@@ -227,7 +227,11 @@
   <div id="error-slot"></div>
   <div class="field">
     <label>API Token</label>
-    <input type="password" id="input-token" placeholder="Paste your API token">
+    <div style="display:flex; gap:8px;">
+      <input type="password" id="input-token" placeholder="Paste your API token" style="flex:1;">
+      <button type="button" class="btn-ghost" id="btn-toggle-token">Show</button>
+    </div>
+    <div class="hint" id="token-len-hint"></div>
   </div>
   <div class="field">
     <label>App ID</label>
@@ -355,8 +359,32 @@
   $('btn-connect').addEventListener('click', connect);
   $('btn-disconnect').addEventListener('click', () => location.reload());
 
+  $('btn-toggle-token').addEventListener('click', () => {
+    const inp = $('input-token');
+    const showing = inp.type === 'text';
+    inp.type = showing ? 'password' : 'text';
+    $('btn-toggle-token').textContent = showing ? 'Show' : 'Hide';
+  });
+
+  $('input-token').addEventListener('input', (e) => {
+    const raw = e.target.value;
+    const cleaned = raw.replace(/\s/g, '');
+    const hint = $('token-len-hint');
+    if(raw.length !== cleaned.length){
+      hint.textContent = `⚠ ${raw.length - cleaned.length} whitespace character(s) detected in the pasted token — these will be stripped automatically.`;
+      hint.style.color = 'var(--amber)';
+    } else if(raw.length > 0){
+      hint.textContent = `${cleaned.length} characters.`;
+      hint.style.color = '';
+    } else {
+      hint.textContent = '';
+    }
+  });
+
   function connect(){
-    const token = $('input-token').value.trim();
+    // strip ALL whitespace (spaces, tabs, newlines) anywhere in the pasted value,
+    // not just leading/trailing — clipboard paste sometimes injects internal breaks
+    const token = $('input-token').value.replace(/\s/g, '');
     const appId = $('input-appid').value.trim() || '1089';
     if(!token){ showError('Enter your API token first.'); return; }
     $('btn-connect').disabled = true;
@@ -367,7 +395,9 @@
     ws.onopen = async () => {
       const authRes = await send({authorize: token});
       if(authRes.error){
-        showError(authRes.error.message || 'Authorization failed.');
+        const code = authRes.error.code ? ` (${authRes.error.code})` : '';
+        showError((authRes.error.message || 'Authorization failed.') + code);
+        console.error('Deriv authorize error:', authRes.error);
         $('btn-connect').disabled = false;
         $('btn-connect').textContent = 'Connect';
         ws.close();
