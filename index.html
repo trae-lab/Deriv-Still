@@ -1,1078 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deriv - Online Trading Platform</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DerivPro - Trading Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root {
-      --deriv-red: #FF444F;
-      --deriv-red-hover: #E12E3A;
-      --deriv-green: #00A79E;
-      --deriv-navy-dark: #0E0E12;
-      --deriv-navy-light: #151821;
-      --text-dark: #333333;
-      --text-muted: #6E6E6E;
-      --bg-light: #F8F9FA;
-      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-      --card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-
+    /* ===== RESET & BASE ===== */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    :root {
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --card2: #16213e;
+      --accent: #00d4ff;
+      --green: #00ff88;
+      --red: #ff4444;
+      --text: #ffffff;
+      --muted: #8888aa;
+      --border: #2a2a4a;
     }
 
     body {
-      font-family: 'IBM Plex Sans', sans-serif;
-      color: var(--text-dark);
-      background-color: #FFFFFF;
-      line-height: 1.5;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    /* --- Market Ticker --- */
-    .ticker-bar {
-      background-color: #060608;
-      color: #FFFFFF;
-      font-size: 0.8rem;
-      padding: 6px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .ticker-track {
-      display: inline-block;
-      white-space: nowrap;
-    }
-
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-right: 30px;
-    }
-
-    .up { color: #4BB543; }
-    .down { color: var(--deriv-red); }
-
-    /* --- Header & Nav --- */
-    header {
-      background: linear-gradient(180deg, var(--deriv-navy-dark) 0%, var(--deriv-navy-light) 100%);
-      color: #FFFFFF;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* ===== LOGIN SCREEN ===== */
+    #loginScreen {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      padding: 16px 24px;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+
+    .login-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
     }
 
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 1.4rem;
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 5px;
+      letter-spacing: 2px;
     }
 
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--deriv-red);
-      color: #FFFFFF;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
+    .logo span {
+      color: var(--green);
     }
 
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
+    .tagline {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 30px;
     }
 
-    .nav-links a {
-      color: #D1D5DB;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: color 0.2s;
+    .login-box h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: var(--text);
     }
 
-    .nav-links a:hover {
-      color: #FFFFFF;
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
     }
 
-    .nav-actions {
-      display: flex;
-      gap: 12px;
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-group input, 
+    .input-group select {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: var(--accent);
     }
 
     .btn {
-      padding: 10px 20px;
-      border-radius: 4px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s, transform 0.1s;
+      width: 100%;
+      padding: 14px;
       border: none;
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: #FFFFFF;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-outline:hover {
-      border-color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
     }
 
     .btn-primary {
-      background-color: var(--deriv-red);
-      color: #FFFFFF;
+      background: linear-gradient(135deg, var(--accent), #0099cc);
+      color: #000;
     }
 
     .btn-primary:hover {
-      background-color: var(--deriv-red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
     }
 
-    /* --- Hero Section --- */
-    .hero {
-      background: linear-gradient(180deg, var(--deriv-navy-light) 0%, var(--deriv-navy-dark) 100%);
-      color: #FFFFFF;
-      padding: 80px 24px 100px;
-      text-align: center;
+    .btn-success {
+      background: linear-gradient(135deg, var(--green), #00cc66);
+      color: #000;
     }
 
-    .hero-container {
-      max-width: 800px;
-      margin: 0 auto;
+    .btn-danger {
+      background: linear-gradient(135deg, var(--red), #cc0000);
+      color: #fff;
     }
 
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 20px;
+    .btn-warning {
+      background: linear-gradient(135deg, #ffaa00, #ff8800);
+      color: #000;
     }
 
-    .hero p {
-      font-size: 1.2rem;
-      color: #9CA3AF;
-      margin-bottom: 32px;
-    }
-
-    /* --- Main Layout Sections --- */
-    section {
-      padding: 80px 24px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .section-title h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .section-title p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-    }
-
-    /* --- Platforms Grid --- */
-    .platforms {
-      background-color: #FFFFFF;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
-
-    .card {
-      background: #FFFFFF;
-      border: 1px solid #E5E7EB;
+    .btn-small {
+      width: auto;
+      padding: 8px 16px;
+      font-size: 12px;
       border-radius: 8px;
-      padding: 32px 24px;
-      box-shadow: var(--card-shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--card-shadow-hover);
-    }
-
-    .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: #FFFFFF;
-      margin-bottom: 20px;
-    }
-
-    .icon-dtrader { background-color: var(--deriv-red); }
-    .icon-dbot { background-color: #FF9800; }
-    .icon-smarttrader { background-color: var(--deriv-green); }
-    .icon-binarybot { background-color: #2196F3; }
-
-    .card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-    }
-
-    .card p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      flex-grow: 1;
-      margin-bottom: 24px;
-    }
-
-    .card-link {
-      color: var(--deriv-red);
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .card-link:hover {
-      text-decoration: underline;
-    }
-
-    /* --- Features Grid --- */
-    .features {
-      background-color: var(--bg-light);
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-    }
-
-    .feature-item {
-      text-align: center;
-      padding: 24px;
-    }
-
-    .feature-icon {
-      width: 64px;
-      height: 64px;
-      background: rgba(255, 68, 79, 0.1);
-      color: var(--deriv-red);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 1.5rem;
-    }
-
-    .feature-item h3 {
-      font-size: 1.2rem;
-      margin-bottom: 12px;
-    }
-
-    .feature-item p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    /* --- Onboarding Flow --- */
-    .onboarding {
-      background-color: #FFFFFF;
-    }
-
-    .steps-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      position: relative;
-    }
-
-    .step-card {
-      flex: 1;
-      text-align: center;
-      position: relative;
-    }
-
-    .step-number {
-      width: 40px;
-      height: 40px;
-      background-color: var(--deriv-navy-dark);
-      color: #FFFFFF;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      margin: 0 auto 20px;
-    }
-
-    .step-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-    }
-
-    .step-card p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* --- Footer --- */
-    footer {
-      background-color: var(--deriv-navy-dark);
-      color: #9CA3AF;
-      padding: 60px 24px 100px;
-      font-size: 0.85rem;
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 40px;
-      margin-bottom: 40px;
-    }
-
-    .footer-col h4 {
-      color: #FFFFFF;
-      font-size: 1rem;
-      margin-bottom: 16px;
-    }
-
-    .footer-col ul {
-      list-style: none;
-    }
-
-    .footer-col li {
-      margin-bottom: 10px;
-    }
-
-    .footer-col a {
-      color: #9CA3AF;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-col a:hover {
-      color: #FFFFFF;
-    }
-
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      text-align: center;
+    .disclaimer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--muted);
       line-height: 1.6;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
     }
 
-    /* --- Sticky Demo Banner --- */
-    .sticky-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--deriv-navy-light);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 16px 24px;
-      z-index: 1000;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    .error-msg {
+      background: rgba(255, 68, 68, 0.1);
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 15px;
+      display: none;
     }
 
-    .banner-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    .loading-msg {
+      color: var(--accent);
+      font-size: 13px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    /* ===== MAIN APP ===== */
+    #app {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-logo {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .header-logo span {
+      color: var(--green);
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .balance-display {
+      text-align: right;
+    }
+
+    .balance-display .amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .balance-display .currency {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .account-badge {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .logout-btn {
+      background: rgba(255, 68, 68, 0.15);
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* ===== NAV TABS ===== */
+    .nav-tabs {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+      padding: 0 20px;
+    }
+
+    .nav-tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .nav-tab:hover {
+      color: var(--text);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      padding: 20px;
+      flex: 1;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    /* ===== STATS GRID ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .stat-card .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .stat-card .value.green { color: var(--green); }
+    .stat-card .value.red { color: var(--red); }
+    .stat-card .value.blue { color: var(--accent); }
+    .stat-card .value.white { color: var(--text); }
+
+    /* ===== TRADING SECTION ===== */
+    .market-selector {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+    }
+
+    .market-btn {
+      padding: 8px 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .market-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+    }
+
+    .price-display {
+      background: var(--card2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+    }
+
+    .price-display .symbol {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .price-display .price {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--accent);
+      font-family: monospace;
+    }
+
+    .price-display .change {
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .trade-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .trade-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 5px;
+    }
+
+    .trade-btn-rise {
+      background: linear-gradient(135deg, var(--green), #00aa55);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .trade-btn-fall {
+      background: linear-gradient(135deg, var(--red), #cc0000);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .trade-btn-rise:hover, 
+    .trade-btn-fall:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* ===== OPEN TRADES ===== */
+    .trade-item {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .banner-text {
-      color: #FFFFFF;
-    }
-
-    .banner-text strong {
-      color: var(--deriv-red);
-    }
-
-    /* --- Modal Styles --- */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(14, 14, 18, 0.75);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-card {
-      background: #FFFFFF;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 440px;
-      padding: 32px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-      position: relative;
-      transform: translateY(20px);
-      transition: transform 0.25s ease;
-    }
-
-    .modal-overlay.active .modal-card {
-      transform: translateY(0);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      color: var(--text-dark);
-    }
-
-    .modal-header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .modal-header h3 {
-      font-size: 1.5rem;
+    .trade-item .trade-info .symbol {
+      font-size: 14px;
       font-weight: 700;
-      margin-bottom: 6px;
     }
 
-    .modal-header p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
+    .trade-item .trade-info .details {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
     }
 
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-dark);
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #D1D5DB;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--deriv-red);
-    }
-
-    .form-terms {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .form-terms input {
-      margin-top: 2px;
-    }
-
-    /* Error Message Box */
-    .error-msg {
-      display: none;
-      background-color: #FDF2F2;
-      color: #ECFDF5;
-      color: var(--deriv-red);
-      font-size: 0.82rem;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 4px;
-      border: 1px solid #FDE8E8;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .btn-full {
-      width: 100%;
-      padding: 12px;
-      text-align: center;
-      font-size: 1rem;
-    }
-
-    /* --- Inline Success State --- */
-    .success-box {
-      display: none;
-      text-align: center;
-      padding: 20px 10px;
-    }
-
-    .success-icon {
-      width: 56px;
-      height: 56px;
-      background-color: #E6F6F5;
-      color: var(--deriv-green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 16px;
-      font-weight: bold;
-    }
-
-    .success-box h4 {
-      font-size: 1.3rem;
-      margin-bottom: 8px;
-    }
-
-    .success-box p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 20px;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 0.8s ease-in-out infinite;
-      margin-right: 8px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* --- Responsive Queries --- */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero h1 { font-size: 2.2rem; }
-      .steps-container { flex-direction: column; gap: 40px; }
-      .banner-container { flex-direction: column; gap: 12px; text-align: center; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Live Market Ticker -->
-  <div class="ticker-bar">
-    <div class="ticker-track">
-      <span class="ticker-item" id="tick-frxEURUSD">EUR/USD <strong>Loading...</strong></span>
-      <span class="ticker-item" id="tick-frxGBPUSD">GBP/USD <strong>Loading...</strong></span>
-      <span class="ticker-item" id="tick-frxUSDJPY">USD/JPY <strong>Loading...</strong></span>
-      <span class="ticker-item" id="tick-R_100">Volatility 100 Index <strong>Loading...</strong></span>
-      <span class="ticker-item" id="tick-cryBTCUSD">BTC/USD <strong>Loading...</strong></span>
-    </div>
-  </div>
-
-  <!-- Header Navigation -->
-  <header>
-    <div class="nav-container">
-      <a href="#" class="logo">
-        <div class="logo-icon">d</div>
-        <span>deriv</span>
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="#trade">Trade</a></li>
-        <li><a href="#markets">Markets</a></li>
-        <li><a href="#about">About us</a></li>
-        <li><a href="#resources">Resources</a></li>
-      </ul>
-
-      <div class="nav-actions">
-        <a href="#" class="btn btn-outline" id="loginBtn">Log in</a>
-        <a href="#" class="btn btn-primary">Sign up</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-container">
-      <h1>Trade the way you want</h1>
-      <p>Trade forex, commodities, synthetic indices, and stock indices on simple, flexible, and reliable platforms.</p>
-      <a href="#" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">Create free demo account</a>
-    </div>
-  </section>
-
-  <!-- Platforms Grid Section -->
-  <section class="platforms" id="trade">
-    <div class="container">
-      <div class="section-title">
-        <h2>A platform for every trader</h2>
-        <p>Choose from our suite of intuitive trading platforms tailored to your trading style.</p>
-      </div>
-
-      <div class="grid-4">
-        <!-- DTrader -->
-        <div class="card">
-          <div class="card-icon icon-dtrader">DT</div>
-          <h3>DTrader</h3>
-          <p>A powerful, easy-to-use platform. Trade what you want, when you want, how you want.</p>
-          <a href="#" class="card-link open-modal-link">Explore DTrader &rarr;</a>
-        </div>
-
-        <!-- DBot -->
-        <div class="card">
-          <div class="card-icon icon-dbot">DB</div>
-          <h3>DBot</h3>
-          <p>Automate your trading strategies without writing a single line of code using drag-and-drop logic.</p>
-          <a href="#" class="card-link open-modal-link">Explore DBot &rarr;</a>
-        </div>
-
-        <!-- SmartTrader -->
-        <div class="card">
-          <div class="card-icon icon-smarttrader">ST</div>
-          <h3>SmartTrader</h3>
-          <p>The classic options trading platform. Simple, user-friendly, and ideal for fast trades.</p>
-          <a href="#" class="card-link open-modal-link">Explore SmartTrader &rarr;</a>
-        </div>
-
-        <!-- Binary Bot -->
-        <div class="card">
-          <div class="card-icon icon-binarybot">BB</div>
-          <h3>Binary Bot</h3>
-          <p>Our classic auto-trading engine. Build custom trading bots with advanced visual block coding.</p>
-          <a href="#" class="card-link open-modal-link">Explore Binary Bot &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Why Trade With Us -->
-  <section class="features" id="about">
-    <div class="container">
-      <div class="section-title">
-        <h2>Why trade with Deriv?</h2>
-        <p>Serving over 2.5 million traders worldwide with proven reliability.</p>
-      </div>
-
-      <div class="grid-3">
-        <div class="feature-item">
-          <div class="feature-icon">&#128274;</div>
-          <h3>Regulated & Secure</h3>
-          <p>Strict regulatory standards across multiple jurisdictions to ensure your funds and personal data stay safe.</p>
-        </div>
-
-        <div class="feature-item">
-          <div class="feature-icon">&#9889;</div>
-          <h3>24/7 Synthetic Indices</h3>
-          <p>Trade simulated real-world market movements anytime, uninterrupted by market hours or real-world events.</p>
-        </div>
-
-        <div class="feature-item">
-          <div class="feature-icon">&#128179;</div>
-          <h3>Fast & Easy Withdrawals</h3>
-          <p>Multiple deposit and withdrawal methods with zero hidden fees and quick processing times.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Onboarding Flow -->
-  <section class="onboarding">
-    <div class="container">
-      <div class="section-title">
-        <h2>Start trading in 3 easy steps</h2>
-      </div>
-
-      <div class="steps-container">
-        <div class="step-card">
-          <div class="step-number">1</div>
-          <h3>Sign up</h3>
-          <p>Create a free demo account instantly with $10,000 in virtual funds.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-number">2</div>
-          <h3>Practice</h3>
-          <p>Explore our trading platforms and test strategies risk-free.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-number">3</div>
-          <h3>Fund & Trade</h3>
-          <p>Switch to a real account, deposit funds, and start trading live markets.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-col">
-        <h4>Trade</h4>
-        <ul>
-          <li><a href="#" class="open-modal-link">DTrader</a></li>
-          <li><a href="#" class="open-modal-link">DBot</a></li>
-          <li><a href="#" class="open-modal-link">SmartTrader</a></li>
-          <li><a href="#" class="open-modal-link">Binary Bot</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Markets</h4>
-        <ul>
-          <li><a href="#">Forex</a></li>
-          <li><a href="#">Derived Indices</a></li>
-          <li><a href="#">Stock Indices</a></li>
-          <li><a href="#">Commodities</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>About us</h4>
-        <ul>
-          <li><a href="#">Our story</a></li>
-          <li><a href="#">Regulatory info</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Contact us</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="#">Help centre</a></li>
-          <li><a href="#">Community</a></li>
-          <li><a href="#">Payment methods</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>Deriv is a regulated trading provider with over 20 years of experience. Financial trading involves high risk and may not be suitable for all investors.</p>
-      <p style="margin-top: 10px;">&copy; 2026 Deriv. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <!-- Sticky Demo Account Banner -->
-  <div class="sticky-banner">
-    <div class="banner-container">
-      <div class="banner-text">
-        Ready to start? Get <strong>$10,000</strong> in virtual funds with a demo account.
-      </div>
-      <a href="#" class="btn btn-primary">Create free demo account</a>
-    </div>
-  </div>
-
-  <!-- Sign Up Modal Overlay -->
-  <div class="modal-overlay" id="signupModal">
-    <div class="modal-card">
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-      
-      <!-- Modal Header -->
-      <div class="modal-header" id="modalHeader">
-        <h3 id="modalTitle">Join Deriv Today</h3>
-        <p id="modalSubtitle">Start trading with $10,000 in virtual funds</p>
-      </div>
-
-      <!-- Form Container -->
-      <div id="signupForm">
-        <div id="errorBox" class="error-msg"></div>
-
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" id="email" placeholder="name@example.com">
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Create a password">
-        </div>
-
-        <div class="form-terms" id="termsContainer">
-          <input type="checkbox" id="terms">
-          <label for="terms">I agree to the <a href="#" style="color: var(--deriv-red);">Terms & Conditions</a></label>
-        </div>
-
-        <button type="button" class="btn btn-primary btn-full" id="modalSubmitBtn" onclick="processSignup()">
-          Create demo account
-        </button>
-      </div>
-
-      <!-- Smooth Inline Success Screen -->
-      <div class="success-box" id="successBox">
-        <div class="success-icon">&#10003;</div>
-        <h4>Account Ready!</h4>
-        <p id="successEmail">Your demo account with <strong>$10,000</strong> virtual funds has been initialized.</p>
-        <button class="btn btn-primary btn-full" onclick="closeModal()">Start Trading</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- JavaScript -->
-  <script>
-    /* --- Deriv Live WebSocket Feed --- */
-    const appId = 1089;
-    const wsUrl = `wss://ws.derivws.com/websockets/v3?app_id=${appId}`;
-    let socket;
-
-    function initWebSocket() {
-      socket = new WebSocket(wsUrl);
-
-      const symbols = [
-        { code: 'frxEURUSD', display: 'EUR/USD' },
-        { code: 'frxGBPUSD', display: 'GBP/USD' },
-        { code: 'frxUSDJPY', display: 'USD/JPY' },
-        { code: 'R_100', display: 'Volatility 100 Index' },
-        { code: 'cryBTCUSD', display: 'BTC/USD' }
-      ];
-
-      const lastPrices = {};
-
-      socket.onopen = () => {
-        symbols.forEach(item => {
-          socket.send(JSON.stringify({
-            ticks: item.code,
-            subscribe: 1
-          }));
-        });
-      };
-
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-
-        if (data.msg_type === 'tick') {
-          const tick = data.tick;
-          const symbolCode = tick.symbol;
-          const currentPrice = tick.quote;
-          const symbolObj = symbols.find(s => s.code === symbolCode);
-          
-          if (!symbolObj) return;
-
-          const prevPrice = lastPrices[symbolCode];
-          let directionClass = 'up';
-          let arrow = '▲';
-
-          if (prevPrice !== undefined) {
-            if (currentPrice < prevPrice) {
-              directionClass = 'down';
-              arrow = '▼';
-            }
-          }
-          lastPrices[symbolCode] = currentPrice;
-
-          const priceElem = document.getElementById(`tick-${symbolCode}`);
-          if (priceElem) {
-            priceElem.innerHTML = `
-              ${symbolObj.display} 
-              <strong>${currentPrice.toFixed(tick.pip_size || 2)}</strong> 
-              <span class="${directionClass}">${arrow}</span>
-            `;
-          }
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error('WebSocket Error:', error);
-      };
-    }
-
-    initWebSocket();
-
-    /* --- Interactive Modal Logic --- */
-    let currentMode = 'signup';
-
-    function openModal(isLogin = false) {
-      const modal = document.getElementById('signupModal');
-      const title = document.getElementById('modalTitle');
-      const subtitle = document.getElementById('modalSubtitle');
-      const submitBtn = document.getElementById('modalSubmitBtn');
-      const termsContainer = document.getElementById('termsContainer');
-      const errorBox = document.getElementById('errorBox');
-      
-      currentMode = isLogin ? 'login' : 'signup';
-
-      // Reset view
-      errorBox.style.display = 'none';
-      document.getElementById('signupForm').style.display = 'block';
-      document.getElementById('modalHeader').style.display = 'block';
-      document.getElementById('successBox').style.display = 'none';
-      submitBtn.disabled = false;
-
-      if (isLogin) {
-        title.textContent = 'Welcome Back';
-        subtitle.textContent = 'Log in to access your trading account';
-        submitBtn.textContent = 'Log in';
-        termsContainer.style.display = 'none';
-      } else {
-        title.textContent = 'Join Deriv Today';
-        subtitle.textContent = 'Start trading with $10,000 in virtual funds';
-        submitBtn.textContent = 'Create demo account';
-        termsContainer.style.display = 'flex';
-      }
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      document.getElementById('signupModal').classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    document.getElementById('signupModal').addEventListener('click', (e) => {
-      if (e.target.id === 'signupModal') closeModal();
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctaButtons = document.querySelectorAll('.btn-primary');
-      ctaButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          openModal(false);
-        });
-      });
-
-      const loginBtn = document.getElementById('loginBtn');
-      if (loginBtn) {
-        loginBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          openModal(true);
-        });
-      }
-
-      const cardLinks = document.querySelectorAll('.open-modal-link');
-      cardLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          openModal(false);
-        });
-      });
-    });
-
-    /* --- Fail-Proof Custom Processing --- */
-    function processSignup() {
-      const emailInput = document.getElementById('email').value.trim();
-      const passwordInput = document.getElementById('password').value.trim();
-      const termsCheck = document.getElementById('terms').checked;
-      const errorBox = document.getElementById('errorBox');
-      const submitBtn = document.getElementById('modalSubmitBtn');
-
-      errorBox.style.display = 'none';
-
-      // Input Validation
-      if (!emailInput || !emailInput.includes('@')) {
-        errorBox.textContent = 'Please enter a valid email address.';
-        errorBox.style.display = 'block';
-        return;
-      }
-
-      if (passwordInput.length < 6) {
-        errorBox.textContent = 'Password must be at least 6 characters.';
-        errorBox.style.display = 'block';
-        return;
-      }
-
-      if (currentMode === 'signup' && !termsCheck) {
-        errorBox.textContent = 'Please accept the Terms & Conditions to proceed.';
-        errorBox.style.display = 'block';
-        return;
-      }
-
-      // Show Spinner on Button
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="spinner"></span> Processing...`;
-
-      // Transition to Success Card
-      setTimeout(() => {
-        document.getElementById('signupForm').style.display = 'none';
-        document.getElementById('modalHeader').style.display = 'none';
-        
-        const successBox = document.getElementById('successBox');
-        if (currentMode === 'login') {
-          document.querySelector('#successBox h4').textContent = 'Welcome Back!';
-          document.getElementById('successEmail').innerHTML = `Successfully logged in as <strong>${emailInput}</strong>. Ready to trade.`;
-        } else {
-          document.querySelector('#successBox h4').textContent = 'Account Ready!';
-          document.getElementById('successEmail').innerHTML = `Your demo account for <strong>${emailInput}</strong> is ready with <strong>$10,000</strong> in virtual funds.`;
-        }
-        
-        successBox.style.display = 'block';
-      }, 400);
-    }
-  </script>
-</body>
-</html>
+    .trade-item 
