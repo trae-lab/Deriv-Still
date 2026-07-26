@@ -133,7 +133,9 @@
       font-size: 0.9rem;
       cursor: pointer;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: background-color 0.2s, transform 0.1s;
       border: none;
     }
@@ -557,6 +559,53 @@
       font-size: 1rem;
     }
 
+    /* --- Inline Success State --- */
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background-color: #E6F6F5;
+      color: var(--deriv-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 16px;
+      font-weight: bold;
+    }
+
+    .success-box h4 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .success-box p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s ease-in-out infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* --- Responsive Queries --- */
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -776,12 +825,15 @@
   <div class="modal-overlay" id="signupModal">
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()">&times;</button>
-      <div class="modal-header">
+      
+      <!-- Modal Header -->
+      <div class="modal-header" id="modalHeader">
         <h3 id="modalTitle">Join Deriv Today</h3>
         <p id="modalSubtitle">Start trading with $10,000 in virtual funds</p>
       </div>
 
-      <form onsubmit="handleSignup(event)">
+      <!-- Form Container -->
+      <form id="signupForm" onsubmit="handleSignup(event)">
         <div class="form-group">
           <label for="email">Email address</label>
           <input type="email" id="email" placeholder="name@example.com" required>
@@ -797,75 +849,91 @@
           <label for="terms">I agree to the <a href="#" style="color: var(--deriv-red);">Terms & Conditions</a></label>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-full" id="modalSubmitBtn">Create demo account</button>
+        <button type="submit" class="btn btn-primary btn-full" id="modalSubmitBtn">
+          Create demo account
+        </button>
       </form>
+
+      <!-- Smooth Inline Success Screen -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon">&#10003;</div>
+        <h4>Account Ready!</h4>
+        <p id="successEmail">Your demo account with <strong>$10,000</strong> virtual funds has been initialized.</p>
+        <button class="btn btn-primary btn-full" onclick="closeModal()">Start Trading</button>
+      </div>
+
     </div>
   </div>
 
-  <!-- WebSocket & Interactive Logic -->
+  <!-- JavaScript -->
   <script>
     /* --- Deriv Live WebSocket Feed --- */
-    const appId = 1089; // Deriv public App ID
+    const appId = 1089;
     const wsUrl = `wss://ws.derivws.com/websockets/v3?app_id=${appId}`;
-    const socket = new WebSocket(wsUrl);
+    let socket;
 
-    const symbols = [
-      { code: 'frxEURUSD', display: 'EUR/USD' },
-      { code: 'frxGBPUSD', display: 'GBP/USD' },
-      { code: 'frxUSDJPY', display: 'USD/JPY' },
-      { code: 'R_100', display: 'Volatility 100 Index' },
-      { code: 'cryBTCUSD', display: 'BTC/USD' }
-    ];
+    function initWebSocket() {
+      socket = new WebSocket(wsUrl);
 
-    const lastPrices = {};
+      const symbols = [
+        { code: 'frxEURUSD', display: 'EUR/USD' },
+        { code: 'frxGBPUSD', display: 'GBP/USD' },
+        { code: 'frxUSDJPY', display: 'USD/JPY' },
+        { code: 'R_100', display: 'Volatility 100 Index' },
+        { code: 'cryBTCUSD', display: 'BTC/USD' }
+      ];
 
-    socket.onopen = () => {
-      console.log('Connected to Deriv WebSocket Feed');
-      symbols.forEach(item => {
-        socket.send(JSON.stringify({
-          ticks: item.code,
-          subscribe: 1
-        }));
-      });
-    };
+      const lastPrices = {};
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+      socket.onopen = () => {
+        symbols.forEach(item => {
+          socket.send(JSON.stringify({
+            ticks: item.code,
+            subscribe: 1
+          }));
+        });
+      };
 
-      if (data.msg_type === 'tick') {
-        const tick = data.tick;
-        const symbolCode = tick.symbol;
-        const currentPrice = tick.quote;
-        const symbolObj = symbols.find(s => s.code === symbolCode);
-        
-        if (!symbolObj) return;
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-        const prevPrice = lastPrices[symbolCode];
-        let directionClass = 'up';
-        let arrow = '▲';
+        if (data.msg_type === 'tick') {
+          const tick = data.tick;
+          const symbolCode = tick.symbol;
+          const currentPrice = tick.quote;
+          const symbolObj = symbols.find(s => s.code === symbolCode);
+          
+          if (!symbolObj) return;
 
-        if (prevPrice !== undefined) {
-          if (currentPrice < prevPrice) {
-            directionClass = 'down';
-            arrow = '▼';
+          const prevPrice = lastPrices[symbolCode];
+          let directionClass = 'up';
+          let arrow = '▲';
+
+          if (prevPrice !== undefined) {
+            if (currentPrice < prevPrice) {
+              directionClass = 'down';
+              arrow = '▼';
+            }
+          }
+          lastPrices[symbolCode] = currentPrice;
+
+          const priceElem = document.getElementById(`tick-${symbolCode}`);
+          if (priceElem) {
+            priceElem.innerHTML = `
+              ${symbolObj.display} 
+              <strong>${currentPrice.toFixed(tick.pip_size || 2)}</strong> 
+              <span class="${directionClass}">${arrow}</span>
+            `;
           }
         }
-        lastPrices[symbolCode] = currentPrice;
+      };
 
-        const priceElem = document.getElementById(`tick-${symbolCode}`);
-        if (priceElem) {
-          priceElem.innerHTML = `
-            ${symbolObj.display} 
-            <strong>${currentPrice.toFixed(tick.pip_size || 2)}</strong> 
-            <span class="${directionClass}">${arrow}</span>
-          `;
-        }
-      }
-    };
+      socket.onerror = (error) => {
+        console.error('WebSocket Error:', error);
+      };
+    }
 
-    socket.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
+    initWebSocket();
 
     /* --- Interactive Modal Logic --- */
     function openModal(isLogin = false) {
@@ -873,6 +941,12 @@
       const title = document.getElementById('modalTitle');
       const subtitle = document.getElementById('modalSubtitle');
       const submitBtn = document.getElementById('modalSubmitBtn');
+      
+      // Reset view to form
+      document.getElementById('signupForm').style.display = 'block';
+      document.getElementById('modalHeader').style.display = 'block';
+      document.getElementById('successBox').style.display = 'none';
+      submitBtn.disabled = false;
 
       if (isLogin) {
         title.textContent = 'Welcome Back';
@@ -898,7 +972,6 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Attach primary sign up actions
       const ctaButtons = document.querySelectorAll('.btn-primary');
       ctaButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -907,7 +980,6 @@
         });
       });
 
-      // Attach log in action
       const loginBtn = document.getElementById('loginBtn');
       if (loginBtn) {
         loginBtn.addEventListener('click', (e) => {
@@ -916,7 +988,6 @@
         });
       }
 
-      // Attach platform explore actions
       const cardLinks = document.querySelectorAll('.open-modal-link');
       cardLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -926,11 +997,27 @@
       });
     });
 
+    /* --- Non-Blocking Signup Submission --- */
     function handleSignup(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      alert(`Success! Request processed for: ${email}`);
-      closeModal();
+      
+      const emailInput = document.getElementById('email').value;
+      const submitBtn = document.getElementById('modalSubmitBtn');
+      
+      // Show loading spinner on button
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="spinner"></span> Processing...`;
+
+      // Simulate instantaneous registration response without blocking pop-ups
+      setTimeout(() => {
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('modalHeader').style.display = 'none';
+        
+        const successBox = document.getElementById('successBox');
+        document.getElementById('successEmail').innerHTML = `Your demo account for <strong>${emailInput}</strong> is ready with <strong>$10,000</strong> in virtual funds.`;
+        
+        successBox.style.display = 'block';
+      }, 600);
     }
   </script>
 </body>
