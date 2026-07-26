@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     :root {
@@ -51,6 +51,7 @@
       width: 100%;
       max-width: 420px;
       text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .logo {
@@ -141,11 +142,6 @@
       color: #fff;
     }
 
-    .btn-warning {
-      background: linear-gradient(135deg, #ffaa00, #ff8800);
-      color: #000;
-    }
-
     .btn-small {
       width: auto;
       padding: 8px 16px;
@@ -169,13 +165,6 @@
       color: var(--red);
       padding: 10px;
       border-radius: 8px;
-      font-size: 13px;
-      margin-bottom: 15px;
-      display: none;
-    }
-
-    .loading-msg {
-      color: var(--accent);
       font-size: 13px;
       margin-bottom: 15px;
       display: none;
@@ -233,15 +222,6 @@
       color: var(--muted);
     }
 
-    .account-badge {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 5px 10px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
     .logout-btn {
       background: rgba(255, 68, 68, 0.15);
       border: 1px solid var(--red);
@@ -292,6 +272,9 @@
     .main-content {
       padding: 20px;
       flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
     }
 
     .page {
@@ -323,7 +306,7 @@
     /* ===== STATS GRID ===== */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
       margin-bottom: 15px;
     }
@@ -351,9 +334,20 @@
     .stat-card .value.green { color: var(--green); }
     .stat-card .value.red { color: var(--red); }
     .stat-card .value.blue { color: var(--accent); }
-    .stat-card .value.white { color: var(--text); }
 
     /* ===== TRADING SECTION ===== */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 850px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .market-selector {
       display: flex;
       gap: 8px;
@@ -401,11 +395,6 @@
       font-weight: 900;
       color: var(--accent);
       font-family: monospace;
-    }
-
-    .price-display .change {
-      font-size: 13px;
-      margin-top: 5px;
     }
 
     .trade-form {
@@ -473,4 +462,389 @@
       margin-top: 3px;
     }
 
-    .trade-item 
+    .trade-item .trade-result {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <div class="logo">DERIV<span>PRO</span></div>
+      <div class="tagline">Next-Gen Synthetic Trading Platform</div>
+
+      <div id="loginError" class="error-msg">Invalid API Token provided.</div>
+
+      <div class="input-group">
+        <label for="tokenInput">Deriv API Token</label>
+        <input type="password" id="tokenInput" placeholder="Enter API Token..." />
+      </div>
+
+      <div class="input-group">
+        <label for="accountType">Account Type</label>
+        <select id="accountType">
+          <option value="demo">Demo Account</option>
+          <option value="real">Real Account</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" onclick="login()">CONNECT ACCOUNT</button>
+
+      <div class="disclaimer">
+        Trading derivative products carries high financial risk. Ensure you test strategy configurations safely on Demo accounts.
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="app">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-logo">DERIV<span>PRO</span></div>
+      <div class="header-info">
+        <div class="balance-display">
+          <div class="currency">ACCOUNT BALANCE</div>
+          <div class="amount" id="balanceDisplay">$10,000.00</div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Disconnect</button>
+      </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="switchTab('trade')">Manual Trade</div>
+      <div class="nav-tab" onclick="switchTab('bot')">Auto-Trader</div>
+      <div class="nav-tab" onclick="switchTab('history')">Trade History</div>
+    </div>
+
+    <!-- CONTENT BODY -->
+    <div class="main-content">
+      
+      <!-- TAB 1: MANUAL TRADING -->
+      <div id="tradePage" class="page active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Total Profit/Loss</div>
+            <div class="value green" id="pnlDisplay">+$0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Win Rate</div>
+            <div class="value blue" id="winRateDisplay">0%</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Active Contracts</div>
+            <div class="value" id="activeTradesDisplay">0</div>
+          </div>
+        </div>
+
+        <div class="dashboard-layout">
+          <!-- LEFT PANEL: CHART & MARKETS -->
+          <div class="card">
+            <div class="market-selector">
+              <button class="market-btn active" onclick="selectMarket('R_100', this)">Vol 100</button>
+              <button class="market-btn" onclick="selectMarket('R_75', this)">Vol 75</button>
+              <button class="market-btn" onclick="selectMarket('R_50', this)">Vol 50</button>
+              <button class="market-btn" onclick="selectMarket('R_25', this)">Vol 25</button>
+              <button class="market-btn" onclick="selectMarket('R_10', this)">Vol 10</button>
+            </div>
+
+            <div class="price-display">
+              <div class="symbol" id="selectedMarketLabel">Volatility 100 Index</div>
+              <div class="price" id="livePrice">6521.45</div>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="marketChart"></canvas>
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL: TRADE EXECUTION -->
+          <div class="card">
+            <div class="card-title">Contract Parameters</div>
+            <div class="trade-form">
+              <div class="input-group">
+                <label>Stake (USD)</label>
+                <input type="number" id="stakeInput" value="10" min="1" />
+              </div>
+
+              <div class="input-group">
+                <label>Duration (Ticks)</label>
+                <select id="durationInput">
+                  <option value="5">5 Ticks</option>
+                  <option value="10">10 Ticks</option>
+                </select>
+              </div>
+
+              <div class="trade-buttons">
+                <button class="trade-btn-rise" onclick="executeTrade('RISE')">HIGHER ↑</button>
+                <button class="trade-btn-fall" onclick="executeTrade('FALL')">LOWER ↓</button>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <div class="card-title">Live Executions</div>
+              <div id="activeTradesList">
+                <!-- Executing trades render here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: AUTOMATED BOT -->
+      <div id="botPage" class="page">
+        <div class="card">
+          <div class="card-title">Bot Strategy Settings</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="input-group">
+              <label>Base Stake</label>
+              <input type="number" id="botStake" value="5" />
+            </div>
+            <div class="input-group">
+              <label>Take Profit Limit ($)</label>
+              <input type="number" id="botTP" value="50" />
+            </div>
+            <div class="input-group">
+              <label>Stop Loss Limit ($)</label>
+              <input type="number" id="botSL" value="30" />
+            </div>
+          </div>
+          <button id="botToggleBtn" class="btn btn-primary" onclick="toggleBot()" style="margin-top: 10px;">START AUTOMATED BOT</button>
+        </div>
+      </div>
+
+      <!-- TAB 3: HISTORY -->
+      <div id="historyPage" class="page">
+        <div class="card">
+          <div class="card-title">Recent Transactions</div>
+          <div id="historyList">
+            <!-- Closed trades display here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ===== APP STATE =====
+    let state = {
+      balance: 10000.00,
+      pnl: 0,
+      wins: 0,
+      losses: 0,
+      currentMarket: 'R_100',
+      currentPrice: 6521.45,
+      activeTrades: [],
+      history: [],
+      botRunning: false,
+      botInterval: null
+    };
+
+    let chartInstance = null;
+
+    // ===== INITIALIZATION =====
+    window.onload = () => {
+      initChart();
+      setInterval(updatePriceMock, 1000);
+    };
+
+    function login() {
+      const token = document.getElementById('tokenInput').value;
+      if (!token && token !== "") {
+        // Simple authentication fallback mock
+      }
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      updateUI();
+    }
+
+    function logout() {
+      if(state.botRunning) toggleBot();
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabName + 'Page').classList.add('active');
+    }
+
+    function selectMarket(symbol, btn) {
+      document.querySelectorAll('.market-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.currentMarket = symbol;
+      document.getElementById('selectedMarketLabel').innerText = btn.innerText + " Index";
+    }
+
+    // ===== CHART ENGINE =====
+    function initChart() {
+      const ctx = document.getElementById('marketChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array(15).fill(''),
+          datasets: [{
+            data: Array(15).fill(state.currentPrice),
+            borderColor: '#00d4ff',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.2,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { display: false },
+            y: { grid: { color: '#2a2a4a' }, ticks: { color: '#8888aa' } }
+          }
+        }
+      });
+    }
+
+    function updatePriceMock() {
+      const delta = (Math.random() - 0.49) * 2.5;
+      state.currentPrice = parseFloat((state.currentPrice + delta).toFixed(2));
+      document.getElementById('livePrice').innerText = state.currentPrice.toFixed(2);
+
+      if (chartInstance) {
+        const data = chartInstance.data.datasets[0].data;
+        data.shift();
+        data.push(state.currentPrice);
+        chartInstance.update();
+      }
+
+      processActiveTrades();
+    }
+
+    // ===== TRADING ENGINE =====
+    function executeTrade(type) {
+      const stake = parseFloat(document.getElementById('stakeInput').value);
+      if (stake > state.balance) {
+        alert("Insufficient balance!");
+        return;
+      }
+
+      state.balance -= stake;
+      const trade = {
+        id: Date.now(),
+        type: type,
+        entryPrice: state.currentPrice,
+        stake: stake,
+        ticksLeft: parseInt(document.getElementById('durationInput').value),
+        symbol: state.currentMarket
+      };
+
+      state.activeTrades.push(trade);
+      updateUI();
+    }
+
+    function processActiveTrades() {
+      for (let i = state.activeTrades.length - 1; i >= 0; i--) {
+        let trade = state.activeTrades[i];
+        trade.ticksLeft--;
+
+        if (trade.ticksLeft <= 0) {
+          // Resolve Contract
+          const isWin = (trade.type === 'RISE' && state.currentPrice > trade.entryPrice) ||
+                        (trade.type === 'FALL' && state.currentPrice < trade.entryPrice);
+
+          const payout = isWin ? trade.stake * 1.95 : 0;
+          const profit = payout - trade.stake;
+
+          state.balance += payout;
+          state.pnl += profit;
+
+          if (isWin) state.wins++;
+          else state.losses++;
+
+          state.history.unshift({
+            ...trade,
+            exitPrice: state.currentPrice,
+            profit: profit,
+            win: isWin
+          });
+
+          state.activeTrades.splice(i, 1);
+        }
+      }
+      updateUI();
+    }
+
+    // ===== AUTOMATED BOT =====
+    function toggleBot() {
+      state.botRunning = !state.botRunning;
+      const btn = document.getElementById('botToggleBtn');
+
+      if (state.botRunning) {
+        btn.innerText = "STOP AUTOMATED BOT";
+        btn.className = "btn btn-danger";
+        state.botInterval = setInterval(() => {
+          if (state.activeTrades.length === 0) {
+            const botStake = parseFloat(document.getElementById('botStake').value);
+            document.getElementById('stakeInput').value = botStake;
+            executeTrade(Math.random() > 0.5 ? 'RISE' : 'FALL');
+          }
+        }, 3000);
+      } else {
+        btn.innerText = "START AUTOMATED BOT";
+        btn.className = "btn btn-primary";
+        clearInterval(state.botInterval);
+      }
+    }
+
+    // ===== UI RENDER ENGINE =====
+    function updateUI() {
+      document.getElementById('balanceDisplay').innerText = `$${state.balance.toFixed(2)}`;
+      document.getElementById('pnlDisplay').innerText = `${state.pnl >= 0 ? '+' : ''}$${state.pnl.toFixed(2)}`;
+      document.getElementById('pnlDisplay').className = `value ${state.pnl >= 0 ? 'green' : 'red'}`;
+
+      const totalTrades = state.wins + state.losses;
+      const winRate = totalTrades > 0 ? ((state.wins / totalTrades) * 100).toFixed(0) : 0;
+      document.getElementById('winRateDisplay').innerText = `${winRate}%`;
+      document.getElementById('activeTradesDisplay').innerText = state.activeTrades.length;
+
+      // Render Active Trades
+      const activeContainer = document.getElementById('activeTradesList');
+      activeContainer.innerHTML = state.activeTrades.map(t => `
+        <div class="trade-item">
+          <div class="trade-info">
+            <div class="symbol">${t.symbol} (${t.type})</div>
+            <div class="details">Entry: ${t.entryPrice} | Stake: $${t.stake}</div>
+          </div>
+          <div class="trade-result" style="color: var(--accent);">${t.ticksLeft} Ticks</div>
+        </div>
+      `).join('');
+
+      // Render Trade History
+      const historyContainer = document.getElementById('historyList');
+      historyContainer.innerHTML = state.history.map(h => `
+        <div class="trade-item">
+          <div class="trade-info">
+            <div class="symbol">${h.symbol} (${h.type})</div>
+            <div class="details">Entry: ${h.entryPrice} | Exit: ${h.exitPrice}</div>
+          </div>
+          <div class="trade-result ${h.win ? 'green' : 'red'}" style="color: ${h.win ? 'var(--green)' : 'var(--red)'}">
+            ${h.win ? '+' : ''}$${h.profit.toFixed(2)}
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
