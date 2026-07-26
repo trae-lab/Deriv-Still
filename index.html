@@ -52,7 +52,6 @@
       overflow-x: hidden;
     }
 
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
@@ -160,7 +159,6 @@
       gap: 16px;
     }
 
-    /* TAB PAGES */
     .tab-view {
       display: none;
       flex-direction: column;
@@ -170,7 +168,6 @@
       display: flex;
     }
 
-    /* FROSTED GLASS CARD */
     .glass-card {
       background: var(--glass-card);
       backdrop-filter: var(--glass-blur);
@@ -211,26 +208,18 @@
       font-size: 16px;
     }
 
-    .market-details {
-      text-align: left;
-    }
-
-    .market-name {
-      font-size: 15px;
-      font-weight: 700;
-    }
-
+    .market-details { text-align: left; }
+    .market-name { font-size: 15px; font-weight: 700; }
     .market-price {
       font-family: var(--font-mono);
       font-size: 13px;
       color: var(--text-muted);
       margin-top: 2px;
     }
-
     .market-price span.up { color: var(--accent-cyan); }
     .market-price span.down { color: var(--accent-red); }
 
-    /* DIGIT PERCENTAGE STATS */
+    /* DIGIT PERCENTAGE STATS (MANUAL VIEW) */
     .digits-stats-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -266,16 +255,8 @@
       box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
     }
 
-    .circle-stat .num {
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .circle-stat .pct {
-      font-size: 9px;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
+    .circle-stat .num { font-size: 14px; font-weight: 800; }
+    .circle-stat .pct { font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); }
 
     .indicator-arrow {
       width: 0;
@@ -291,7 +272,7 @@
       border-top: 6px solid var(--accent-red);
     }
 
-    /* TRADE CONTROLS */
+    /* MANUAL CONTROLS */
     .trade-type-selector {
       display: flex;
       align-items: center;
@@ -337,7 +318,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
-    /* INPUT CONTROLS */
     .inputs-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -371,7 +351,6 @@
       outline: none;
     }
 
-    /* EXECUTION BUTTONS */
     .action-buttons-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -418,7 +397,6 @@
       font-weight: 600;
     }
 
-    /* LOGS / TRADES LIST */
     .trades-list {
       display: flex;
       flex-direction: column;
@@ -438,7 +416,239 @@
       font-size: 12px;
     }
 
-    /* MODAL DRAWERS */
+    /* ========================================================= */
+    /* ===== NEW IMAGE 3 EXACT BULK TRADER STYLES ===== */
+    /* ========================================================= */
+    .bulk-custom-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-family: var(--font-main);
+    }
+
+    .bulk-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .bulk-field-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #7b88a8;
+      text-transform: uppercase;
+    }
+
+    .bulk-input-card {
+      background: rgba(13, 21, 38, 0.85);
+      border: 1px solid rgba(40, 60, 95, 0.8);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bulk-input-card select, .bulk-input-card input {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      width: 100%;
+      outline: none;
+      text-align: center;
+    }
+
+    .bulk-input-card select {
+      text-align: left;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .bulk-select-arrow {
+      color: #6b7a99;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    /* CURRENT TICK DISPLAY */
+    .bulk-current-tick-wrapper {
+      text-align: center;
+      margin: 4px 0;
+    }
+
+    .bulk-tick-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #7b88a8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .bulk-tick-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ff5252;
+      font-family: var(--font-mono);
+      letter-spacing: 0.5px;
+    }
+
+    /* DIGIT STATS CIRCLES (IMAGE 3) */
+    .bulk-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px 8px;
+      justify-items: center;
+    }
+
+    .bulk-stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .bulk-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(9, 15, 29, 0.9);
+      border: 4px solid #1a2844;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* CONCENTRIC COLOR ACCENTS (SIMULATED RING PROGRESS) */
+    .bulk-circle.accent-red { border-top-color: #ef4444; }
+    .bulk-circle.accent-blue { border-top-color: #3b82f6; }
+    .bulk-circle.accent-orange { border-top-color: #f97316; }
+
+    .bulk-circle .num {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .bulk-circle .pct {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 3px;
+      font-family: var(--font-mono);
+    }
+
+    .bulk-indicator-triangle {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 7px solid #ef4444;
+      margin-top: 6px;
+    }
+
+    /* TICK HISTORY BADGES (E / O) */
+    .bulk-history-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .bulk-history-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #ffffff;
+    }
+
+    .bulk-history-badge.even {
+      background: #00a884;
+    }
+
+    .bulk-history-badge.odd {
+      background: #d9383a;
+    }
+
+    /* BOTTOM CONTROLS GRID */
+    .bulk-controls-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    /* EVEN / ODD BIG ACTION BUTTONS */
+    .bulk-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      position: relative;
+    }
+
+    .bulk-action-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ffffff;
+      transition: transform 0.1s;
+    }
+
+    .bulk-action-btn:active { transform: scale(0.98); }
+
+    .bulk-action-btn.even-btn {
+      background: #00a884;
+    }
+
+    .bulk-action-btn.odd-btn {
+      background: #dc3545;
+    }
+
+    .bulk-action-btn .btn-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .bulk-action-btn .btn-pct {
+      font-size: 15px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    .bulk-warning-icon {
+      position: absolute;
+      bottom: -6px;
+      left: -6px;
+      width: 28px;
+      height: 28px;
+      background: #ffd000;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-size: 14px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    /* MODALS & GENERAL BTNS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -470,7 +680,6 @@
 
     .drawer-option:hover { background: rgba(255,255,255,0.03); }
 
-    /* FORM STYLES FOR BOT & BULK */
     .btn-full {
       width: 100%;
       padding: 14px;
@@ -518,7 +727,7 @@
   <main class="app-container">
 
     <!-- GLOBAL MARKET SELECTOR CARD -->
-    <div class="glass-card">
+    <div class="glass-card" id="globalMarketCard">
       <button class="market-dropdown-btn" onclick="openModal('marketModal')">
         <div class="market-info">
           <div class="market-icon"><i class="fa-solid fa-chart-simple"></i></div>
@@ -536,13 +745,9 @@
 
     <!-- 1. MANUAL TRADER VIEW -->
     <div id="manualView" class="tab-view active">
-      
-      <!-- DIGIT PERCENTAGES STATS -->
       <div class="digits-stats-grid" id="digitsStatsGrid"></div>
 
-      <!-- MAIN TRADE PANEL -->
       <div class="glass-card">
-        <!-- TRADE TYPE SELECTOR -->
         <div class="trade-type-selector" onclick="openModal('tradeTypeModal')">
           <div class="trade-type-info">
             <i class="fa-solid fa-arrows-up-down" style="color: var(--accent-red);"></i>
@@ -551,10 +756,8 @@
           <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
         </div>
 
-        <!-- DIGIT BUTTONS (0 - 9) -->
         <div class="digits-selector-grid" id="digitButtonsGrid"></div>
 
-        <!-- INPUT DURATION & STAKE -->
         <div class="inputs-grid">
           <div class="input-box">
             <label>Ticks</label>
@@ -571,18 +774,15 @@
           </div>
         </div>
 
-        <!-- EXECUTION BUTTONS -->
         <div class="action-buttons-grid" id="actionButtonsContainer"></div>
       </div>
 
-      <!-- RECENT EXECUTIONS -->
       <div class="glass-card">
         <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">
           Recent Contracts
         </div>
         <div class="trades-list" id="manualLog"></div>
       </div>
-
     </div>
 
     <!-- 2. ANALYSIS TOOL VIEW -->
@@ -596,33 +796,153 @@
       </div>
     </div>
 
-    <!-- 3. BULK TRADER VIEW -->
+    <!-- ========================================================= -->
+    <!-- 3. BULK TRADER VIEW (EXACT MATCH OF IMAGE 3) -->
+    <!-- ========================================================= -->
     <div id="bulkView" class="tab-view">
-      <div class="glass-card">
-        <h3 style="font-size: 15px; margin-bottom: 12px;">Bulk Contract Executions</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-          Execute multiple sequential contracts automatically.
-        </p>
-
-        <div class="inputs-grid">
-          <div class="input-box">
-            <label>Number of Orders</label>
-            <input type="number" id="bulkCount" value="5" min="1" max="20" />
+      <div class="glass-card bulk-custom-container">
+        
+        <!-- TOP DROPDOWNS: MARKET & TRADE TYPE -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="bulk-field-group">
+            <span class="bulk-field-label">MARKET</span>
+            <div class="bulk-input-card">
+              <select id="bulkMarketSelect" onchange="syncBulkMarket(this.value)">
+                <option value="Volatility 100 (1s) Index" selected>Volatility 100 (1s) Index</option>
+                <option value="Volatility 10 (1s) Index">Volatility 10 (1s) Index</option>
+                <option value="Volatility 25 (1s) Index">Volatility 25 (1s) Index</option>
+                <option value="Volatility 50 (1s) Index">Volatility 50 (1s) Index</option>
+                <option value="Volatility 75 (1s) Index">Volatility 75 (1s) Index</option>
+                <option value="Volatility 10 Index">Volatility 10 Index</option>
+                <option value="Volatility 25 Index">Volatility 25 Index</option>
+                <option value="Volatility 50 Index">Volatility 50 Index</option>
+                <option value="Volatility 75 Index">Volatility 75 Index</option>
+                <option value="Volatility 100 Index">Volatility 100 Index</option>
+              </select>
+              <i class="fa-solid fa-v bulk-select-arrow"></i>
+            </div>
           </div>
-          <div class="input-box">
-            <label>Stake per Order ($)</label>
-            <input type="number" id="bulkStake" value="5.00" min="1" />
+
+          <div class="bulk-field-group">
+            <span class="bulk-field-label">TRADE TYPE</span>
+            <div class="bulk-input-card">
+              <select id="bulkTradeTypeSelect">
+                <option value="Even/Odd" selected>Even/Odd</option>
+                <option value="Over/Under">Over/Under</option>
+                <option value="Matches/Differs">Matches/Differs</option>
+              </select>
+              <i class="fa-solid fa-v bulk-select-arrow"></i>
+            </div>
           </div>
         </div>
 
-        <button class="btn-full btn-cyan" onclick="startBulkTrader()">
-          <i class="fa-solid fa-layer-group"></i> EXECUTE BULK ORDERS
-        </button>
+        <!-- NUMBER OF TICKS BAR -->
+        <div class="bulk-field-group">
+          <span class="bulk-field-label">NUMBER OF TICKS</span>
+          <div class="bulk-input-card">
+            <input type="number" id="bulkNumTicks" value="1000" />
+          </div>
+        </div>
+
+        <!-- CURRENT TICK HEADER -->
+        <div class="bulk-current-tick-wrapper">
+          <div class="bulk-tick-label">CURRENT TICK</div>
+          <div class="bulk-tick-value" id="bulkCurrentTick">721.25</div>
+        </div>
+
+        <!-- 10 CIRCULAR STATS (0 - 9) -->
+        <div class="bulk-stats-grid">
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">0</span><span class="pct">10.10%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">1</span><span class="pct">9.40%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle accent-red"><span class="num">2</span><span class="pct">9.20%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle accent-blue"><span class="num">3</span><span class="pct">10.30%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle accent-orange"><span class="num">4</span><span class="pct">11.10%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">5</span><span class="pct">10.20%</span></div>
+            <div class="bulk-indicator-triangle"></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle accent-orange"><span class="num">6</span><span class="pct">9.40%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">7</span><span class="pct">10.30%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">8</span><span class="pct">10.30%</span></div>
+          </div>
+          <div class="bulk-stat-item">
+            <div class="bulk-circle"><span class="num">9</span><span class="pct">9.70%</span></div>
+          </div>
+        </div>
+
+        <!-- RECENT TICK HISTORY (E, E, E, O, E, E, E, O) -->
+        <div class="bulk-history-row" id="bulkHistoryBadges">
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge odd">O</div>
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge even">E</div>
+          <div class="bulk-history-badge odd">O</div>
+        </div>
+
+        <!-- THREE BOTTOM INPUTS: TICKS, STAKE, NO OF TRADES -->
+        <div class="bulk-controls-row">
+          <div class="bulk-field-group">
+            <span class="bulk-field-label" style="text-align:center;">TICKS</span>
+            <div class="bulk-input-card">
+              <input type="number" id="bulkTicksInput" value="1" />
+            </div>
+          </div>
+
+          <div class="bulk-field-group">
+            <span class="bulk-field-label" style="text-align:center;">STAKE</span>
+            <div class="bulk-input-card">
+              <input type="number" id="bulkStakeInput" value="0.5" step="0.1" />
+            </div>
+          </div>
+
+          <div class="bulk-field-group">
+            <span class="bulk-field-label" style="text-align:center;">NO OF TRADES</span>
+            <div class="bulk-input-card">
+              <input type="number" id="bulkNoTradesInput" value="1" />
+            </div>
+          </div>
+        </div>
+
+        <!-- EVEN / ODD ACTION BUTTONS -->
+        <div class="bulk-action-row">
+          <button class="bulk-action-btn even-btn" onclick="executeBulkAction('Even')">
+            <span class="btn-title">Even</span>
+            <span class="btn-pct">50.10%</span>
+          </button>
+
+          <button class="bulk-action-btn odd-btn" onclick="executeBulkAction('Odd')">
+            <span class="btn-title">Odd</span>
+            <span class="btn-pct">49.90%</span>
+          </button>
+
+          <div class="bulk-warning-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+
       </div>
 
       <div class="glass-card">
         <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">
-          Bulk Trade Activity
+          Bulk Trade Activity Log
         </div>
         <div class="trades-list" id="bulkLog"></div>
       </div>
@@ -699,12 +1019,12 @@
       market: 'Volatility 100 (1s) Index',
       tradeType: 'Over/Under',
       selectedDigit: 5,
-      price: 719.43,
+      price: 721.25,
       botRunning: false,
       botTimer: null,
       botCurrentStake: 2.00,
       botPnl: 0,
-      digitsCounts: Array(10).fill(10), // For Analysis Tool
+      digitsCounts: Array(10).fill(10),
       digitsData: [
         { num: 0, pct: 11.2, isHighest: true },
         { num: 1, pct: 10.0 },
@@ -732,7 +1052,15 @@
       
       element.classList.add('active');
       document.getElementById(tab + 'View').classList.add('active');
-      if(tab === 'analysis') renderAnalysisTool();
+
+      // Hide global header market card on bulk trader tab since it has its own market selector inside Image 3 layout
+      if (tab === 'bulk') {
+        document.getElementById('globalMarketCard').style.display = 'none';
+      } else {
+        document.getElementById('globalMarketCard').style.display = 'block';
+      }
+
+      if (tab === 'analysis') renderAnalysisTool();
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -747,10 +1075,15 @@
       document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
     }
 
+    function syncBulkMarket(val) {
+      selectMarket(val);
+    }
+
     // ===== MARKET & TRADE SELECTION =====
     function selectMarket(market) {
       app.market = market;
       document.getElementById('selectedMarketName').innerText = market;
+      document.getElementById('bulkMarketSelect').value = market;
       closeModal('marketModal');
     }
 
@@ -864,33 +1197,32 @@
       ` + log.innerHTML;
     }
 
-    // ===== BULK TRADER =====
-    function startBulkTrader() {
-      const count = parseInt(document.getElementById('bulkCount').value);
-      const stake = parseFloat(document.getElementById('bulkStake').value);
+    // ===== BULK TRADER (IMAGE 3) ACTIONS =====
+    function executeBulkAction(side) {
+      const stake = parseFloat(document.getElementById('bulkStakeInput').value) || 0.5;
+      const noTrades = parseInt(document.getElementById('bulkNoTradesInput').value) || 1;
       const log = document.getElementById('bulkLog');
-      
-      log.innerHTML = '';
+
       let executed = 0;
-
       const timer = setInterval(() => {
-        if (executed >= count) return clearInterval(timer);
+        if (executed >= noTrades) return clearInterval(timer);
 
-        const isWin = Math.random() > 0.5;
+        const isWin = Math.random() > 0.49;
         const profit = isWin ? stake * 0.95 : -stake;
         app.balance += profit;
         document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
 
-        log.innerHTML += `
+        log.innerHTML = `
           <div class="trade-log-item">
-            <div>Order #${executed + 1} Execution</div>
+            <div>Bulk Trade (${side}) #${executed + 1}</div>
             <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
               ${isWin ? '+' : ''}${profit.toFixed(2)} USD
             </div>
           </div>
-        `;
+        ` + log.innerHTML;
+
         executed++;
-      }, 800);
+      }, 500);
     }
 
     // ===== AUTO BOT =====
@@ -902,7 +1234,6 @@
         btn.innerHTML = `<i class="fa-solid fa-stop"></i> STOP AUTO BOT`;
         btn.className = "btn-full btn-red";
         app.botCurrentStake = parseFloat(document.getElementById('botStake').value);
-        
         app.botTimer = setInterval(runBotCycle, 2000);
       } else {
         btn.innerHTML = `<i class="fa-solid fa-play"></i> START AUTO BOT`;
@@ -966,17 +1297,29 @@
       app.price = parseFloat((app.price + delta).toFixed(2));
       const lastDigit = parseInt(app.price.toString().slice(-1)) || 0;
 
-      // Update Live UI Ticker
-      const priceEl = document.getElementById('livePrice');
-      const changeEl = document.getElementById('liveChange');
-      priceEl.innerText = app.price.toFixed(2);
+      // Update Live UI Tickers
+      document.getElementById('livePrice').innerText = app.price.toFixed(2);
+      document.getElementById('bulkCurrentTick').innerText = app.price.toFixed(2);
       
+      const changeEl = document.getElementById('liveChange');
       if (delta >= 0) {
         changeEl.className = 'up';
         changeEl.innerText = `+${delta.toFixed(2)} (0.02%) ▲`;
       } else {
         changeEl.className = 'down';
         changeEl.innerText = `${delta.toFixed(2)} (0.02%) ▼`;
+      }
+
+      // Update Recent Tick History Badges (E / O)
+      const isEven = lastDigit % 2 === 0;
+      const historyContainer = document.getElementById('bulkHistoryBadges');
+      const newBadge = document.createElement('div');
+      newBadge.className = `bulk-history-badge ${isEven ? 'even' : 'odd'}`;
+      newBadge.innerText = isEven ? 'E' : 'O';
+      
+      historyContainer.prepend(newBadge);
+      if (historyContainer.children.length > 8) {
+        historyContainer.removeChild(historyContainer.lastChild);
       }
 
       // Shift Digit Stat Frequencies
