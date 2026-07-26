@@ -10,20 +10,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== GLASSMORPHISM THEME (FROM IMAGE 1) ===== */
+    /* ===== GLASSMORPHISM THEME ===== */
     :root {
       --bg-dark: #050508;
-      --glass-card: rgba(22, 23, 34, 0.55);
-      --glass-card-hover: rgba(30, 32, 48, 0.7);
+      --glass-card: rgba(22, 23, 34, 0.65);
+      --glass-card-hover: rgba(30, 32, 48, 0.8);
       --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-border-light: rgba(255, 255, 255, 0.15);
+      --glass-border-light: rgba(255, 255, 255, 0.18);
       --glass-blur: blur(20px);
       
-      --accent-cyan: #10b981; /* Deriv Teal/Green */
+      --accent-cyan: #10b981; 
       --accent-cyan-bg: rgba(16, 185, 129, 0.15);
-      --accent-red: #ef4444;  /* Deriv Red */
+      --accent-red: #ef4444;  
       --accent-red-bg: rgba(239, 68, 68, 0.15);
-      --accent-blue: #3b82f6;
+      --accent-blue: #38bdf8;
 
       --text-main: #f3f4f6;
       --text-muted: #8388a4;
@@ -43,7 +43,7 @@
     body {
       background: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
         radial-gradient(circle at 90% 90%, rgba(239, 68, 68, 0.05) 0%, transparent 40%);
       color: var(--text-main);
       min-height: 100vh;
@@ -57,9 +57,9 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
 
-    /* ===== TOP NAVIGATION BAR (FROM IMAGE 2) ===== */
+    /* ===== TOP NAVIGATION BAR ===== */
     .top-bar {
-      background: rgba(10, 11, 18, 0.75);
+      background: rgba(10, 11, 18, 0.85);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border-bottom: 1px solid var(--glass-border);
@@ -109,19 +109,19 @@
       align-items: center;
       justify-content: center;
       font-size: 12px;
-      color: #38bdf8;
+      color: var(--accent-blue);
     }
 
     .acc-balance {
       font-family: var(--font-mono);
       font-weight: 700;
-      color: #2dd4bf;
+      color: var(--accent-cyan);
       font-size: 14px;
     }
 
     /* ===== SECONDARY NAVIGATION TABS ===== */
     .nav-tabs {
-      background: rgba(12, 13, 20, 0.8);
+      background: rgba(12, 13, 20, 0.9);
       border-bottom: 1px solid var(--glass-border);
       display: flex;
       overflow-x: auto;
@@ -143,9 +143,9 @@
     }
 
     .nav-tab.active {
-      color: #38bdf8;
+      color: var(--accent-blue);
       background: rgba(56, 189, 248, 0.08);
-      border-bottom-color: #38bdf8;
+      border-bottom-color: var(--accent-blue);
     }
 
     /* ===== MAIN CONTAINER ===== */
@@ -160,7 +160,17 @@
       gap: 16px;
     }
 
-    /* ===== MARKET SELECTOR FROSTED CARD ===== */
+    /* TAB PAGES */
+    .tab-view {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .tab-view.active {
+      display: flex;
+    }
+
+    /* FROSTED GLASS CARD */
     .glass-card {
       background: var(--glass-card);
       backdrop-filter: var(--glass-blur);
@@ -171,6 +181,7 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
+    /* MARKET SELECTOR */
     .market-dropdown-btn {
       display: flex;
       align-items: center;
@@ -217,52 +228,19 @@
     }
 
     .market-price span.up { color: var(--accent-cyan); }
+    .market-price span.down { color: var(--accent-red); }
 
-    /* MARKET MODAL DRAWER */
-    .market-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
-      z-index: 200;
-      display: none;
-      align-items: flex-end;
-    }
-
-    .market-modal-content {
-      background: #0f111a;
-      border-top: 1px solid var(--glass-border-light);
-      border-radius: 24px 24px 0 0;
-      width: 100%;
-      max-height: 70vh;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    .market-option {
-      padding: 14px;
-      border-bottom: 1px solid var(--glass-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .market-option:hover { background: rgba(255,255,255,0.03); }
-
-    /* ===== DIGIT PERCENTAGE STATS (FROM IMAGE 2) ===== */
+    /* DIGIT PERCENTAGE STATS */
     .digits-stats-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin-top: 4px;
     }
 
     .digit-circle-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
     }
 
     .circle-stat {
@@ -275,7 +253,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
       transition: all 0.3s ease;
     }
 
@@ -314,7 +291,7 @@
       border-top: 6px solid var(--accent-red);
     }
 
-    /* ===== TRADE CONTROLS (FROM IMAGE 2) ===== */
+    /* TRADE CONTROLS */
     .trade-type-selector {
       display: flex;
       align-items: center;
@@ -335,7 +312,6 @@
       font-size: 14px;
     }
 
-    /* DIGITS SELECTOR GRID 0-9 */
     .digits-selector-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -347,7 +323,7 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--glass-border);
       border-radius: 10px;
-      padding: 14px 0;
+      padding: 12px 0;
       color: var(--text-main);
       font-weight: 700;
       font-size: 15px;
@@ -361,24 +337,38 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
-    /* DURATION & STAKE INPUTS */
-    .inputs-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
+    /* INPUT CONTROLS */
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
       margin-bottom: 16px;
     }
 
-    .input-label {
-      font-size: 13px;
-      color: var(--text-muted);
+    .input-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 10px 12px;
     }
 
-    .stake-amount {
+    .input-box label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .input-box input, .input-box select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
       font-family: var(--font-mono);
-      font-size: 15px;
       font-weight: 700;
+      font-size: 14px;
+      outline: none;
     }
 
     /* EXECUTION BUTTONS */
@@ -399,6 +389,8 @@
       transition: all 0.2s;
     }
 
+    .action-btn:hover { transform: translateY(-2px); }
+
     .action-btn.btn-over {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #000;
@@ -414,7 +406,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
     }
 
@@ -426,8 +418,28 @@
       font-weight: 600;
     }
 
-    /* BOTTOM TRADE TYPE DRAWER */
-    .trade-type-modal {
+    /* LOGS / TRADES LIST */
+    .trades-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .trade-log-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    /* MODAL DRAWERS */
+    .modal-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.8);
@@ -437,31 +449,45 @@
       align-items: flex-end;
     }
 
-    .trade-type-content {
+    .modal-drawer {
       background: #0f111a;
       border-top: 1px solid var(--glass-border-light);
       border-radius: 24px 24px 0 0;
       width: 100%;
+      max-height: 75vh;
+      overflow-y: auto;
       padding: 20px;
     }
 
-    .type-option {
-      padding: 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      font-weight: 700;
+    .drawer-option {
+      padding: 14px;
+      border-bottom: 1px solid var(--glass-border);
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
     }
 
-    .type-option.active {
-      border-color: #38bdf8;
-      background: rgba(56, 189, 248, 0.08);
-      color: #38bdf8;
+    .drawer-option:hover { background: rgba(255,255,255,0.03); }
+
+    /* FORM STYLES FOR BOT & BULK */
+    .btn-full {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+
+    .btn-cyan { background: var(--accent-cyan); color: #000; }
+    .btn-red { background: var(--accent-red); color: #fff; }
+
   </style>
 </head>
 <body>
@@ -470,11 +496,10 @@
   <header class="top-bar">
     <div class="top-bar-left">
       <button class="icon-btn"><i class="fa-solid fa-bars"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-phone-volume"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-rotate-right"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-rotate-right" onclick="location.reload()"></i></button>
     </div>
 
-    <div class="account-selector">
+    <div class="account-selector" onclick="toggleDemoReal()">
       <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
       <div class="acc-balance" id="accountBalance">10,223.72 USD</div>
       <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-muted);"></i>
@@ -483,25 +508,25 @@
 
   <!-- SECONDARY NAV TABS -->
   <nav class="nav-tabs">
-    <div class="nav-tab"><i class="fa-solid fa-magnifying-glass-chart"></i> Analysis Tool</div>
-    <div class="nav-tab active"><i class="fa-solid fa-tv"></i> Manual Trader</div>
-    <div class="nav-tab"><i class="fa-solid fa-layer-group"></i> Bulk Trader</div>
-    <div class="nav-tab"><i class="fa-solid fa-chart-line"></i> Auto Bot</div>
+    <div class="nav-tab active" onclick="switchNavTab('manual', this)"><i class="fa-solid fa-tv"></i> Manual Trader</div>
+    <div class="nav-tab" onclick="switchNavTab('analysis', this)"><i class="fa-solid fa-magnifying-glass-chart"></i> Analysis Tool</div>
+    <div class="nav-tab" onclick="switchNavTab('bulk', this)"><i class="fa-solid fa-layer-group"></i> Bulk Trader</div>
+    <div class="nav-tab" onclick="switchNavTab('bot', this)"><i class="fa-solid fa-robot"></i> Auto Bot</div>
   </nav>
 
-  <!-- MAIN APP CONTENT -->
+  <!-- MAIN APP CONTAINER -->
   <main class="app-container">
 
-    <!-- MARKET SELECTOR CARD -->
+    <!-- GLOBAL MARKET SELECTOR CARD -->
     <div class="glass-card">
-      <button class="market-dropdown-btn" onclick="openMarketModal()">
+      <button class="market-dropdown-btn" onclick="openModal('marketModal')">
         <div class="market-info">
           <div class="market-icon"><i class="fa-solid fa-chart-simple"></i></div>
           <div class="market-details">
             <div class="market-name" id="selectedMarketName">Volatility 100 (1s) Index</div>
             <div class="market-price">
               <span id="livePrice">719.43</span> 
-              <span class="up" id="liveChange">- 0.14 (0.02%) ▲</span>
+              <span class="up" id="liveChange">+0.14 (0.02%) ▲</span>
             </div>
           </div>
         </div>
@@ -509,81 +534,177 @@
       </button>
     </div>
 
-    <!-- DIGIT PERCENTAGES STATS GRID -->
-    <div class="digits-stats-grid" id="digitsStatsGrid">
-      <!-- Generated via JS to reflect Image 2 stats exactly -->
+    <!-- 1. MANUAL TRADER VIEW -->
+    <div id="manualView" class="tab-view active">
+      
+      <!-- DIGIT PERCENTAGES STATS -->
+      <div class="digits-stats-grid" id="digitsStatsGrid"></div>
+
+      <!-- MAIN TRADE PANEL -->
+      <div class="glass-card">
+        <!-- TRADE TYPE SELECTOR -->
+        <div class="trade-type-selector" onclick="openModal('tradeTypeModal')">
+          <div class="trade-type-info">
+            <i class="fa-solid fa-arrows-up-down" style="color: var(--accent-red);"></i>
+            <span id="selectedTradeTypeName">Over/Under</span>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
+        </div>
+
+        <!-- DIGIT BUTTONS (0 - 9) -->
+        <div class="digits-selector-grid" id="digitButtonsGrid"></div>
+
+        <!-- INPUT DURATION & STAKE -->
+        <div class="inputs-grid">
+          <div class="input-box">
+            <label>Ticks</label>
+            <select id="manualTicks" onchange="updatePayouts()">
+              <option value="1">1 Tick</option>
+              <option value="2">2 Ticks</option>
+              <option value="5" selected>5 Ticks</option>
+              <option value="10">10 Ticks</option>
+            </select>
+          </div>
+          <div class="input-box">
+            <label>Stake (USD)</label>
+            <input type="number" id="manualStake" value="10.00" step="1" min="1" oninput="updatePayouts()"/>
+          </div>
+        </div>
+
+        <!-- EXECUTION BUTTONS -->
+        <div class="action-buttons-grid" id="actionButtonsContainer"></div>
+      </div>
+
+      <!-- RECENT EXECUTIONS -->
+      <div class="glass-card">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">
+          Recent Contracts
+        </div>
+        <div class="trades-list" id="manualLog"></div>
+      </div>
+
     </div>
 
-    <!-- MAIN TRADE PANEL -->
-    <div class="glass-card" style="margin-top: 8px;">
-      <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px; text-decoration: underline; cursor: pointer;">
-        Learn about this trade type
+    <!-- 2. ANALYSIS TOOL VIEW -->
+    <div id="analysisView" class="tab-view">
+      <div class="glass-card">
+        <h3 style="font-size: 15px; margin-bottom: 12px;">Digit Frequency Analysis</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+          Live distribution across the last 100 ticks.
+        </p>
+        <div id="analysisBarChart" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
+    </div>
 
-      <!-- TRADE TYPE SELECTOR -->
-      <div class="trade-type-selector" onclick="openTradeTypeModal()">
-        <div class="trade-type-info">
-          <i class="fa-solid fa-arrows-up-down" style="color: var(--accent-red);"></i>
-          <span id="selectedTradeTypeName">Over/Under</span>
+    <!-- 3. BULK TRADER VIEW -->
+    <div id="bulkView" class="tab-view">
+      <div class="glass-card">
+        <h3 style="font-size: 15px; margin-bottom: 12px;">Bulk Contract Executions</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+          Execute multiple sequential contracts automatically.
+        </p>
+
+        <div class="inputs-grid">
+          <div class="input-box">
+            <label>Number of Orders</label>
+            <input type="number" id="bulkCount" value="5" min="1" max="20" />
+          </div>
+          <div class="input-box">
+            <label>Stake per Order ($)</label>
+            <input type="number" id="bulkStake" value="5.00" min="1" />
+          </div>
         </div>
-        <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
+
+        <button class="btn-full btn-cyan" onclick="startBulkTrader()">
+          <i class="fa-solid fa-layer-group"></i> EXECUTE BULK ORDERS
+        </button>
       </div>
 
-      <!-- DIGIT BUTTONS (0 - 9) -->
-      <div class="digits-selector-grid" id="digitButtonsGrid">
-        <!-- Digit Buttons 0-9 rendered dynamically -->
+      <div class="glass-card">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">
+          Bulk Trade Activity
+        </div>
+        <div class="trades-list" id="bulkLog"></div>
+      </div>
+    </div>
+
+    <!-- 4. AUTO BOT VIEW -->
+    <div id="botView" class="tab-view">
+      <div class="glass-card">
+        <h3 style="font-size: 15px; margin-bottom: 8px;">Auto Trading Bot</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+          Automated strategy based on digit frequency signals.
+        </p>
+
+        <div class="inputs-grid">
+          <div class="input-box">
+            <label>Base Stake ($)</label>
+            <input type="number" id="botStake" value="2.00" />
+          </div>
+          <div class="input-box">
+            <label>Take Profit ($)</label>
+            <input type="number" id="botTP" value="20.00" />
+          </div>
+        </div>
+
+        <div class="inputs-grid">
+          <div class="input-box">
+            <label>Stop Loss ($)</label>
+            <input type="number" id="botSL" value="10.00" />
+          </div>
+          <div class="input-box">
+            <label>Martingale Multiplier</label>
+            <input type="number" id="botMartingale" value="2.0" step="0.1" />
+          </div>
+        </div>
+
+        <button class="btn-full btn-cyan" id="botControlBtn" onclick="toggleAutoBot()">
+          <i class="fa-solid fa-play"></i> START AUTO BOT
+        </button>
       </div>
 
-      <!-- INPUT DURATION & STAKE -->
-      <div class="inputs-row">
-        <div class="input-label" id="ticksDisplay">5 ticks</div>
-        <div class="stake-amount" id="stakeDisplay">10.00 USD <span style="font-size: 11px; color: var(--text-muted); font-weight: 400;">Stake</span></div>
-      </div>
-
-      <!-- EXECUTION BUTTONS -->
-      <div class="action-buttons-grid" id="actionButtonsContainer">
-        <!-- Action Buttons render based on active Trade Type -->
+      <div class="glass-card">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">
+          Bot Session Console
+        </div>
+        <div class="trades-list" id="botLog"></div>
       </div>
     </div>
 
   </main>
 
-  <!-- MARKET SELECTOR MODAL DRAWER -->
-  <div class="market-modal" id="marketModal">
-    <div class="market-modal-content">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Select Volatility Market</h3>
+  <!-- MARKET SELECTOR MODAL -->
+  <div class="modal-overlay" id="marketModal">
+    <div class="modal-drawer">
+      <h3 style="margin-bottom: 16px; font-size: 16px;">Volatility Markets</h3>
       <div id="marketList"></div>
     </div>
   </div>
 
-  <!-- TRADE TYPE MODAL DRAWER -->
-  <div class="trade-type-modal" id="tradeTypeModal">
-    <div class="trade-type-content">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Select Digit Trade Type</h3>
-      <div class="type-option active" onclick="selectTradeType('Over/Under')">
-        <span>Over / Under</span>
-        <i class="fa-solid fa-check"></i>
-      </div>
-      <div class="type-option" onclick="selectTradeType('Matches/Differs')">
-        <span>Matches / Differs</span>
-      </div>
-      <div class="type-option" onclick="selectTradeType('Even/Odd')">
-        <span>Even / Odd</span>
-      </div>
-      <div class="type-option" onclick="selectTradeType('Rise/Fall')">
-        <span>Rise / Fall</span>
-      </div>
+  <!-- TRADE TYPE MODAL -->
+  <div class="modal-overlay" id="tradeTypeModal">
+    <div class="modal-drawer">
+      <h3 style="margin-bottom: 16px; font-size: 16px;">Digit Contract Types</h3>
+      <div class="drawer-option" onclick="selectTradeType('Over/Under')"><span>Over / Under</span></div>
+      <div class="drawer-option" onclick="selectTradeType('Matches/Differs')"><span>Matches / Differs</span></div>
+      <div class="drawer-option" onclick="selectTradeType('Even/Odd')"><span>Even / Odd</span></div>
+      <div class="drawer-option" onclick="selectTradeType('Rise/Fall')"><span>Rise / Fall</span></div>
     </div>
   </div>
 
   <script>
-    // ===== STATE MANAGEMENT =====
-    const state = {
+    // ===== STATE ENGINE =====
+    const app = {
+      balance: 10223.72,
       market: 'Volatility 100 (1s) Index',
       tradeType: 'Over/Under',
       selectedDigit: 5,
-      stake: 10.00,
       price: 719.43,
+      botRunning: false,
+      botTimer: null,
+      botCurrentStake: 2.00,
+      botPnl: 0,
+      digitsCounts: Array(10).fill(10), // For Analysis Tool
       digitsData: [
         { num: 0, pct: 11.2, isHighest: true },
         { num: 1, pct: 10.0 },
@@ -604,10 +725,53 @@
       ]
     };
 
-    // ===== RENDER FUNCTIONS =====
+    // ===== NAVIGATION & MODALS =====
+    function switchNavTab(tab, element) {
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+      
+      element.classList.add('active');
+      document.getElementById(tab + 'View').classList.add('active');
+      if(tab === 'analysis') renderAnalysisTool();
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    window.onclick = (e) => {
+      if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
+    };
+
+    function toggleDemoReal() {
+      app.balance = app.balance === 10223.72 ? 500.00 : 10223.72;
+      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
+    }
+
+    // ===== MARKET & TRADE SELECTION =====
+    function selectMarket(market) {
+      app.market = market;
+      document.getElementById('selectedMarketName').innerText = market;
+      closeModal('marketModal');
+    }
+
+    function selectTradeType(type) {
+      app.tradeType = type;
+      document.getElementById('selectedTradeTypeName').innerText = type;
+      closeModal('tradeTypeModal');
+      renderDigitSelector();
+      updatePayouts();
+    }
+
+    function setDigit(digit) {
+      app.selectedDigit = digit;
+      renderDigitSelector();
+      updatePayouts();
+    }
+
+    // ===== RENDER ENGINES =====
     function renderDigitsStats() {
       const container = document.getElementById('digitsStatsGrid');
-      container.innerHTML = state.digitsData.map(item => `
+      container.innerHTML = app.digitsData.map(item => `
         <div class="digit-circle-item">
           <div class="circle-stat ${item.isHighest ? 'highest' : ''} ${item.isLowest ? 'lowest' : ''}">
             <span class="num">${item.num}</span>
@@ -621,133 +785,215 @@
 
     function renderDigitSelector() {
       const container = document.getElementById('digitButtonsGrid');
-      if (state.tradeType === 'Rise/Fall' || state.tradeType === 'Even/Odd') {
+      if (app.tradeType === 'Rise/Fall' || app.tradeType === 'Even/Odd') {
         container.style.display = 'none';
         return;
       }
       container.style.display = 'grid';
-      
-      let html = '';
-      for (let i = 0; i <= 9; i++) {
-        html += `
-          <button class="digit-btn ${state.selectedDigit === i ? 'active' : ''}" onclick="setDigit(${i})">
-            ${i}
-          </button>
-        `;
-      }
-      container.innerHTML = html;
+      container.innerHTML = Array.from({length: 10}, (_, i) => `
+        <button class="digit-btn ${app.selectedDigit === i ? 'active' : ''}" onclick="setDigit(${i})">${i}</button>
+      `).join('');
     }
 
-    function renderActionButtons() {
+    function updatePayouts() {
+      const stake = parseFloat(document.getElementById('manualStake').value) || 10;
       const container = document.getElementById('actionButtonsContainer');
-      
-      if (state.tradeType === 'Over/Under') {
-        container.innerHTML = `
-          <button class="action-btn btn-over">
-            <div class="action-btn-header"><i class="fa-solid fa-arrow-trend-up"></i> Over</div>
-            <div class="action-btn-payout"><span>Payout</span><span>22.22 USD</span></div>
-          </button>
-          <button class="action-btn btn-under">
-            <div class="action-btn-header"><i class="fa-solid fa-arrow-trend-down"></i> Under</div>
-            <div class="action-btn-payout"><span>Payout</span><span>18.18 USD</span></div>
-          </button>
-        `;
-      } else if (state.tradeType === 'Matches/Differs') {
-        container.innerHTML = `
-          <button class="action-btn btn-over">
-            <div class="action-btn-header"><i class="fa-solid fa-equals"></i> Matches</div>
-            <div class="action-btn-payout"><span>Payout</span><span>95.00 USD</span></div>
-          </button>
-          <button class="action-btn btn-under">
-            <div class="action-btn-header"><i class="fa-solid fa-not-equal"></i> Differs</div>
-            <div class="action-btn-payout"><span>Payout</span><span>10.98 USD</span></div>
-          </button>
-        `;
-      } else if (state.tradeType === 'Even/Odd') {
-        container.innerHTML = `
-          <button class="action-btn btn-over">
-            <div class="action-btn-header">Even</div>
-            <div class="action-btn-payout"><span>Payout</span><span>19.50 USD</span></div>
-          </button>
-          <button class="action-btn btn-under">
-            <div class="action-btn-header">Odd</div>
-            <div class="action-btn-payout"><span>Payout</span><span>19.50 USD</span></div>
-          </button>
-        `;
-      } else if (state.tradeType === 'Rise/Fall') {
-        container.innerHTML = `
-          <button class="action-btn btn-over">
-            <div class="action-btn-header"><i class="fa-solid fa-arrow-up"></i> Rise</div>
-            <div class="action-btn-payout"><span>Payout</span><span>19.50 USD</span></div>
-          </button>
-          <button class="action-btn btn-under">
-            <div class="action-btn-header"><i class="fa-solid fa-arrow-down"></i> Fall</div>
-            <div class="action-btn-payout"><span>Payout</span><span>19.50 USD</span></div>
-          </button>
-        `;
+
+      let winPct1 = 1.95, winPct2 = 1.95;
+      let label1 = "Higher", label2 = "Lower";
+
+      if (app.tradeType === 'Over/Under') {
+        label1 = "Over"; label2 = "Under";
+        winPct1 = (9 - app.selectedDigit) * 0.22;
+        winPct2 = app.selectedDigit * 0.22;
+      } else if (app.tradeType === 'Matches/Differs') {
+        label1 = "Matches"; label2 = "Differs";
+        winPct1 = 9.0; winPct2 = 1.09;
+      } else if (app.tradeType === 'Even/Odd') {
+        label1 = "Even"; label2 = "Odd";
+        winPct1 = 1.95; winPct2 = 1.95;
+      } else if (app.tradeType === 'Rise/Fall') {
+        label1 = "Rise"; label2 = "Fall";
+        winPct1 = 1.95; winPct2 = 1.95;
       }
+
+      const payout1 = (stake * (winPct1 || 1.1)).toFixed(2);
+      const payout2 = (stake * (winPct2 || 1.1)).toFixed(2);
+
+      container.innerHTML = `
+        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}', ${payout1})">
+          <div class="action-btn-header">${label1}</div>
+          <div class="action-btn-payout"><span>Payout</span><span>${payout1} USD</span></div>
+        </button>
+        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}', ${payout2})">
+          <div class="action-btn-header">${label2}</div>
+          <div class="action-btn-payout"><span>Payout</span><span>${payout2} USD</span></div>
+        </button>
+      `;
     }
 
     function renderMarketsList() {
-      const container = document.getElementById('marketList');
-      container.innerHTML = state.markets.map(m => `
-        <div class="market-option" onclick="selectMarket('${m}')">
+      document.getElementById('marketList').innerHTML = app.markets.map(m => `
+        <div class="drawer-option" onclick="selectMarket('${m}')">
           <span>${m}</span>
           <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
         </div>
       `).join('');
     }
 
-    // ===== EVENT HANDLERS =====
-    function setDigit(digit) {
-      state.selectedDigit = digit;
-      renderDigitSelector();
+    // ===== TRADING EXECUTION =====
+    function executeManualTrade(choice, payout) {
+      const stake = parseFloat(document.getElementById('manualStake').value);
+      if (stake > app.balance) return alert("Insufficient funds!");
+
+      app.balance -= stake;
+      const isWin = Math.random() > 0.48;
+      const profit = isWin ? payout - stake : -stake;
+
+      if (isWin) app.balance += parseFloat(payout);
+      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
+
+      const log = document.getElementById('manualLog');
+      log.innerHTML = `
+        <div class="trade-log-item">
+          <div><b>${app.tradeType}</b> (${choice})</div>
+          <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
+            ${isWin ? '+' : ''}${profit.toFixed(2)} USD
+          </div>
+        </div>
+      ` + log.innerHTML;
     }
 
-    function openMarketModal() {
-      document.getElementById('marketModal').style.display = 'flex';
+    // ===== BULK TRADER =====
+    function startBulkTrader() {
+      const count = parseInt(document.getElementById('bulkCount').value);
+      const stake = parseFloat(document.getElementById('bulkStake').value);
+      const log = document.getElementById('bulkLog');
+      
+      log.innerHTML = '';
+      let executed = 0;
+
+      const timer = setInterval(() => {
+        if (executed >= count) return clearInterval(timer);
+
+        const isWin = Math.random() > 0.5;
+        const profit = isWin ? stake * 0.95 : -stake;
+        app.balance += profit;
+        document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
+
+        log.innerHTML += `
+          <div class="trade-log-item">
+            <div>Order #${executed + 1} Execution</div>
+            <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
+              ${isWin ? '+' : ''}${profit.toFixed(2)} USD
+            </div>
+          </div>
+        `;
+        executed++;
+      }, 800);
     }
 
-    function selectMarket(market) {
-      state.market = market;
-      document.getElementById('selectedMarketName').innerText = market;
-      document.getElementById('marketModal').style.display = 'none';
-    }
+    // ===== AUTO BOT =====
+    function toggleAutoBot() {
+      const btn = document.getElementById('botControlBtn');
+      app.botRunning = !app.botRunning;
 
-    function openTradeTypeModal() {
-      document.getElementById('tradeTypeModal').style.display = 'flex';
-    }
-
-    function selectTradeType(type) {
-      state.tradeType = type;
-      document.getElementById('selectedTradeTypeName').innerText = type;
-      document.getElementById('tradeTypeModal').style.display = 'none';
-      renderDigitSelector();
-      renderActionButtons();
-    }
-
-    // Close modals on backdrop click
-    window.onclick = function(e) {
-      if (e.target === document.getElementById('marketModal')) {
-        document.getElementById('marketModal').style.display = 'none';
+      if (app.botRunning) {
+        btn.innerHTML = `<i class="fa-solid fa-stop"></i> STOP AUTO BOT`;
+        btn.className = "btn-full btn-red";
+        app.botCurrentStake = parseFloat(document.getElementById('botStake').value);
+        
+        app.botTimer = setInterval(runBotCycle, 2000);
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-play"></i> START AUTO BOT`;
+        btn.className = "btn-full btn-cyan";
+        clearInterval(app.botTimer);
       }
-      if (e.target === document.getElementById('tradeTypeModal')) {
-        document.getElementById('tradeTypeModal').style.display = 'none';
+    }
+
+    function runBotCycle() {
+      const tp = parseFloat(document.getElementById('botTP').value);
+      const sl = parseFloat(document.getElementById('botSL').value);
+      const mult = parseFloat(document.getElementById('botMartingale').value);
+
+      const isWin = Math.random() > 0.52;
+      const profit = isWin ? app.botCurrentStake * 0.95 : -app.botCurrentStake;
+
+      app.botPnl += profit;
+      app.balance += profit;
+      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
+
+      const log = document.getElementById('botLog');
+      log.innerHTML = `
+        <div class="trade-log-item">
+          <div>Bot Stake: $${app.botCurrentStake.toFixed(2)}</div>
+          <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
+            ${isWin ? 'WIN' : 'LOSS'} (${profit >= 0 ? '+' : ''}${profit.toFixed(2)})
+          </div>
+        </div>
+      ` + log.innerHTML;
+
+      if (isWin) {
+        app.botCurrentStake = parseFloat(document.getElementById('botStake').value);
+      } else {
+        app.botCurrentStake *= mult;
+      }
+
+      if (app.botPnl >= tp || app.botPnl <= -sl) {
+        alert(`Bot Auto-Stopped! Total PnL: $${app.botPnl.toFixed(2)}`);
+        toggleAutoBot();
       }
     }
 
-    // ===== INIT =====
-    renderDigitsStats();
-    renderDigitSelector();
-    renderActionButtons();
-    renderMarketsList();
+    // ===== ANALYSIS TOOL =====
+    function renderAnalysisTool() {
+      const container = document.getElementById('analysisBarChart');
+      const max = Math.max(...app.digitsCounts);
+      container.innerHTML = app.digitsCounts.map((val, i) => `
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 12px;">
+          <span style="width: 15px; font-weight: 700;">${i}</span>
+          <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 4px; height: 12px; overflow: hidden;">
+            <div style="width: ${(val/max)*100}%; background: var(--accent-blue); height: 100%;"></div>
+          </div>
+          <span style="font-family: var(--font-mono);">${val}%</span>
+        </div>
+      `).join('');
+    }
 
-    // Simulated live tick update
+    // ===== REAL-TIME TICK SIMULATOR =====
     setInterval(() => {
       const delta = (Math.random() - 0.48) * 0.4;
-      state.price = parseFloat((state.price + delta).toFixed(2));
-      document.getElementById('livePrice').innerText = state.price.toFixed(2);
+      app.price = parseFloat((app.price + delta).toFixed(2));
+      const lastDigit = parseInt(app.price.toString().slice(-1)) || 0;
+
+      // Update Live UI Ticker
+      const priceEl = document.getElementById('livePrice');
+      const changeEl = document.getElementById('liveChange');
+      priceEl.innerText = app.price.toFixed(2);
+      
+      if (delta >= 0) {
+        changeEl.className = 'up';
+        changeEl.innerText = `+${delta.toFixed(2)} (0.02%) ▲`;
+      } else {
+        changeEl.className = 'down';
+        changeEl.innerText = `${delta.toFixed(2)} (0.02%) ▼`;
+      }
+
+      // Shift Digit Stat Frequencies
+      app.digitsCounts[lastDigit]++;
+      const total = app.digitsCounts.reduce((a, b) => a + b, 0);
+      app.digitsData.forEach((d, idx) => {
+        d.pct = ((app.digitsCounts[idx] / total) * 100).toFixed(1);
+      });
+
+      renderDigitsStats();
     }, 1000);
+
+    // INITIALIZATION
+    renderDigitsStats();
+    renderDigitSelector();
+    updatePayouts();
+    renderMarketsList();
   </script>
 </body>
 </html>
