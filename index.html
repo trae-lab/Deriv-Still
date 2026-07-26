@@ -552,6 +552,21 @@
       margin-top: 2px;
     }
 
+    /* Error Message Box */
+    .error-msg {
+      display: none;
+      background-color: #FDF2F2;
+      color: #ECFDF5;
+      color: var(--deriv-red);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #FDE8E8;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
     .btn-full {
       width: 100%;
       padding: 12px;
@@ -833,26 +848,28 @@
       </div>
 
       <!-- Form Container -->
-      <form id="signupForm" onsubmit="handleSignup(event)">
+      <div id="signupForm">
+        <div id="errorBox" class="error-msg"></div>
+
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" id="email" placeholder="name@example.com" required>
+          <input type="email" id="email" placeholder="name@example.com">
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Create a password" required minlength="8">
+          <input type="password" id="password" placeholder="Create a password">
         </div>
 
-        <div class="form-terms">
-          <input type="checkbox" id="terms" required>
+        <div class="form-terms" id="termsContainer">
+          <input type="checkbox" id="terms">
           <label for="terms">I agree to the <a href="#" style="color: var(--deriv-red);">Terms & Conditions</a></label>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-full" id="modalSubmitBtn">
+        <button type="button" class="btn btn-primary btn-full" id="modalSubmitBtn" onclick="processSignup()">
           Create demo account
         </button>
-      </form>
+      </div>
 
       <!-- Smooth Inline Success Screen -->
       <div class="success-box" id="successBox">
@@ -936,13 +953,20 @@
     initWebSocket();
 
     /* --- Interactive Modal Logic --- */
+    let currentMode = 'signup';
+
     function openModal(isLogin = false) {
       const modal = document.getElementById('signupModal');
       const title = document.getElementById('modalTitle');
       const subtitle = document.getElementById('modalSubtitle');
       const submitBtn = document.getElementById('modalSubmitBtn');
+      const termsContainer = document.getElementById('termsContainer');
+      const errorBox = document.getElementById('errorBox');
       
-      // Reset view to form
+      currentMode = isLogin ? 'login' : 'signup';
+
+      // Reset view
+      errorBox.style.display = 'none';
       document.getElementById('signupForm').style.display = 'block';
       document.getElementById('modalHeader').style.display = 'block';
       document.getElementById('successBox').style.display = 'none';
@@ -952,10 +976,12 @@
         title.textContent = 'Welcome Back';
         subtitle.textContent = 'Log in to access your trading account';
         submitBtn.textContent = 'Log in';
+        termsContainer.style.display = 'none';
       } else {
         title.textContent = 'Join Deriv Today';
         subtitle.textContent = 'Start trading with $10,000 in virtual funds';
         submitBtn.textContent = 'Create demo account';
+        termsContainer.style.display = 'flex';
       }
 
       modal.classList.add('active');
@@ -997,27 +1023,55 @@
       });
     });
 
-    /* --- Non-Blocking Signup Submission --- */
-    function handleSignup(event) {
-      event.preventDefault();
-      
-      const emailInput = document.getElementById('email').value;
+    /* --- Fail-Proof Custom Processing --- */
+    function processSignup() {
+      const emailInput = document.getElementById('email').value.trim();
+      const passwordInput = document.getElementById('password').value.trim();
+      const termsCheck = document.getElementById('terms').checked;
+      const errorBox = document.getElementById('errorBox');
       const submitBtn = document.getElementById('modalSubmitBtn');
-      
-      // Show loading spinner on button
+
+      errorBox.style.display = 'none';
+
+      // Input Validation
+      if (!emailInput || !emailInput.includes('@')) {
+        errorBox.textContent = 'Please enter a valid email address.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      if (passwordInput.length < 6) {
+        errorBox.textContent = 'Password must be at least 6 characters.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      if (currentMode === 'signup' && !termsCheck) {
+        errorBox.textContent = 'Please accept the Terms & Conditions to proceed.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      // Show Spinner on Button
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<span class="spinner"></span> Processing...`;
 
-      // Simulate instantaneous registration response without blocking pop-ups
+      // Transition to Success Card
       setTimeout(() => {
         document.getElementById('signupForm').style.display = 'none';
         document.getElementById('modalHeader').style.display = 'none';
         
         const successBox = document.getElementById('successBox');
-        document.getElementById('successEmail').innerHTML = `Your demo account for <strong>${emailInput}</strong> is ready with <strong>$10,000</strong> in virtual funds.`;
+        if (currentMode === 'login') {
+          document.querySelector('#successBox h4').textContent = 'Welcome Back!';
+          document.getElementById('successEmail').innerHTML = `Successfully logged in as <strong>${emailInput}</strong>. Ready to trade.`;
+        } else {
+          document.querySelector('#successBox h4').textContent = 'Account Ready!';
+          document.getElementById('successEmail').innerHTML = `Your demo account for <strong>${emailInput}</strong> is ready with <strong>$10,000</strong> in virtual funds.`;
+        }
         
         successBox.style.display = 'block';
-      }, 600);
+      }, 400);
     }
   </script>
 </body>
