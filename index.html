@@ -5,434 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>DerivPro Glass Trader</title>
   
-  <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== THEME VARIABLES ===== */
     :root {
       --bg-dark: #050508;
       --card-bg: rgba(22, 23, 34, 0.65);
       --card-border: rgba(255, 255, 255, 0.08);
       --glass-blur: blur(20px);
-      
       --accent-cyan: #10b981; 
       --accent-red: #ef4444;  
       --accent-blue: #38bdf8;
-
       --text-main: #f3f4f6;
       --text-muted: #8388a4;
-      
       --font-main: 'Plus Jakarta Sans', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    body.light-theme {
-      --bg-dark: #f0f4f8;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: rgba(0, 0, 0, 0.1);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+    body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: var(--font-main);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(239, 68, 68, 0.05) 0%, transparent 40%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* ===== TOP NAVIGATION BAR ===== */
     .top-bar {
-      background: rgba(10, 11, 18, 0.85);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: rgba(10, 11, 18, 0.85); backdrop-filter: var(--glass-blur);
+      border-bottom: 1px solid var(--card-border); padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
     }
 
-    .top-bar-left, .top-bar-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .icon-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .account-selector {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      padding: 6px 12px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .acc-balance {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      color: var(--accent-cyan);
-      font-size: 14px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-red);
-      display: inline-block;
-    }
+    .icon-btn { background: transparent; border: none; color: var(--text-main); font-size: 18px; cursor: pointer; }
+    .acc-balance { font-family: var(--font-mono); font-weight: 700; color: var(--accent-cyan); font-size: 14px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-red); display: inline-block; }
     .status-dot.connected { background: var(--accent-cyan); }
 
-    /* ===== NAVIGATION TABS ===== */
-    .nav-tabs {
-      background: rgba(12, 13, 20, 0.9);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      overflow-x: auto;
-      padding: 0 8px;
-    }
-
-    .nav-tab {
-      padding: 12px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 2px solid transparent;
-      flex: 1;
-      justify-content: center;
-    }
-
-    .nav-tab.active {
-      color: var(--accent-blue);
-      background: rgba(56, 189, 248, 0.08);
-      border-bottom-color: var(--accent-blue);
-    }
-
-    /* ===== MAIN CONTAINER ===== */
-    .app-container {
-      flex: 1;
-      padding: 16px;
-      max-width: 500px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .tab-view { display: none; flex-direction: column; gap: 16px; }
-    .tab-view.active { display: flex; }
-
+    .app-container { flex: 1; padding: 16px; max-width: 500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    
     .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
+      background: var(--card-bg); backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--card-border); border-radius: 20px; padding: 16px;
     }
 
-    .market-dropdown-btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      cursor: pointer;
-    }
+    .btn-full { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-deriv { background: #ff444f; color: white; }
+    .btn-cyan { background: var(--accent-cyan); color: #000; }
 
-    .market-details { text-align: left; }
-    .market-name { font-size: 15px; font-weight: 700; }
-    .market-price {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* DIGIT STATS */
-    .digits-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
-
-    .circle-stat {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: rgba(18, 20, 32, 0.5);
-      border: 3px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-    }
-
+    .digits-stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .circle-stat { width: 52px; height: 52px; border-radius: 50%; background: rgba(18, 20, 32, 0.5); border: 3px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; }
     .circle-stat.highest { border-color: var(--accent-cyan); }
     .circle-stat.lowest { border-color: var(--accent-red); }
     .circle-stat .num { font-size: 14px; font-weight: 800; }
     .circle-stat .pct { font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); }
 
-    .digits-selector-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .digit-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 12px 0;
-      color: var(--text-main);
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .digit-btn.active {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .input-box {
-      background: rgba(0, 0, 0, 0.15);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
+    .inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+    .input-box { background: rgba(0, 0, 0, 0.15); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; }
     .input-box label { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-    .input-box input, .input-box select {
-      width: 100%; background: transparent; border: none; color: var(--text-main); font-family: var(--font-mono); font-weight: 700; font-size: 14px; outline: none;
-    }
+    .input-box input { width: 100%; background: transparent; border: none; color: var(--text-main); font-family: var(--font-mono); font-weight: 700; font-size: 14px; outline: none; }
 
-    .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .action-btn {
-      border: none; border-radius: 14px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 15px; text-align: center;
-    }
-    .action-btn.btn-over { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #000; }
-    .action-btn.btn-under { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; }
-
-    .btn-full {
-      width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-cyan { background: var(--accent-cyan); color: #000; }
-    .btn-red { background: var(--accent-red); color: #fff; }
-
-    .trades-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
-    .trade-log-item {
-      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: flex-end;
-    }
-    .modal-drawer {
-      background: var(--bg-dark); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; width: 100%; max-height: 75vh; overflow-y: auto; padding: 20px;
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: flex-end; }
+    .modal-drawer { background: var(--bg-dark); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; width: 100%; max-height: 75vh; overflow-y: auto; padding: 20px; }
     .drawer-option { padding: 14px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR NAVIGATION -->
+  <!-- TOP BAR -->
   <header class="top-bar">
-    <div class="top-bar-left">
-      <!-- Hamburger Menu Button -->
+    <div style="display:flex; align-items:center; gap:12px;">
       <button class="icon-btn" onclick="openModal('menuModal')"><i class="fa-solid fa-bars"></i></button>
-      <span class="status-dot" id="connectionDot" title="Disconnected"></span>
+      <span class="status-dot" id="connectionDot"></span>
     </div>
-
-    <div class="top-bar-right">
-      <div class="account-selector">
-        <div class="acc-balance" id="accountBalance">Set Token First</div>
-      </div>
-    </div>
+    <div class="acc-balance" id="accountBalance">Login Required</div>
   </header>
 
-  <!-- SECONDARY NAV TABS -->
-  <nav class="nav-tabs">
-    <div class="nav-tab active" onclick="switchNavTab('manual', this)"><i class="fa-solid fa-tv"></i> Manual Trader</div>
-    <div class="nav-tab" onclick="switchNavTab('bot', this)"><i class="fa-solid fa-robot"></i> Even/Odd Auto Bot</div>
-  </nav>
-
-  <!-- MAIN APP CONTAINER -->
   <main class="app-container">
-
-    <!-- MARKET SELECTOR CARD -->
+    <!-- MARKET HEADER -->
     <div class="glass-card">
-      <button class="market-dropdown-btn" onclick="openModal('marketModal')">
-        <div class="market-details">
-          <div class="market-name" id="selectedMarketName">Volatility 100 (1s) Index</div>
-          <div class="market-price"><span id="livePrice">Connecting...</span></div>
-        </div>
-        <i class="fa-solid fa-chevron-down" style="color: var(--text-muted);"></i>
-      </button>
+      <div style="font-size: 15px; font-weight: 700;" id="marketName">Volatility 100 (1s) Index</div>
+      <div style="font-family: var(--font-mono); font-size: 13px; color: var(--text-muted);" id="livePrice">Connecting...</div>
     </div>
 
-    <!-- 1. MANUAL TRADER -->
-    <div id="manualView" class="tab-view active">
-      <div class="digits-stats-grid" id="digitsStatsGrid"></div>
+    <!-- STATS -->
+    <div class="digits-stats-grid" id="digitsStatsGrid"></div>
 
-      <div class="glass-card">
-        <div class="digits-selector-grid" id="digitButtonsGrid"></div>
-
-        <div class="inputs-grid">
-          <div class="input-box">
-            <label>Ticks</label>
-            <input type="number" id="manualTicks" value="1" min="1" max="10" />
-          </div>
-          <div class="input-box">
-            <label>Stake (USD)</label>
-            <input type="number" id="manualStake" value="10.00" step="1" min="0.35" />
-          </div>
-        </div>
-
-        <div class="action-buttons-grid">
-          <button class="action-btn btn-over" onclick="sendManualTrade('DIGITEVEN')">Trade EVEN</button>
-          <button class="action-btn btn-under" onclick="sendManualTrade('DIGITODD')">Trade ODD</button>
-        </div>
+    <!-- CONTROLS -->
+    <div class="glass-card">
+      <div class="inputs-grid">
+        <div class="input-box"><label>Ticks</label><input type="number" id="manualTicks" value="1" /></div>
+        <div class="input-box"><label>Stake ($)</label><input type="number" id="manualStake" value="10.00" /></div>
       </div>
-
-      <div class="glass-card">
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">RECENT TRADES</div>
-        <div class="trades-list" id="manualLog"></div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <button class="btn-full btn-cyan" onclick="sendTrade('DIGITEVEN')">Trade EVEN</button>
+        <button class="btn-full btn-deriv" onclick="sendTrade('DIGITODD')">Trade ODD</button>
       </div>
     </div>
-
-    <!-- 2. AUTO BOT -->
-    <div id="botView" class="tab-view">
-      <div class="glass-card">
-        <h3 style="font-size: 15px; margin-bottom: 8px;">Even / Odd Strategy Bot</h3>
-
-        <div class="inputs-grid">
-          <div class="input-box">
-            <label>Base Stake ($)</label>
-            <input type="number" id="botStake" value="1.00" step="0.5" />
-          </div>
-          <div class="input-box">
-            <label>Take Profit ($)</label>
-            <input type="number" id="botTP" value="10.00" />
-          </div>
-        </div>
-
-        <div class="inputs-grid">
-          <div class="input-box">
-            <label>Stop Loss ($)</label>
-            <input type="number" id="botSL" value="10.00" />
-          </div>
-          <div class="input-box">
-            <label>Martingale Multiplier</label>
-            <input type="number" id="botMartingale" value="2.0" step="0.1" />
-          </div>
-        </div>
-
-        <button class="btn-full btn-cyan" id="botControlBtn" onclick="toggleAutoBot()">
-          <i class="fa-solid fa-play"></i> START AUTO BOT
-        </button>
-      </div>
-
-      <div class="glass-card">
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">BOT CONSOLE</div>
-        <div class="trades-list" id="botLog"></div>
-      </div>
-    </div>
-
   </main>
 
-  <!-- THREE-LINE MENU MODAL (API TOKEN INSIDE HERE) -->
+  <!-- MENU MODAL -->
   <div class="modal-overlay" id="menuModal">
     <div class="modal-drawer">
-      <h3 style="margin-bottom: 16px;">Menu & Settings</h3>
+      <h3 style="margin-bottom: 16px;">Account Authentication</h3>
 
-      <!-- Set API Token Option -->
+      <!-- 1-CLICK DERIV OAUTH LOGIN -->
+      <button class="btn-full btn-deriv" onclick="loginWithDeriv()" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-right-to-bracket"></i> Direct Log in with Deriv
+      </button>
+
+      <!-- MANUAL TOKEN BACKUP -->
       <div class="drawer-option" onclick="closeModal('menuModal'); openModal('tokenModal');">
-        <span><i class="fa-solid fa-key" style="margin-right:10px; color:var(--accent-blue);"></i> Deriv API Token</span>
-        <span style="font-size:12px; color:var(--text-muted);" id="tokenStatusText">Not Configured</span>
+        <span><i class="fa-solid fa-key" style="margin-right:10px; color:var(--accent-blue);"></i> Manual API Token</span>
+        <span style="font-size:12px; color:var(--text-muted);" id="tokenStatus">Not Configured</span>
       </div>
 
-      <!-- Switch Theme Option -->
-      <div class="drawer-option" onclick="toggleTheme()">
-        <span><i class="fa-solid fa-circle-half-stroke" style="margin-right:10px;"></i> Switch Theme</span>
-        <span id="themeLabel" style="font-size:12px; color:var(--text-muted);">Dark</span>
-      </div>
-
-      <!-- Logout Option -->
       <div class="drawer-option" onclick="logoutDeriv()">
-        <span style="color:var(--accent-red);"><i class="fa-solid fa-right-from-bracket" style="margin-right:10px;"></i> Clear API Token</span>
+        <span style="color:var(--accent-red);"><i class="fa-solid fa-power-off" style="margin-right:10px;"></i> Logout</span>
       </div>
     </div>
   </div>
 
-  <!-- API TOKEN INPUT MODAL -->
+  <!-- MANUAL TOKEN MODAL -->
   <div class="modal-overlay" id="tokenModal">
     <div class="modal-drawer">
-      <h3 style="margin-bottom:12px;">Set Deriv API Token</h3>
-      <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
-        Paste your token generated from Deriv (Account Settings > API Token with Read/Trade scopes).
-      </p>
+      <h3 style="margin-bottom:12px;">Set Manual Token</h3>
       <div class="input-box" style="margin-bottom:12px;">
         <label>API Token</label>
-        <input type="password" id="derivTokenInput" placeholder="e.g. wJ8sA912kL..." />
+        <input type="password" id="derivTokenInput" placeholder="Paste Token Here" />
       </div>
-      <button class="btn-full btn-cyan" onclick="saveTokenAndConnect()">Save Token & Authenticate</button>
-    </div>
-  </div>
-
-  <!-- MARKET SELECTOR MODAL -->
-  <div class="modal-overlay" id="marketModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom:16px;">Select Market</h3>
-      <div id="marketList"></div>
+      <button class="btn-full btn-cyan" onclick="saveManualToken()">Save Token</button>
     </div>
   </div>
 
   <script>
-    // ===== DERIV WEBSOCKET CONFIG =====
     const DERIV_APP_ID = '1089'; 
     let ws = null;
 
@@ -441,81 +143,66 @@
       symbol: '1HZ100V',
       balance: 0,
       currency: 'USD',
-      selectedDigit: 5,
       tickHistory: [],
-      digitsCounts: Array(10).fill(0),
-
-      botRunning: false,
-      botCurrentStake: 1.00,
-      botPnl: 0,
-
-      markets: [
-        { name: 'Volatility 10 (1s) Index', symbol: '1HZ10V' },
-        { name: 'Volatility 25 (1s) Index', symbol: '1HZ25V' },
-        { name: 'Volatility 50 (1s) Index', symbol: '1HZ50V' },
-        { name: 'Volatility 75 (1s) Index', symbol: '1HZ75V' },
-        { name: 'Volatility 100 (1s) Index', symbol: '1HZ100V' },
-        { name: 'Volatility 10 Index', symbol: 'R_10' },
-        { name: 'Volatility 25 Index', symbol: 'R_25' },
-        { name: 'Volatility 50 Index', symbol: 'R_50' },
-        { name: 'Volatility 75 Index', symbol: 'R_75' },
-        { name: 'Volatility 100 Index', symbol: 'R_100' }
-      ]
+      digitsCounts: Array(10).fill(0)
     };
 
+    // Auto-catch Token if returning from OAuth Login Redirect
+    function checkOAuthRedirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token1 = urlParams.get('token1');
+      if (token1) {
+        app.token = token1;
+        localStorage.setItem('deriv_token', token1);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
+    function loginWithDeriv() {
+      // Official OAuth2 Authorize Link
+      const redirectUrl = window.location.href.split('?')[0];
+      window.location.href = `https://oauth.deriv.com/oauth2/authorize?app_id=${DERIV_APP_ID}&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+    }
+
     function initWebSocket() {
-      // Connect directly to Deriv official WebSocket
       ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${DERIV_APP_ID}`);
 
       ws.onopen = () => {
         document.getElementById('connectionDot').classList.add('connected');
-        
-        // Check if API token is present
         if (app.token) {
-          document.getElementById('tokenStatusText').innerText = "Connected";
+          document.getElementById('tokenStatus').innerText = "Active";
           ws.send(JSON.stringify({ authorize: app.token }));
         } else {
-          document.getElementById('accountBalance').innerText = 'Set API Token';
-          document.getElementById('tokenStatusText').innerText = "Not Configured";
+          document.getElementById('accountBalance').innerText = 'Log In First';
         }
-
-        // Subscribe to live market tick stream
-        subscribeTicks(app.symbol);
+        ws.send(JSON.stringify({ ticks_history: app.symbol, adjust_start_time: 1, count: 100, end: 'latest', start: 1, style: 'ticks', subscribe: 1 }));
       };
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
-        // Authorization response
         if (data.msg_type === 'authorize') {
           if (data.error) {
-            alert('Deriv Token Error: ' + data.error.message);
-            document.getElementById('accountBalance').innerText = 'Invalid Token';
+            document.getElementById('accountBalance').innerText = 'Auth Error';
+            document.getElementById('tokenStatus').innerText = "Invalid";
           } else {
             app.balance = parseFloat(data.authorize.balance);
             app.currency = data.authorize.currency;
             document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
-            
-            // Subscribe to real-time balance updates
             ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
           }
         }
 
-        // Live balance update
         if (data.msg_type === 'balance' && data.balance) {
           app.balance = parseFloat(data.balance.balance);
           document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
         }
 
-        // Live tick stream
         if (data.msg_type === 'tick' && data.tick) {
-          const price = data.tick.quote;
-          const pip = data.tick.pip_size;
-          const priceStr = price.toFixed(pip);
+          const priceStr = data.tick.quote.toFixed(data.tick.pip_size);
           const lastDigit = parseInt(priceStr.slice(-1));
-
           document.getElementById('livePrice').innerText = priceStr;
-          processNewDigit(lastDigit);
+          processDigit(lastDigit);
         }
       };
 
@@ -525,97 +212,55 @@
       };
     }
 
-    function subscribeTicks(symbol) {
-      app.tickHistory = [];
-      app.digitsCounts = Array(10).fill(0);
-
-      ws.send(JSON.stringify({
-        ticks_history: symbol,
-        adjust_start_time: 1,
-        count: 100,
-        end: 'latest',
-        start: 1,
-        style: 'ticks',
-        subscribe: 1
-      }));
-    }
-
-    function processNewDigit(digit) {
+    function processDigit(digit) {
       app.tickHistory.push(digit);
       if (app.tickHistory.length > 100) {
         const removed = app.tickHistory.shift();
         app.digitsCounts[removed]--;
       }
       app.digitsCounts[digit]++;
-      renderDigitsStats();
+      renderStats();
     }
 
-    function renderDigitsStats() {
+    function renderStats() {
       const total = app.tickHistory.length || 1;
-      let maxVal = -1, minVal = Infinity;
-      let maxDigit = 0, minDigit = 0;
-
+      let maxVal = -1, minVal = Infinity, maxDigit = 0, minDigit = 0;
       app.digitsCounts.forEach((cnt, idx) => {
         if (cnt > maxVal) { maxVal = cnt; maxDigit = idx; }
         if (cnt < minVal) { minVal = cnt; minDigit = idx; }
       });
 
-      const container = document.getElementById('digitsStatsGrid');
-      container.innerHTML = app.digitsCounts.map((cnt, idx) => {
-        const pct = ((cnt / total) * 100).toFixed(0);
-        return `
-          <div style="text-align:center;">
-            <div class="circle-stat ${idx === maxDigit ? 'highest' : ''} ${idx === minDigit ? 'lowest' : ''}">
-              <span class="num">${idx}</span>
-              <span class="pct">${pct}%</span>
-            </div>
+      document.getElementById('digitsStatsGrid').innerHTML = app.digitsCounts.map((cnt, idx) => `
+        <div style="text-align:center;">
+          <div class="circle-stat ${idx === maxDigit ? 'highest' : ''} ${idx === minDigit ? 'lowest' : ''}">
+            <span class="num">${idx}</span>
+            <span class="pct">${((cnt / total) * 100).toFixed(0)}%</span>
           </div>
-        `;
-      }).join('');
-    }
-
-    function renderDigitSelector() {
-      const container = document.getElementById('digitButtonsGrid');
-      container.innerHTML = Array.from({length: 10}, (_, i) => `
-        <button class="digit-btn ${app.selectedDigit === i ? 'active' : ''}" onclick="setDigit(${i})">${i}</button>
+        </div>
       `).join('');
     }
 
-    function setDigit(digit) {
-      app.selectedDigit = digit;
-      renderDigitSelector();
-    }
-
-    function sendManualTrade(contractType) {
-      if (!app.token) return alert('Please set your API Token from the top-left menu (☰)!');
-      
-      const stake = parseFloat(document.getElementById('manualStake').value);
-      const ticks = parseInt(document.getElementById('manualTicks').value);
-
+    function sendTrade(type) {
+      if (!app.token) return alert('Please Log in first from the top-left menu (☰)!');
       ws.send(JSON.stringify({
         buy: 1,
-        price: stake,
+        price: parseFloat(document.getElementById('manualStake').value),
         parameters: {
-          amount: stake,
-          basis: 'stake',
-          contract_type: contractType,
-          currency: app.currency,
-          duration: ticks,
-          duration_unit: 't',
-          symbol: app.symbol
+          amount: parseFloat(document.getElementById('manualStake').value),
+          basis: 'stake', contract_type: type, currency: app.currency,
+          duration: parseInt(document.getElementById('manualTicks').value),
+          duration_unit: 't', symbol: app.symbol
         }
       }));
     }
 
-    function saveTokenAndConnect() {
-      const input = document.getElementById('derivTokenInput').value.trim();
-      if (input) {
-        app.token = input;
-        localStorage.setItem('deriv_token', input);
+    function saveManualToken() {
+      const val = document.getElementById('derivTokenInput').value.trim();
+      if (val) {
+        app.token = val;
+        localStorage.setItem('deriv_token', val);
         closeModal('tokenModal');
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ authorize: app.token }));
-        }
+        ws.send(JSON.stringify({ authorize: app.token }));
       }
     }
 
@@ -625,46 +270,10 @@
       location.reload();
     }
 
-    function switchNavTab(tab, element) {
-      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      document.getElementById(tab + 'View').classList.add('active');
-    }
-
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    function selectMarket(market) {
-      app.symbol = market.symbol;
-      document.getElementById('selectedMarketName').innerText = market.name;
-      closeModal('marketModal');
-      subscribeTicks(app.symbol);
-    }
-
-    function renderMarketsList() {
-      document.getElementById('marketList').innerHTML = app.markets.map(m => `
-        <div class="drawer-option" onclick='selectMarket(${JSON.stringify(m)})'>
-          <span>${m.name}</span>
-          <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
-        </div>
-      `).join('');
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('light-theme');
-      const isLight = document.body.classList.contains('light-theme');
-      document.getElementById('themeLabel').innerText = isLight ? 'Light' : 'Dark';
-      closeModal('menuModal');
-    }
-
-    window.onclick = (e) => {
-      if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
-    };
-
-    // INIT
-    renderDigitSelector();
-    renderMarketsList();
+    checkOAuthRedirect();
     initWebSocket();
   </script>
 </body>
