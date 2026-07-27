@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>DerivPro Glass Trader</title>
+  <title>Cornerstone Glass Trader</title>
   
   <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -106,7 +106,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      cursor: pointer;
     }
 
     .acc-icon {
@@ -138,12 +137,6 @@
     }
 
     .btn-login {
-      background: transparent;
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
-    }
-
-    .btn-signup {
       background: var(--accent-blue);
       color: #000;
     }
@@ -252,8 +245,6 @@
       color: var(--text-muted);
       margin-top: 2px;
     }
-    .market-price span.up { color: var(--accent-cyan); }
-    .market-price span.down { color: var(--accent-red); }
 
     /* DIGIT PERCENTAGE STATS */
     .digits-stats-grid {
@@ -537,13 +528,11 @@
     </div>
 
     <div class="top-bar-right">
-      <div class="account-selector" onclick="toggleDemoReal()">
+      <div class="account-selector">
         <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
-        <div class="acc-balance" id="accountBalance">10,223.72 USD</div>
-        <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-muted);"></i>
+        <div class="acc-balance" id="accountBalance">Login Required</div>
       </div>
-      <button class="auth-btn btn-login" onclick="alert('Login Clicked')">Login</button>
-      <button class="auth-btn btn-signup" onclick="alert('Sign Up Clicked')">Sign Up</button>
+      <button class="auth-btn btn-login" onclick="loginWithDeriv()">Login</button>
     </div>
   </header>
 
@@ -564,8 +553,7 @@
           <div class="market-details">
             <div class="market-name" id="selectedMarketName">Volatility 100 (1s) Index</div>
             <div class="market-price">
-              <span id="livePrice">719.43</span> 
-              <span class="up" id="liveChange">+0.14 (0.02%) ▲</span>
+              <span id="livePrice">Connecting...</span>
             </div>
           </div>
         </div>
@@ -685,7 +673,7 @@
         <span><i class="fa-solid fa-circle-half-stroke" style="margin-right: 10px;"></i> Switch Theme</span>
         <span id="themeLabel" style="font-size: 12px; color: var(--text-muted);">Dark</span>
       </div>
-      <div class="drawer-option" onclick="alert('Logged out successfully'); closeModal('menuModal');">
+      <div class="drawer-option" onclick="logout()">
         <span style="color: var(--accent-red);"><i class="fa-solid fa-right-from-bracket" style="margin-right: 10px;"></i> Log Out</span>
       </div>
     </div>
@@ -706,37 +694,142 @@
       <div class="drawer-option" onclick="selectTradeType('Over/Under')"><span>Over / Under</span></div>
       <div class="drawer-option" onclick="selectTradeType('Matches/Differs')"><span>Matches / Differs</span></div>
       <div class="drawer-option" onclick="selectTradeType('Even/Odd')"><span>Even / Odd</span></div>
-      <div class="drawer-option" onclick="selectTradeType('Rise/Fall')"><span>Rise / Fall</span></div>
     </div>
   </div>
 
   <script>
+    // ===== DERIV API CONFIGURATION =====
+    const DERIV_APP_ID = 'YOUR_APP_ID'; // Replace with your assigned App ID (e.g. 68341)
+
+    let ws = null;
+
     // ===== STATE ENGINE =====
     const app = {
-      balance: 10223.72,
-      market: 'Volatility 100 (1s) Index',
+      token: localStorage.getItem('deriv_token') || '',
+      balance: 0.00,
+      currency: 'USD',
+      symbol: '1HZ100V',
       tradeType: 'Over/Under',
       selectedDigit: 5,
-      price: 721.25,
       
       // Bot state & strategy variables
       botRunning: false,
-      botTimer: null,
       botCurrentStake: 2.00,
       botPnl: 0,
-      botState: 'SEARCHING_LEAST', // SEARCHING_LEAST -> COUNTING_OPPOSITES -> ENTER_TRADE
+      botState: 'SEARCHING_LEAST',
       oppositeCount: 0,
-      targetTrade: null, // 'Even' or 'Odd'
+      targetTrade: null,
       
-      digitsCounts: [12, 8, 15, 6, 11, 9, 14, 5, 10, 10], // initial frequencies for 0-9
-      digitsData: [],
+      tickHistory: [],
+      digitsCounts: Array(10).fill(0),
       markets: [
-        'Volatility 10 (1s) Index', 'Volatility 25 (1s) Index', 'Volatility 50 (1s) Index', 
-        'Volatility 75 (1s) Index', 'Volatility 100 (1s) Index', 'Volatility 150 (1s) Index',
-        'Volatility 250 (1s) Index', 'Volatility 10 Index', 'Volatility 25 Index', 
-        'Volatility 50 Index', 'Volatility 75 Index', 'Volatility 100 Index'
+        { name: 'Volatility 100 (1s) Index', symbol: '1HZ100V' },
+        { name: 'Volatility 75 (1s) Index', symbol: '1HZ75V' },
+        { name: 'Volatility 50 (1s) Index', symbol: '1HZ50V' },
+        { name: 'Volatility 25 (1s) Index', symbol: '1HZ25V' },
+        { name: 'Volatility 10 (1s) Index', symbol: '1HZ10V' }
       ]
     };
+
+    // Check OAuth Redirect
+    function checkOAuthRedirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token1 = urlParams.get('token1');
+      if (token1) {
+        app.token = token1;
+        localStorage.setItem('deriv_token', token1);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
+    function loginWithDeriv() {
+      const redirectUrl = window.location.origin + window.location.pathname;
+      window.location.href = `https://oauth.deriv.com/oauth2/authorize?app_id=${DERIV_APP_ID}&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+    }
+
+    function logout() {
+      localStorage.removeItem('deriv_token');
+      location.reload();
+    }
+
+    // Connect to Deriv Live WebSocket Engine
+    function initWebSocket() {
+      ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${DERIV_APP_ID}`);
+
+      ws.onopen = () => {
+        if (app.token) {
+          ws.send(JSON.stringify({ authorize: app.token }));
+        }
+        subscribeSymbol(app.symbol);
+      };
+
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+
+        if (data.msg_type === 'authorize') {
+          if (!data.error) {
+            app.currency = data.authorize.currency;
+            app.balance = parseFloat(data.authorize.balance);
+            document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
+            ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
+          }
+        }
+
+        if (data.msg_type === 'balance') {
+          app.balance = parseFloat(data.balance.balance);
+          document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
+        }
+
+        if (data.msg_type === 'tick' && data.tick) {
+          const rawPrice = data.tick.quote.toFixed(data.tick.pip_size);
+          const lastDigit = parseInt(rawPrice.slice(-1));
+          
+          document.getElementById('livePrice').innerText = rawPrice;
+          
+          app.tickHistory.push(lastDigit);
+          if (app.tickHistory.length > 100) {
+            const removed = app.tickHistory.shift();
+            app.digitsCounts[removed]--;
+          }
+          app.digitsCounts[lastDigit]++;
+          
+          renderDigitsStats();
+          processBotStrategy(lastDigit);
+        }
+
+        if (data.msg_type === 'buy') {
+          if (data.error) {
+            alert('Trade Error: ' + data.error.message);
+          } else {
+            const log = document.getElementById('manualLog');
+            log.innerHTML = `
+              <div class="trade-log-item">
+                <div>Contract ID: <b>#${data.buy.contract_id}</b></div>
+                <div style="color: var(--accent-cyan)">EXECUTED</div>
+              </div>
+            ` + log.innerHTML;
+          }
+        }
+      };
+
+      ws.onclose = () => {
+        setTimeout(initWebSocket, 3000);
+      };
+    }
+
+    function subscribeSymbol(symbol) {
+      app.tickHistory = [];
+      app.digitsCounts = Array(10).fill(0);
+      ws.send(JSON.stringify({
+        ticks_history: symbol,
+        adjust_start_time: 1,
+        count: 100,
+        end: 'latest',
+        start: 1,
+        style: 'ticks',
+        subscribe: 1
+      }));
+    }
 
     // ===== NAVIGATION & MODALS =====
     function switchNavTab(tab, element) {
@@ -761,15 +854,11 @@
       closeModal('menuModal');
     }
 
-    function toggleDemoReal() {
-      app.balance = app.balance === 10223.72 ? 500.00 : 10223.72;
-      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
-    }
-
     // ===== MARKET & TRADE SELECTION =====
-    function selectMarket(market) {
-      app.market = market;
-      document.getElementById('selectedMarketName').innerText = market;
+    function selectMarket(name, symbol) {
+      app.symbol = symbol;
+      document.getElementById('selectedMarketName').innerText = name;
+      subscribeSymbol(symbol);
       closeModal('marketModal');
     }
 
@@ -789,7 +878,7 @@
 
     // ===== CALCULATE DIGIT STATS & HIGHEST/LOWEST =====
     function updateDigitStatsData() {
-      const total = app.digitsCounts.reduce((a, b) => a + b, 0);
+      const total = app.tickHistory.length || 1;
       let maxVal = -1, minVal = Infinity;
       let maxDigit = 0, minDigit = 0;
 
@@ -825,7 +914,7 @@
 
     function renderDigitSelector() {
       const container = document.getElementById('digitButtonsGrid');
-      if (app.tradeType === 'Rise/Fall' || app.tradeType === 'Even/Odd') {
+      if (app.tradeType === 'Even/Odd') {
         container.style.display = 'none';
         return;
       }
@@ -836,72 +925,64 @@
     }
 
     function updatePayouts() {
-      const stake = parseFloat(document.getElementById('manualStake').value) || 10;
       const container = document.getElementById('actionButtonsContainer');
-
-      let winPct1 = 1.95, winPct2 = 1.95;
       let label1 = "Higher", label2 = "Lower";
 
       if (app.tradeType === 'Over/Under') {
         label1 = "Over"; label2 = "Under";
-        winPct1 = (9 - app.selectedDigit) * 0.22;
-        winPct2 = app.selectedDigit * 0.22;
       } else if (app.tradeType === 'Matches/Differs') {
         label1 = "Matches"; label2 = "Differs";
-        winPct1 = 9.0; winPct2 = 1.09;
       } else if (app.tradeType === 'Even/Odd') {
         label1 = "Even"; label2 = "Odd";
-        winPct1 = 1.95; winPct2 = 1.95;
-      } else if (app.tradeType === 'Rise/Fall') {
-        label1 = "Rise"; label2 = "Fall";
-        winPct1 = 1.95; winPct2 = 1.95;
       }
 
-      const payout1 = (stake * (winPct1 || 1.1)).toFixed(2);
-      const payout2 = (stake * (winPct2 || 1.1)).toFixed(2);
-
       container.innerHTML = `
-        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}', ${payout1})">
+        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}')">
           <div class="action-btn-header">${label1}</div>
-          <div class="action-btn-payout"><span>Payout</span><span>${payout1} USD</span></div>
         </button>
-        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}', ${payout2})">
+        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}')">
           <div class="action-btn-header">${label2}</div>
-          <div class="action-btn-payout"><span>Payout</span><span>${payout2} USD</span></div>
         </button>
       `;
     }
 
     function renderMarketsList() {
       document.getElementById('marketList').innerHTML = app.markets.map(m => `
-        <div class="drawer-option" onclick="selectMarket('${m}')">
-          <span>${m}</span>
+        <div class="drawer-option" onclick="selectMarket('${m.name}', '${m.symbol}')">
+          <span>${m.name}</span>
           <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
         </div>
       `).join('');
     }
 
     // ===== MANUAL TRADING =====
-    function executeManualTrade(choice, payout) {
+    function executeManualTrade(choice) {
+      if (!app.token) return alert("Please log in using Deriv!");
+
       const stake = parseFloat(document.getElementById('manualStake').value);
-      if (stake > app.balance) return alert("Insufficient funds!");
+      const ticks = parseInt(document.getElementById('manualTicks').value);
 
-      app.balance -= stake;
-      const isWin = Math.random() > 0.48;
-      const profit = isWin ? payout - stake : -stake;
+      let contractType = 'DIGITOVER';
+      if (choice === 'Under') contractType = 'DIGITUNDER';
+      if (choice === 'Even') contractType = 'DIGITEVEN';
+      if (choice === 'Odd') contractType = 'DIGITODD';
+      if (choice === 'Matches') contractType = 'DIGITMATCH';
+      if (choice === 'Differs') contractType = 'DIGITDIFF';
 
-      if (isWin) app.balance += parseFloat(payout);
-      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
-
-      const log = document.getElementById('manualLog');
-      log.innerHTML = `
-        <div class="trade-log-item">
-          <div><b>${app.tradeType}</b> (${choice})</div>
-          <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
-            ${isWin ? '+' : ''}${profit.toFixed(2)} USD
-          </div>
-        </div>
-      ` + log.innerHTML;
+      ws.send(JSON.stringify({
+        buy: 1,
+        price: stake,
+        parameters: {
+          amount: stake,
+          basis: 'stake',
+          contract_type: contractType,
+          currency: app.currency,
+          duration: ticks,
+          duration_unit: 't',
+          symbol: app.symbol,
+          barrier: app.selectedDigit.toString()
+        }
+      }));
     }
 
     // ===== AUTO BOT STRATEGY ENGINE =====
@@ -930,7 +1011,6 @@
       const isMaxEven = maxDigit % 2 === 0;
       const isMinEven = minDigit % 2 === 0;
 
-      // Rule 1: One must be Even and the other must be Odd
       const validParitySplit = (isMaxEven !== isMinEven);
       
       const step1El = document.getElementById('step1Val');
@@ -949,15 +1029,13 @@
         return;
       }
 
-      // Rule 2 & 3: Dominant digit dictates trade direction
       app.targetTrade = isMaxEven ? 'Even' : 'Odd';
       const oppositeSide = isMaxEven ? 'Odd' : 'Even';
       step2El.innerText = `Trade ${app.targetTrade}`;
 
       const isCurrentDigitEven = (lastDigit % 2 === 0);
-      const isCurrentOpposite = isMaxEven ? !isCurrentDigitEven : isCurrentDigitEven; // Is current digit on opposite side of target trade
+      const isCurrentOpposite = isMaxEven ? !isCurrentDigitEven : isCurrentDigitEven;
 
-      // Rule 4: Entry Criteria Logic
       if (app.botState === 'SEARCHING_LEAST') {
         step3El.innerText = `Waiting for tick arrow on Least Digit (${minDigit})...`;
         if (lastDigit === minDigit) {
@@ -971,15 +1049,12 @@
           app.oppositeCount++;
           step3El.innerText = `Opposite (${oppositeSide}) ticks: ${app.oppositeCount}/3`;
         } else {
-          // If sequence reaches 3 or more opposite touches and now hits target side digit
           if (app.oppositeCount >= 3) {
             step3El.innerText = `Entry triggered on ${app.targetTrade}! Executing...`;
-            executeBotTrade(app.targetTrade);
-            // Reset state after executing trade
+            executeManualTrade(app.targetTrade);
             app.botState = 'SEARCHING_LEAST';
             app.oppositeCount = 0;
           } else {
-            // Touched target digit too early before 3 opposite touches, reset counter
             app.oppositeCount = 0;
             step3El.innerText = `Reset: Hit ${app.targetTrade} before 3 opposite ticks. Counting again...`;
           }
@@ -987,72 +1062,12 @@
       }
     }
 
-    function executeBotTrade(tradeSide) {
-      const tp = parseFloat(document.getElementById('botTP').value);
-      const sl = parseFloat(document.getElementById('botSL').value);
-      const mult = parseFloat(document.getElementById('botMartingale').value);
-
-      const isWin = Math.random() > 0.49;
-      const profit = isWin ? app.botCurrentStake * 0.95 : -app.botCurrentStake;
-
-      app.botPnl += profit;
-      app.balance += profit;
-      document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} USD`;
-
-      const log = document.getElementById('botLog');
-      log.innerHTML = `
-        <div class="trade-log-item">
-          <div><b>${tradeSide} Trade</b> ($${app.botCurrentStake.toFixed(2)})</div>
-          <div style="color: ${isWin ? 'var(--accent-cyan)' : 'var(--accent-red)'}">
-            ${isWin ? 'WIN' : 'LOSS'} (${profit >= 0 ? '+' : ''}${profit.toFixed(2)})
-          </div>
-        </div>
-      ` + log.innerHTML;
-
-      if (isWin) {
-        app.botCurrentStake = parseFloat(document.getElementById('botStake').value);
-      } else {
-        app.botCurrentStake *= mult;
-      }
-
-      if (app.botPnl >= tp || app.botPnl <= -sl) {
-        alert(`Bot Auto-Stopped! Goal/Limit Reached. Total PnL: $${app.botPnl.toFixed(2)}`);
-        toggleAutoBot();
-      }
-    }
-
-    // ===== REAL-TIME TICK SIMULATOR =====
-    setInterval(() => {
-      const delta = (Math.random() - 0.48) * 0.4;
-      app.price = parseFloat((app.price + delta).toFixed(2));
-      const lastDigit = parseInt(app.price.toString().slice(-1)) || 0;
-
-      // Update Ticker UI
-      document.getElementById('livePrice').innerText = app.price.toFixed(2);
-      
-      const changeEl = document.getElementById('liveChange');
-      if (delta >= 0) {
-        changeEl.className = 'up';
-        changeEl.innerText = `+${delta.toFixed(2)} (0.02%) ▲`;
-      } else {
-        changeEl.className = 'down';
-        changeEl.innerText = `${delta.toFixed(2)} (0.02%) ▼`;
-      }
-
-      // Update Digit Counts
-      app.digitsCounts[lastDigit]++;
-      renderDigitsStats();
-
-      // Process Bot Logic
-      processBotStrategy(lastDigit);
-
-    }, 1000);
-
     // INITIALIZATION
-    renderDigitsStats();
+    checkOAuthRedirect();
     renderDigitSelector();
     updatePayouts();
     renderMarketsList();
+    initWebSocket();
   </script>
 </body>
 </html>
