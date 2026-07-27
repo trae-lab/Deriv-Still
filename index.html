@@ -703,7 +703,13 @@
 
   <script>
     // Deriv App ID for the registered "Slim Trades" app.
-    const DERIV_APP_ID = '33WuDUxWvmr2EMKgZI5ya';
+    const MY_APP_ID = '33WuDUxWvmr2EMKgZI5ya';
+    // Deriv's public test app_id — known-good, used to isolate whether
+    // connection issues are caused by MY_APP_ID specifically.
+    const TEST_APP_ID = '1089';
+    // Flip this to false to test with the known-good public ID instead.
+    const USE_MY_APP_ID = true;
+    const DERIV_APP_ID = USE_MY_APP_ID ? MY_APP_ID : TEST_APP_ID;
 
     // No token is hardcoded anymore — you must supply your own via the Token button.
     // Generate one at https://app.deriv.com/account/api-token with the
@@ -895,7 +901,8 @@
       ws.onclose = (evt) => {
         wsReady = false;
         setTradeButtonsEnabled(false);
-        setBanner('Disconnected from Deriv. Reconnecting...', 'warn');
+        console.warn('WebSocket closed. code=', evt.code, 'reason=', evt.reason, 'wasClean=', evt.wasClean, 'app_id used=', DERIV_APP_ID);
+        setBanner(`Disconnected (code ${evt.code}${evt.reason ? ': ' + evt.reason : ''}). Using app_id=${DERIV_APP_ID}. Reconnecting...`, 'warn');
         clearTimeout(reconnectTimer);
         reconnectTimer = setTimeout(initWebSocket, 3000);
       };
