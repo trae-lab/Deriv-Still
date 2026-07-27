@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== THEME VARIABLES ===== */
     :root {
       --bg-dark: #050508;
       --card-bg: rgba(22, 23, 34, 0.65);
@@ -28,7 +27,6 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    /* LIGHT THEME OVERRIDES */
     body.light-theme {
       --bg-dark: #f0f4f8;
       --card-bg: rgba(255, 255, 255, 0.85);
@@ -62,7 +60,6 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
 
-    /* ===== TOP NAVIGATION BAR ===== */
     .top-bar {
       background: rgba(10, 11, 18, 0.85);
       backdrop-filter: var(--glass-blur);
@@ -75,10 +72,6 @@
       position: sticky;
       top: 0;
       z-index: 100;
-    }
-
-    body.light-theme .top-bar {
-      background: rgba(255, 255, 255, 0.9);
     }
 
     .top-bar-left, .top-bar-right {
@@ -134,24 +127,16 @@
       font-weight: 700;
       cursor: pointer;
       border: none;
-    }
-
-    .btn-login {
       background: var(--accent-blue);
       color: #000;
     }
 
-    /* ===== SECONDARY NAVIGATION TABS ===== */
     .nav-tabs {
       background: rgba(12, 13, 20, 0.9);
       border-bottom: 1px solid var(--card-border);
       display: flex;
       overflow-x: auto;
       padding: 0 8px;
-    }
-
-    body.light-theme .nav-tabs {
-      background: rgba(230, 235, 245, 0.9);
     }
 
     .nav-tab {
@@ -176,7 +161,6 @@
       border-bottom-color: var(--accent-blue);
     }
 
-    /* ===== MAIN CONTAINER ===== */
     .app-container {
       flex: 1;
       padding: 16px;
@@ -207,7 +191,6 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
 
-    /* MARKET SELECTOR */
     .market-dropdown-btn {
       display: flex;
       align-items: center;
@@ -246,7 +229,6 @@
       margin-top: 2px;
     }
 
-    /* DIGIT PERCENTAGE STATS */
     .digits-stats-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -270,11 +252,6 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
-    }
-
-    body.light-theme .circle-stat {
-      background: rgba(220, 225, 235, 0.6);
-      border-color: rgba(0, 0, 0, 0.1);
     }
 
     .circle-stat.highest {
@@ -304,7 +281,6 @@
       border-top: 6px solid var(--accent-red);
     }
 
-    /* MANUAL CONTROLS */
     .trade-type-selector {
       display: flex;
       align-items: center;
@@ -438,7 +414,6 @@
       font-size: 12px;
     }
 
-    /* MODALS & DRAWERS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -485,7 +460,6 @@
     .btn-cyan { background: var(--accent-cyan); color: #000; }
     .btn-red { background: var(--accent-red); color: #fff; }
 
-    /* STRATEGY MONITOR CARD */
     .strategy-status-box {
       background: rgba(0, 0, 0, 0.2);
       border: 1px dashed var(--card-border);
@@ -519,7 +493,7 @@
         <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
         <div class="acc-balance" id="accountBalance">Connecting...</div>
       </div>
-      <button class="auth-btn btn-login" onclick="openTokenPrompt()">Token</button>
+      <button class="auth-btn" onclick="openTokenPrompt()">Token</button>
     </div>
   </header>
 
@@ -650,7 +624,7 @@
 
   </main>
 
-  <!-- LEFT NAVIGATION MENU MODAL -->
+  <!-- MODALS -->
   <div class="modal-overlay" id="menuModal">
     <div class="modal-drawer">
       <h3 style="margin-bottom: 16px; font-size: 16px;">Menu</h3>
@@ -664,7 +638,6 @@
     </div>
   </div>
 
-  <!-- MARKET SELECTOR MODAL -->
   <div class="modal-overlay" id="marketModal">
     <div class="modal-drawer">
       <h3 style="margin-bottom: 16px; font-size: 16px;">Volatility Markets</h3>
@@ -672,7 +645,6 @@
     </div>
   </div>
 
-  <!-- TRADE TYPE MODAL -->
   <div class="modal-overlay" id="tradeTypeModal">
     <div class="modal-drawer">
       <h3 style="margin-bottom: 16px; font-size: 16px;">Digit Contract Types</h3>
@@ -683,22 +655,21 @@
   </div>
 
   <script>
-    // ===== DERIV CONFIGURATION =====
-    const DERIV_APP_ID = '1089'; // Default WebSocket App ID for Deriv Public API
-    const HARDCODED_TOKEN = '33WtMsxLdyUj1qJ6bOTMG'; // Your API Token
+    // Official production Deriv App ID for web apps
+    const DERIV_APP_ID = '68341'; 
+    // Hardcoded initial token
+    const INITIAL_TOKEN = '33WtMsxLdyUj1qJ6bOTMG';
 
     let ws = null;
 
-    // ===== STATE ENGINE =====
     const app = {
-      token: localStorage.getItem('deriv_token') || HARDCODED_TOKEN,
+      token: localStorage.getItem('deriv_token') || INITIAL_TOKEN,
       balance: 0.00,
       currency: 'USD',
       symbol: '1HZ100V',
       tradeType: 'Over/Under',
       selectedDigit: 5,
       
-      // Bot state & strategy variables
       botRunning: false,
       botCurrentStake: 2.00,
       botPnl: 0,
@@ -718,10 +689,10 @@
     };
 
     function openTokenPrompt() {
-      const newToken = prompt("Enter your Deriv API Token:", app.token);
-      if (newToken) {
-        app.token = newToken;
-        localStorage.setItem('deriv_token', newToken);
+      const newToken = prompt("Paste your fresh Deriv API Token:", app.token);
+      if (newToken !== null && newToken.trim() !== "") {
+        app.token = newToken.trim();
+        localStorage.setItem('deriv_token', app.token);
         if (ws && ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ authorize: app.token }));
         }
@@ -731,16 +702,18 @@
     function logout() {
       localStorage.removeItem('deriv_token');
       app.token = '';
-      location.reload();
+      document.getElementById('accountBalance').innerText = 'Enter Token';
+      closeModal('menuModal');
     }
 
-    // Connect to Deriv Live WebSocket Engine
     function initWebSocket() {
       ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${DERIV_APP_ID}`);
 
       ws.onopen = () => {
         if (app.token) {
           ws.send(JSON.stringify({ authorize: app.token }));
+        } else {
+          document.getElementById('accountBalance').innerText = 'No Token';
         }
         subscribeSymbol(app.symbol);
       };
@@ -748,7 +721,6 @@
       ws.onmessage = (e) => {
         const data = JSON.parse(e.data);
 
-        // Authorization Response
         if (data.msg_type === 'authorize') {
           if (!data.error) {
             app.currency = data.authorize.currency;
@@ -760,13 +732,11 @@
           }
         }
 
-        // Live Balance Updates
         if (data.msg_type === 'balance') {
           app.balance = parseFloat(data.balance.balance);
           document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
         }
 
-        // Ticks Processing
         if (data.msg_type === 'tick' && data.tick) {
           const rawPrice = data.tick.quote.toFixed(data.tick.pip_size);
           const lastDigit = parseInt(rawPrice.slice(-1));
@@ -784,10 +754,9 @@
           processBotStrategy(lastDigit);
         }
 
-        // Trade Execution Responses
         if (data.msg_type === 'buy') {
           if (data.error) {
-            alert('Trade Error: ' + data.error.message);
+            alert('Trade Failed: ' + data.error.message);
           } else {
             const log = document.getElementById('manualLog');
             log.innerHTML = `
@@ -819,11 +788,9 @@
       }));
     }
 
-    // ===== NAVIGATION & MODALS =====
     function switchNavTab(tab, element) {
       document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      
       element.classList.add('active');
       document.getElementById(tab + 'View').classList.add('active');
     }
@@ -842,7 +809,6 @@
       closeModal('menuModal');
     }
 
-    // ===== MARKET & TRADE SELECTION =====
     function selectMarket(name, symbol) {
       app.symbol = symbol;
       document.getElementById('selectedMarketName').innerText = name;
@@ -864,7 +830,6 @@
       updatePayouts();
     }
 
-    // ===== STATS & RENDERING =====
     function updateDigitStatsData() {
       const total = app.tickHistory.length || 1;
       let maxVal = -1, minVal = Infinity;
@@ -943,9 +908,8 @@
       `).join('');
     }
 
-    // ===== MANUAL TRADING =====
     function executeManualTrade(choice) {
-      if (!app.token) return alert("Please set a valid API Token!");
+      if (!app.token) return openTokenPrompt();
 
       const stake = parseFloat(document.getElementById('manualStake').value);
       const ticks = parseInt(document.getElementById('manualTicks').value);
@@ -973,7 +937,6 @@
       }));
     }
 
-    // ===== AUTO BOT STRATEGY ENGINE =====
     function toggleAutoBot() {
       const btn = document.getElementById('botControlBtn');
       app.botRunning = !app.botRunning;
@@ -1050,7 +1013,6 @@
       }
     }
 
-    // INITIALIZATION
     renderDigitSelector();
     updatePayouts();
     renderMarketsList();
