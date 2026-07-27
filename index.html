@@ -419,14 +419,6 @@
       font-weight: 800;
     }
 
-    .action-btn-payout {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      opacity: 0.9;
-      font-weight: 600;
-    }
-
     .trades-list {
       display: flex;
       flex-direction: column;
@@ -511,11 +503,6 @@
       justify-content: space-between;
       color: var(--text-muted);
     }
-
-    .status-step.active {
-      color: var(--accent-cyan);
-      font-weight: 700;
-    }
   </style>
 </head>
 <body>
@@ -530,9 +517,9 @@
     <div class="top-bar-right">
       <div class="account-selector">
         <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
-        <div class="acc-balance" id="accountBalance">Login Required</div>
+        <div class="acc-balance" id="accountBalance">Connecting...</div>
       </div>
-      <button class="auth-btn btn-login" onclick="loginWithDeriv()">Login</button>
+      <button class="auth-btn btn-login" onclick="openTokenPrompt()">Token</button>
     </div>
   </header>
 
@@ -579,7 +566,7 @@
         <div class="inputs-grid">
           <div class="input-box">
             <label>Ticks</label>
-            <select id="manualTicks" onchange="updatePayouts()">
+            <select id="manualTicks">
               <option value="1">1 Tick</option>
               <option value="2">2 Ticks</option>
               <option value="5" selected>5 Ticks</option>
@@ -588,7 +575,7 @@
           </div>
           <div class="input-box">
             <label>Stake (USD)</label>
-            <input type="number" id="manualStake" value="10.00" step="1" min="1" oninput="updatePayouts()"/>
+            <input type="number" id="manualStake" value="10.00" step="1" min="1" />
           </div>
         </div>
 
@@ -611,7 +598,6 @@
           Executes Even/Odd trades based on Most/Least digit parity & sequence conditions.
         </p>
 
-        <!-- PARAMETER INPUTS -->
         <div class="inputs-grid">
           <div class="input-box">
             <label>Base Stake ($)</label>
@@ -634,7 +620,6 @@
           </div>
         </div>
 
-        <!-- STRATEGY LIVE MONITOR -->
         <div class="strategy-status-box">
           <div class="status-step" id="step1">
             <span>1. Most/Least Parity Split:</span>
@@ -674,7 +659,7 @@
         <span id="themeLabel" style="font-size: 12px; color: var(--text-muted);">Dark</span>
       </div>
       <div class="drawer-option" onclick="logout()">
-        <span style="color: var(--accent-red);"><i class="fa-solid fa-right-from-bracket" style="margin-right: 10px;"></i> Log Out</span>
+        <span style="color: var(--accent-red);"><i class="fa-solid fa-right-from-bracket" style="margin-right: 10px;"></i> Clear Token / Logout</span>
       </div>
     </div>
   </div>
@@ -698,14 +683,15 @@
   </div>
 
   <script>
-    // ===== DERIV API CONFIGURATION =====
-    const DERIV_APP_ID = 'YOUR_APP_ID'; // Replace with your assigned App ID (e.g. 68341)
+    // ===== DERIV CONFIGURATION =====
+    const DERIV_APP_ID = '1089'; // Default WebSocket App ID for Deriv Public API
+    const HARDCODED_TOKEN = '33WtMsxLdyUj1qJ6bOTMG'; // Your API Token
 
     let ws = null;
 
     // ===== STATE ENGINE =====
     const app = {
-      token: localStorage.getItem('deriv_token') || '',
+      token: localStorage.getItem('deriv_token') || HARDCODED_TOKEN,
       balance: 0.00,
       currency: 'USD',
       symbol: '1HZ100V',
@@ -731,24 +717,20 @@
       ]
     };
 
-    // Check OAuth Redirect
-    function checkOAuthRedirect() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token1 = urlParams.get('token1');
-      if (token1) {
-        app.token = token1;
-        localStorage.setItem('deriv_token', token1);
-        window.history.replaceState({}, document.title, window.location.pathname);
+    function openTokenPrompt() {
+      const newToken = prompt("Enter your Deriv API Token:", app.token);
+      if (newToken) {
+        app.token = newToken;
+        localStorage.setItem('deriv_token', newToken);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ authorize: app.token }));
+        }
       }
-    }
-
-    function loginWithDeriv() {
-      const redirectUrl = window.location.origin + window.location.pathname;
-      window.location.href = `https://oauth.deriv.com/oauth2/authorize?app_id=${DERIV_APP_ID}&redirect_uri=${encodeURIComponent(redirectUrl)}`;
     }
 
     function logout() {
       localStorage.removeItem('deriv_token');
+      app.token = '';
       location.reload();
     }
 
@@ -766,20 +748,25 @@
       ws.onmessage = (e) => {
         const data = JSON.parse(e.data);
 
+        // Authorization Response
         if (data.msg_type === 'authorize') {
           if (!data.error) {
             app.currency = data.authorize.currency;
             app.balance = parseFloat(data.authorize.balance);
             document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
             ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
+          } else {
+            document.getElementById('accountBalance').innerText = 'Invalid Token';
           }
         }
 
+        // Live Balance Updates
         if (data.msg_type === 'balance') {
           app.balance = parseFloat(data.balance.balance);
           document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
         }
 
+        // Ticks Processing
         if (data.msg_type === 'tick' && data.tick) {
           const rawPrice = data.tick.quote.toFixed(data.tick.pip_size);
           const lastDigit = parseInt(rawPrice.slice(-1));
@@ -797,6 +784,7 @@
           processBotStrategy(lastDigit);
         }
 
+        // Trade Execution Responses
         if (data.msg_type === 'buy') {
           if (data.error) {
             alert('Trade Error: ' + data.error.message);
@@ -876,7 +864,7 @@
       updatePayouts();
     }
 
-    // ===== CALCULATE DIGIT STATS & HIGHEST/LOWEST =====
+    // ===== STATS & RENDERING =====
     function updateDigitStatsData() {
       const total = app.tickHistory.length || 1;
       let maxVal = -1, minVal = Infinity;
@@ -957,7 +945,7 @@
 
     // ===== MANUAL TRADING =====
     function executeManualTrade(choice) {
-      if (!app.token) return alert("Please log in using Deriv!");
+      if (!app.token) return alert("Please set a valid API Token!");
 
       const stake = parseFloat(document.getElementById('manualStake').value);
       const ticks = parseInt(document.getElementById('manualTicks').value);
@@ -1063,7 +1051,6 @@
     }
 
     // INITIALIZATION
-    checkOAuthRedirect();
     renderDigitSelector();
     updatePayouts();
     renderMarketsList();
