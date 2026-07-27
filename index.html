@@ -118,6 +118,7 @@
       font-weight: 700;
       color: var(--accent-cyan);
       font-size: 14px;
+      cursor: default;
     }
 
     .auth-btn {
@@ -189,6 +190,28 @@
       border-radius: 20px;
       padding: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .banner.show { display: flex; }
+    .banner.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .banner.warn {
+      background: rgba(234, 179, 8, 0.1);
+      border-color: rgba(234, 179, 8, 0.4);
+      color: #fde68a;
     }
 
     .market-dropdown-btn {
@@ -376,6 +399,11 @@
       transition: all 0.2s;
     }
 
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .action-btn.btn-over {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #000;
@@ -457,6 +485,11 @@
       gap: 8px;
     }
 
+    .btn-full:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .btn-cyan { background: var(--accent-cyan); color: #000; }
     .btn-red { background: var(--accent-red); color: #fff; }
 
@@ -489,13 +522,18 @@
     </div>
 
     <div class="top-bar-right">
-      <div class="account-selector">
+      <div class="account-selector" title="Click to see connection status" onclick="openModal('statusModal')">
         <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
         <div class="acc-balance" id="accountBalance">Connecting...</div>
       </div>
       <button class="auth-btn" onclick="openTokenPrompt()">Token</button>
     </div>
   </header>
+
+  <!-- CONNECTION STATUS BANNER -->
+  <div style="max-width:500px;margin:8px auto 0;width:100%;padding:0 16px;">
+    <div class="banner" id="statusBanner"></div>
+  </div>
 
   <!-- SECONDARY NAV TABS -->
   <nav class="nav-tabs">
@@ -654,13 +692,29 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="statusModal">
+    <div class="modal-drawer">
+      <h3 style="margin-bottom: 16px; font-size: 16px;">Connection Status</h3>
+      <div style="font-size: 13px; line-height: 1.7; color: var(--text-muted);" id="statusModalBody">
+        No status yet.
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Official production Deriv App ID for web apps
-    const DERIV_APP_ID = '68341'; 
-    // Hardcoded initial token
-    const INITIAL_TOKEN = '33WtMsxLdyUj1qJ6bOTMG';
+    // Deriv App ID for the registered "Slim Trades" app.
+    const DERIV_APP_ID = '33WuDUxWvmr2EMKgZI5ya';
+
+    // No token is hardcoded anymore — you must supply your own via the Token button.
+    // Generate one at https://app.deriv.com/account/api-token with the
+    // "Read" and "Trade" scopes checked at minimum.
+    const INITIAL_TOKEN = '';
 
     let ws = null;
+    let wsReady = false;
+    let currentTickSubId = null;
+    let balanceSubscribed = false;
+    let reconnectTimer = null;
 
     const app = {
       token: localStorage.getItem('deriv_token') || INITIAL_TOKEN,
@@ -688,13 +742,36 @@
       ]
     };
 
+    function setBanner(msg, kind) {
+      const el = document.getElementById('statusBanner');
+      if (!msg) {
+        el.classList.remove('show');
+        el.innerText = '';
+        return;
+      }
+      el.innerText = msg;
+      el.className = 'banner show ' + (kind || 'error');
+      document.getElementById('statusModalBody').innerText = msg;
+    }
+
+    function setTradeButtonsEnabled(enabled) {
+      document.querySelectorAll('.action-btn, #botControlBtn').forEach(btn => {
+        btn.disabled = !enabled;
+      });
+    }
+
     function openTokenPrompt() {
-      const newToken = prompt("Paste your fresh Deriv API Token:", app.token);
+      const newToken = prompt("Paste your Deriv API Token (needs Read + Trade scopes):", app.token);
       if (newToken !== null && newToken.trim() !== "") {
         app.token = newToken.trim();
         localStorage.setItem('deriv_token', app.token);
-        if (ws && ws.readyState === WebSocket.OPEN) {
+        document.getElementById('accountBalance').innerText = 'Connecting...';
+        setBanner(null);
+        if (ws && wsReady) {
           ws.send(JSON.stringify({ authorize: app.token }));
+        } else {
+          // socket not ready yet / was closed — restart cleanly
+          initWebSocket();
         }
       }
     }
@@ -702,33 +779,69 @@
     function logout() {
       localStorage.removeItem('deriv_token');
       app.token = '';
-      document.getElementById('accountBalance').innerText = 'Enter Token';
+      document.getElementById('accountBalance').innerText = 'No Token';
+      setTradeButtonsEnabled(false);
       closeModal('menuModal');
     }
 
     function initWebSocket() {
+      if (ws) {
+        try { ws.onclose = null; ws.close(); } catch (e) {}
+      }
+      wsReady = false;
+      setTradeButtonsEnabled(false);
+
       ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${DERIV_APP_ID}`);
 
       ws.onopen = () => {
+        wsReady = true;
+        setBanner(null);
         if (app.token) {
           ws.send(JSON.stringify({ authorize: app.token }));
         } else {
           document.getElementById('accountBalance').innerText = 'No Token';
+          setBanner('No API token set. Click "Token" in the top bar to add one.', 'warn');
         }
         subscribeSymbol(app.symbol);
       };
 
+      ws.onerror = (e) => {
+        console.error('WebSocket error:', e);
+        setBanner('WebSocket connection error. Check your network / firewall.', 'error');
+      };
+
       ws.onmessage = (e) => {
-        const data = JSON.parse(e.data);
+        let data;
+        try {
+          data = JSON.parse(e.data);
+        } catch (err) {
+          console.error('Failed to parse WS message:', err, e.data);
+          return;
+        }
+
+        // Surface ANY API error clearly instead of hiding it behind "Invalid Token"
+        if (data.error) {
+          console.error('Deriv API error:', data.error);
+          const code = data.error.code || 'UnknownError';
+          const message = data.error.message || 'Unknown error';
+          setBanner(`${code}: ${message}`, 'error');
+
+          if (data.msg_type === 'authorize') {
+            document.getElementById('accountBalance').innerText = code;
+            setTradeButtonsEnabled(false);
+          }
+          return;
+        }
 
         if (data.msg_type === 'authorize') {
-          if (!data.error) {
-            app.currency = data.authorize.currency;
-            app.balance = parseFloat(data.authorize.balance);
-            document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
+          app.currency = data.authorize.currency;
+          app.balance = parseFloat(data.authorize.balance);
+          document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
+          setTradeButtonsEnabled(true);
+          setBanner(null);
+          if (!balanceSubscribed) {
+            balanceSubscribed = true;
             ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
-          } else {
-            document.getElementById('accountBalance').innerText = 'Invalid Token';
           }
         }
 
@@ -738,6 +851,7 @@
         }
 
         if (data.msg_type === 'tick' && data.tick) {
+          currentTickSubId = data.tick.id || currentTickSubId;
           const rawPrice = data.tick.quote.toFixed(data.tick.pip_size);
           const lastDigit = parseInt(rawPrice.slice(-1));
           
@@ -754,29 +868,54 @@
           processBotStrategy(lastDigit);
         }
 
+        if (data.msg_type === 'history' && data.history) {
+          // Bulk-load recent digits (from ticks_history) into the counters
+          app.tickHistory = [];
+          app.digitsCounts = Array(10).fill(0);
+          data.history.prices.forEach(p => {
+            const rawPrice = parseFloat(p).toFixed(data.pip_size || 2);
+            const digit = parseInt(rawPrice.slice(-1));
+            app.tickHistory.push(digit);
+            app.digitsCounts[digit]++;
+          });
+          renderDigitsStats();
+        }
+
         if (data.msg_type === 'buy') {
-          if (data.error) {
-            alert('Trade Failed: ' + data.error.message);
-          } else {
-            const log = document.getElementById('manualLog');
-            log.innerHTML = `
-              <div class="trade-log-item">
-                <div>Contract ID: <b>#${data.buy.contract_id}</b></div>
-                <div style="color: var(--accent-cyan)">EXECUTED</div>
-              </div>
-            ` + log.innerHTML;
-          }
+          const log = document.getElementById('manualLog');
+          log.innerHTML = `
+            <div class="trade-log-item">
+              <div>Contract ID: <b>#${data.buy.contract_id}</b></div>
+              <div style="color: var(--accent-cyan)">EXECUTED</div>
+            </div>
+          ` + log.innerHTML;
         }
       };
 
-      ws.onclose = () => {
-        setTimeout(initWebSocket, 3000);
+      ws.onclose = (evt) => {
+        wsReady = false;
+        setTradeButtonsEnabled(false);
+        setBanner('Disconnected from Deriv. Reconnecting...', 'warn');
+        clearTimeout(reconnectTimer);
+        reconnectTimer = setTimeout(initWebSocket, 3000);
       };
     }
 
     function subscribeSymbol(symbol) {
+      if (!wsReady) return;
+
+      // Stop any previous tick stream first so counts/subscriptions don't pile up
+      if (currentTickSubId) {
+        ws.send(JSON.stringify({ forget: currentTickSubId }));
+        currentTickSubId = null;
+      } else {
+        ws.send(JSON.stringify({ forget_all: 'ticks' }));
+      }
+
       app.tickHistory = [];
       app.digitsCounts = Array(10).fill(0);
+      renderDigitsStats();
+
       ws.send(JSON.stringify({
         ticks_history: symbol,
         adjust_start_time: 1,
@@ -890,10 +1029,10 @@
       }
 
       container.innerHTML = `
-        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}')">
+        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}')" ${wsReady && app.token ? '' : 'disabled'}>
           <div class="action-btn-header">${label1}</div>
         </button>
-        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}')">
+        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}')" ${wsReady && app.token ? '' : 'disabled'}>
           <div class="action-btn-header">${label2}</div>
         </button>
       `;
@@ -910,9 +1049,13 @@
 
     function executeManualTrade(choice) {
       if (!app.token) return openTokenPrompt();
+      if (!wsReady) { setBanner('Not connected yet — please wait.', 'warn'); return; }
 
       const stake = parseFloat(document.getElementById('manualStake').value);
       const ticks = parseInt(document.getElementById('manualTicks').value);
+
+      if (isNaN(stake) || stake <= 0) { setBanner('Enter a valid stake amount.', 'warn'); return; }
+      if (isNaN(ticks) || ticks <= 0) { setBanner('Enter a valid tick duration.', 'warn'); return; }
 
       let contractType = 'DIGITOVER';
       if (choice === 'Under') contractType = 'DIGITUNDER';
@@ -921,23 +1064,27 @@
       if (choice === 'Matches') contractType = 'DIGITMATCH';
       if (choice === 'Differs') contractType = 'DIGITDIFF';
 
-      ws.send(JSON.stringify({
-        buy: 1,
-        price: stake,
-        parameters: {
-          amount: stake,
-          basis: 'stake',
-          contract_type: contractType,
-          currency: app.currency,
-          duration: ticks,
-          duration_unit: 't',
-          symbol: app.symbol,
-          barrier: app.selectedDigit.toString()
-        }
-      }));
+      const parameters = {
+        amount: stake,
+        basis: 'stake',
+        contract_type: contractType,
+        currency: app.currency,
+        duration: ticks,
+        duration_unit: 't',
+        symbol: app.symbol
+      };
+
+      // barrier only applies to Over/Under and Matches/Differs, not Even/Odd
+      if (contractType === 'DIGITOVER' || contractType === 'DIGITUNDER' ||
+          contractType === 'DIGITMATCH' || contractType === 'DIGITDIFF') {
+        parameters.barrier = app.selectedDigit.toString();
+      }
+
+      ws.send(JSON.stringify({ buy: 1, price: stake, parameters }));
     }
 
     function toggleAutoBot() {
+      if (!app.token) return openTokenPrompt();
       const btn = document.getElementById('botControlBtn');
       app.botRunning = !app.botRunning;
 
@@ -1016,6 +1163,7 @@
     renderDigitSelector();
     updatePayouts();
     renderMarketsList();
+    setTradeButtonsEnabled(false);
     initWebSocket();
   </script>
 </body>
