@@ -413,11 +413,16 @@
   }
   .room-card:hover{transform:translateY(-6px);border-color:var(--amber-light);}
 
-  .room-photo{height:200px;position:relative;}
-  .room-photo.fern{background:linear-gradient(150deg,#5c6b4f,#33402a);}
-  .room-photo.cedar{background:linear-gradient(150deg,#8a6b4a,#4a3220);}
-  .room-photo.fox{background:linear-gradient(150deg,#a9713c,#6b4226);}
-  .room-photo.custom{background:linear-gradient(150deg,#4a5c51,#223328);}
+  .room-photo{
+    height:200px;
+    position:relative;
+    background-size:cover;
+    background-position:center;
+  }
+  .room-photo.fern{background-image:linear-gradient(150deg,#5c6b4f,#33402a);}
+  .room-photo.cedar{background-image:linear-gradient(150deg,#8a6b4a,#4a3220);}
+  .room-photo.fox{background-image:linear-gradient(150deg,#a9713c,#6b4226);}
+  .room-photo.custom{background-image:linear-gradient(150deg,#4a5c51,#223328);}
 
   .room-ticket{
     position:absolute;top:12px;right:12px;
@@ -544,6 +549,21 @@
     margin-top:0.3rem;
   }
   .submit-btn:hover{background:var(--amber-light);}
+  .delete-btn{
+    background:#8b3a3a;
+    color:#ffffff;
+    border:none;
+    padding:0.75rem;
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:0.8rem;
+    letter-spacing:0.03em;
+    border-radius:2px;
+    cursor:pointer;
+    transition:background 0.2s ease;
+    margin-top:0.5rem;
+  }
+  .delete-btn:hover{background:#a64242;}
   .form-note{font-size:0.76rem;color:rgba(245,239,224,0.5);text-align:center;}
 
   /* ---------- ADMIN MODAL & SECTION ---------- */
@@ -731,8 +751,8 @@
       <p>Every room opens onto the porch or the garden — no interior hallways to slip past quietly in your socks.</p>
     </div>
     <div class="room-grid" id="roomContainer">
-      <div class="room-card">
-        <div class="room-photo fern"><span class="room-ticket" id="price-fern">$140/night</span></div>
+      <div class="room-card" id="card-fern">
+        <div class="room-photo fern" id="photo-fern"><span class="room-ticket" id="price-fern">$140/night</span></div>
         <div class="room-body">
           <h3 id="name-fern">The Fern Room</h3>
           <div class="room-meta" id="meta-fern">Queen bed · Garden view</div>
@@ -740,8 +760,8 @@
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       </div>
-      <div class="room-card">
-        <div class="room-photo cedar"><span class="room-ticket" id="price-cedar">$165/night</span></div>
+      <div class="room-card" id="card-cedar">
+        <div class="room-photo cedar" id="photo-cedar"><span class="room-ticket" id="price-cedar">$165/night</span></div>
         <div class="room-body">
           <h3 id="name-cedar">The Cedar Room</h3>
           <div class="room-meta" id="meta-cedar">King bed · Private balcony</div>
@@ -749,8 +769,8 @@
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       </div>
-      <div class="room-card">
-        <div class="room-photo fox"><span class="room-ticket" id="price-fox">$155/night</span></div>
+      <div class="room-card" id="card-fox">
+        <div class="room-photo fox" id="photo-fox"><span class="room-ticket" id="price-fox">$155/night</span></div>
         <div class="room-body">
           <h3 id="name-fox">The Fox Den</h3>
           <div class="room-meta" id="meta-fox">Two twins · Forest view</div>
@@ -913,7 +933,7 @@
       <h3>Manage House Prices & Details</h3>
       <div style="display:grid; gap:1rem; max-height:70vh; overflow-y:auto; padding-right:5px;">
         <div>
-          <label for="selectRoom">Select Room to Edit or Add New</label>
+          <label for="selectRoom">Select House / Room</label>
           <select id="selectRoom" onchange="loadRoomForEdit()">
             <option value="fern">The Fern Room</option>
             <option value="cedar">The Cedar Room</option>
@@ -930,6 +950,11 @@
           <input type="text" id="editPrice">
         </div>
         <div>
+          <label for="editPhoto">Photo URL or Local File Path</label>
+          <input type="text" id="editPhoto" placeholder="https://example.com/photo.jpg or images/house.jpg">
+          <input type="file" id="filePhoto" accept="image/*" onchange="handleFileSelect(event)" style="margin-top:0.4rem; font-size:0.75rem;">
+        </div>
+        <div>
           <label for="editMeta">Sub-details (e.g. Queen bed · Garden view)</label>
           <input type="text" id="editMeta">
         </div>
@@ -938,6 +963,7 @@
           <textarea id="editDesc" rows="3"></textarea>
         </div>
         <button class="submit-btn" onclick="saveRoomDetails()">Save Changes</button>
+        <button class="delete-btn" id="deleteRoomBtn" onclick="deleteRoomDetails()">🗑 Delete This House</button>
       </div>
     </div>
   </div>
@@ -976,6 +1002,8 @@
 </footer>
 
 <script>
+  let customRoomCounter = 0;
+
   function toggleMenu() {
     const menu = id('dropdownMenu');
     menu.classList.toggle('active');
@@ -1005,18 +1033,42 @@
     }
   }
 
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        id('editPhoto').value = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   function loadRoomForEdit() {
     const selected = id('selectRoom').value;
+    const delBtn = id('deleteRoomBtn');
+
     if(selected === 'new') {
       id('editTitle').value = '';
       id('editPrice').value = '';
+      id('editPhoto').value = '';
+      id('filePhoto').value = '';
       id('editMeta').value = '';
       id('editDesc').value = '';
+      delBtn.style.display = 'none';
     } else {
-      id('editTitle').value = id('name-' + selected).innerText;
-      id('editPrice').value = id('price-' + selected).innerText;
-      id('editMeta').value = id('meta-' + selected).innerText;
-      id('editDesc').value = id('desc-' + selected).innerText;
+      delBtn.style.display = 'block';
+      id('editTitle').value = id('name-' + selected) ? id('name-' + selected).innerText : '';
+      id('editPrice').value = id('price-' + selected) ? id('price-' + selected).innerText : '';
+      id('editMeta').value = id('meta-' + selected) ? id('meta-' + selected).innerText : '';
+      id('editDesc').value = id('desc-' + selected) ? id('desc-' + selected).innerText : '';
+      
+      const photoElem = id('photo-' + selected);
+      if(photoElem) {
+        const bg = photoElem.style.backgroundImage;
+        id('editPhoto').value = bg ? bg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '') : '';
+      }
+      id('filePhoto').value = '';
     }
   }
 
@@ -1024,32 +1076,85 @@
     const selected = id('selectRoom').value;
     const title = id('editTitle').value;
     const price = id('editPrice').value;
+    const photo = id('editPhoto').value;
     const meta = id('editMeta').value;
     const desc = id('editDesc').value;
 
     if(selected === 'new') {
+      customRoomCounter++;
+      const newKey = 'custom_' + customRoomCounter;
       const container = id('roomContainer');
       const newCard = document.createElement('div');
       newCard.className = 'room-card';
+      newCard.id = 'card-' + newKey;
+
+      const photoStyle = photo ? `background-image: url('${photo}');` : '';
+
       newCard.innerHTML = `
-        <div class="room-photo custom"><span class="room-ticket">${price}</span></div>
+        <div class="room-photo custom" id="photo-${newKey}" style="${photoStyle}">
+          <span class="room-ticket" id="price-${newKey}">${price}</span>
+        </div>
         <div class="room-body">
-          <h3>${title}</h3>
-          <div class="room-meta">${meta}</div>
-          <p>${desc}</p>
+          <h3 id="name-${newKey}">${title}</h3>
+          <div class="room-meta" id="meta-${newKey}">${meta}</div>
+          <p id="desc-${newKey}">${desc}</p>
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       `;
       container.appendChild(newCard);
-      alert('New room added successfully!');
+
+      // Add to select dropdown
+      const opt = document.createElement('option');
+      opt.value = newKey;
+      opt.innerText = title || ('New House ' + customRoomCounter);
+      id('selectRoom').insertBefore(opt, id('selectRoom').lastElementChild);
+
+      alert('New house added successfully!');
     } else {
-      id('name-' + selected).innerText = title;
-      id('price-' + selected).innerText = price;
-      id('meta-' + selected).innerText = meta;
-      id('desc-' + selected).innerText = desc;
-      alert('Room updated successfully!');
+      if(id('name-' + selected)) id('name-' + selected).innerText = title;
+      if(id('price-' + selected)) id('price-' + selected).innerText = price;
+      if(id('meta-' + selected)) id('meta-' + selected).innerText = meta;
+      if(id('desc-' + selected)) id('desc-' + selected).innerText = desc;
+      
+      if(id('photo-' + selected) && photo) {
+        id('photo-' + selected).style.backgroundImage = `url('${photo}')`;
+      }
+
+      // Update dropdown option text
+      const selectElem = id('selectRoom');
+      for(let i = 0; i < selectElem.options.length; i++) {
+        if(selectElem.options[i].value === selected) {
+          selectElem.options[i].innerText = title;
+          break;
+        }
+      }
+
+      alert('House updated successfully!');
     }
     closeAdminModal();
+  }
+
+  function deleteRoomDetails() {
+    const selected = id('selectRoom').value;
+    if(selected === 'new') return;
+
+    if(confirm('Are you sure you want to delete this house?')) {
+      const card = id('card-' + selected);
+      if(card) {
+        card.remove();
+      }
+
+      const selectElem = id('selectRoom');
+      for(let i = 0; i < selectElem.options.length; i++) {
+        if(selectElem.options[i].value === selected) {
+          selectElem.remove(i);
+          break;
+        }
+      }
+
+      alert('House removed successfully!');
+      loadRoomForEdit();
+    }
   }
 </script>
 
