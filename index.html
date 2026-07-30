@@ -1,773 +1,818 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Cornerstone Glass Trader</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hollow Fox Inn — A Cozy Bed &amp; Breakfast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#24312A;
+    --pine-deep:#1A241D;
+    --walnut:#5B3A29;
+    --walnut-light:#7A5138;
+    --oat:#EDE3CE;
+    --oat-light:#F5EFE0;
+    --amber:#C98A3C;
+    --amber-light:#DDA85E;
+    --sage:#7C8A6E;
+    --ink:#2A241C;
+    --cream-paper:#F7F1E1;
+  }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  *{margin:0;padding:0;box-sizing:border-box;}
 
-  <style>
-    :root {
-      --bg-dark: #050508;
-      --card-bg: rgba(22, 23, 34, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --glass-blur: blur(20px);
-      --accent-cyan: #10b981;
-      --accent-red: #ef4444;
-      --accent-blue: #38bdf8;
-      --accent-amber: #f59e0b;
-      --text-main: #f3f4f6;
-      --text-muted: #8388a4;
-      --font-main: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
-    body.light-theme {
-      --bg-dark: #f0f4f8;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: rgba(0, 0, 0, 0.1);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
-    body {
-      background: var(--bg-dark);
-      background-image:
-        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(239, 68, 68, 0.05) 0%, transparent 40%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
-    }
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+  html{scroll-behavior:smooth;}
 
-    .top-bar {
-      background: rgba(10, 11, 18, 0.85);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .top-bar-left, .top-bar-right { display: flex; align-items: center; gap: 10px; }
-    .icon-btn { background: transparent; border: none; color: var(--text-main); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .account-selector {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      padding: 6px 12px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .acc-icon { width: 22px; height: 22px; background: #1e293b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--accent-blue); }
-    .acc-balance { font-family: var(--font-mono); font-weight: 700; color: var(--accent-cyan); font-size: 13px; }
-    .auth-btn { padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: none; background: var(--accent-blue); color: #000; white-space: nowrap; }
+  body{
+    background:var(--oat);
+    color:var(--ink);
+    font-family:'Karla',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
 
-    .banner-wrap { max-width: 500px; margin: 8px auto 0; width: 100%; padding: 0 16px; }
-    .banner { display: none; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid; line-height: 1.5; }
-    .banner.show { display: flex; }
-    .banner.error { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
-    .banner.warn { background: rgba(234, 179, 8, 0.1); border-color: rgba(234, 179, 8, 0.4); color: #fde68a; }
-    .banner.ok { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
 
-    .nav-tabs { background: rgba(12, 13, 20, 0.9); border-bottom: 1px solid var(--card-border); display: flex; overflow-x: auto; padding: 0 8px; }
-    .nav-tab { padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid transparent; transition: all 0.2s ease; flex: 1; justify-content: center; }
-    .nav-tab.active { color: var(--accent-blue); background: rgba(56, 189, 248, 0.08); border-bottom-color: var(--accent-blue); }
+  .label{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    font-size:0.72rem;
+  }
 
-    .app-container { flex: 1; padding: 16px; max-width: 500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 16px; }
-    .tab-view { display: none; flex-direction: column; gap: 16px; }
-    .tab-view.active { display: flex; }
+  a{color:inherit;text-decoration:none;}
 
-    .glass-card { background: var(--card-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+  img, .placeholder-photo{display:block;}
 
-    .market-dropdown-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: transparent; border: none; color: var(--text-main); cursor: pointer; }
-    .market-info { display: flex; align-items: center; gap: 12px; }
-    .market-icon { width: 36px; height: 36px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .market-details { text-align: left; }
-    .market-name { font-size: 15px; font-weight: 700; }
-    .market-price { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 6vw;
+  }
 
-    .digits-stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-    .digit-circle-item { display: flex; flex-direction: column; align-items: center; }
-    .circle-stat { width: 52px; height: 52px; border-radius: 50%; background: rgba(18, 20, 32, 0.5); border: 3px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease; }
-    .circle-stat.highest { border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(16, 185, 129, 0.3); }
-    .circle-stat.lowest { border-color: var(--accent-red); box-shadow: 0 0 12px rgba(239, 68, 68, 0.3); }
-    .circle-stat .num { font-size: 14px; font-weight: 800; }
-    .circle-stat .pct { font-size: 9px; color: var(--text-muted); font-family: var(--font-mono); }
-    .indicator-arrow { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 6px solid var(--accent-cyan); margin-top: 4px; }
-    .indicator-arrow.down { border-bottom: none; border-top: 6px solid var(--accent-red); }
+  /* grain texture overlay */
+  .grain{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:0.05;
+    z-index:9999;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
-    .trade-type-selector { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); padding: 12px 16px; border-radius: 14px; cursor: pointer; margin-bottom: 14px; }
-    .trade-type-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(237,227,206,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(42,36,28,0.1);
+  }
 
-    .digits-selector-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
-    .digit-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 0; color: var(--text-main); font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
-    .digit-btn.active { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:1.1rem 6vw;
+    max-width:1180px;
+    margin:0 auto;
+  }
 
-    .inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .input-box { background: rgba(0, 0, 0, 0.15); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; }
-    .input-box label { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-    .input-box input, .input-box select { width: 100%; background: transparent; border: none; color: var(--text-main); font-family: var(--font-mono); font-weight: 700; font-size: 14px; outline: none; }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    font-family:'Fraunces',serif;
+    font-size:1.25rem;
+    font-weight:600;
+  }
 
-    .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .action-btn { border: none; border-radius: 14px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: all 0.2s; }
-    .action-btn:disabled, .btn-full:disabled { opacity: 0.45; cursor: not-allowed; }
-    .action-btn.btn-over { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #000; }
-    .action-btn.btn-under { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; }
-    .action-btn-header { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; font-weight: 800; }
+  .logo svg{width:30px;height:30px;flex-shrink:0;}
 
-    .trades-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
-    .trade-log-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-    .empty-log { color: var(--text-muted); font-size: 12px; padding: 8px 0; text-align: center; }
+  .nav-links{display:flex;gap:2.2rem;align-items:center;}
+  .nav-links a{font-size:0.92rem;position:relative;padding-bottom:4px;}
+  .nav-links a::after{
+    content:'';
+    position:absolute;left:0;bottom:0;width:0;height:1.5px;
+    background:var(--amber);
+    transition:width 0.25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: flex-end; }
-    .modal-drawer { background: var(--bg-dark); border-top: 1px solid var(--card-border); border-radius: 24px 24px 0 0; width: 100%; max-height: 80vh; overflow-y: auto; padding: 20px; }
-    .drawer-option { padding: 14px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .nav-cta{
+    background:var(--walnut);
+    color:var(--oat-light);
+    padding:0.6rem 1.3rem;
+    border-radius:2px;
+    font-size:0.85rem;
+    font-family:'Space Mono',monospace;
+    letter-spacing:0.03em;
+    transition:background 0.2s ease;
+  }
+  .nav-cta:hover{background:var(--amber);}
 
-    .settings-field { margin-bottom: 14px; }
-    .settings-field label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
-    .settings-field input, .settings-field select { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; color: var(--text-main); font-family: var(--font-mono); font-size: 13px; outline: none; }
-    .settings-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
-    .settings-preset-row { display: flex; gap: 8px; margin-top: 8px; }
-    .preset-chip { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px; font-size: 11px; text-align: center; cursor: pointer; color: var(--text-muted); }
-    .preset-chip.active { color: var(--accent-blue); border-color: var(--accent-blue); background: rgba(56,189,248,0.08); }
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;}
 
-    .btn-full { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-cyan { background: var(--accent-cyan); color: #000; }
-    .btn-red { background: var(--accent-red); color: #fff; }
-    .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-main); }
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:92vh;
+    display:flex;
+    align-items:center;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(201,138,60,0.25), transparent 55%),
+      linear-gradient(180deg, var(--pine) 0%, var(--pine-deep) 100%);
+    color:var(--oat-light);
+    overflow:hidden;
+  }
 
-    .strategy-status-box { background: rgba(0, 0, 0, 0.2); border: 1px dashed var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .status-step { display: flex; justify-content: space-between; color: var(--text-muted); gap: 8px; }
-    .status-step b { text-align: right; }
-  </style>
+  .hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.15' numOctaves='4' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity:0.15;
+    mix-blend-mode:overlay;
+  }
+
+  .hero-grid{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:3rem;
+    align-items:center;
+    width:100%;
+    max-width:1180px;
+    margin:0 auto;
+    padding:6rem 6vw 4rem;
+  }
+
+  .hero-eyebrow{
+    font-family:'Space Mono',monospace;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:var(--amber-light);
+    display:flex;
+    align-items:center;
+    gap:0.7rem;
+    margin-bottom:1.4rem;
+  }
+  .hero-eyebrow::before{content:'';width:26px;height:1px;background:var(--amber-light);}
+
+  .hero h1{
+    font-size:clamp(2.6rem,5.2vw,4.4rem);
+    line-height:1.04;
+    margin-bottom:1.4rem;
+  }
+  .hero h1 em{font-style:italic;color:var(--amber-light);}
+
+  .hero p{
+    max-width:36ch;
+    font-size:1.08rem;
+    color:rgba(245,239,224,0.82);
+    margin-bottom:2.2rem;
+  }
+
+  .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+
+  .btn-primary{
+    background:var(--amber);
+    color:var(--pine-deep);
+    padding:0.95rem 1.9rem;
+    border-radius:2px;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+    font-weight:700;
+    display:inline-block;
+    transition:transform 0.2s ease,background 0.2s ease;
+  }
+  .btn-primary:hover{background:var(--amber-light);transform:translateY(-2px);}
+
+  .btn-ghost{
+    border:1px solid rgba(245,239,224,0.35);
+    color:var(--oat-light);
+    padding:0.95rem 1.7rem;
+    border-radius:2px;
+    font-size:0.85rem;
+    font-family:'Space Mono',monospace;
+    transition:border-color 0.2s ease,background 0.2s ease;
+  }
+  .btn-ghost:hover{border-color:var(--amber-light);background:rgba(245,239,224,0.06);}
+
+  /* carved sign — signature element */
+  .sign-wrap{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    animation:sway 6s ease-in-out infinite;
+    transform-origin:top center;
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(-1.1deg);}
+    50%{transform:rotate(1.1deg);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sign-wrap{animation:none;}
+  }
+
+  .sign-chain{
+    position:absolute;top:-46px;left:50%;
+    transform:translateX(-50%);
+    display:flex;gap:70px;
+  }
+  .sign-chain span{
+    width:2px;height:46px;
+    background:linear-gradient(180deg,rgba(237,227,206,0.5),rgba(237,227,206,0.15));
+  }
+
+  .sign-board{
+    background:linear-gradient(160deg,var(--walnut-light) 0%,var(--walnut) 55%,#4a2f21 100%);
+    border:3px solid #3e281c;
+    border-radius:6px;
+    padding:2.6rem 2.2rem;
+    width:min(320px,80vw);
+    text-align:center;
+    box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    position:relative;
+  }
+  .sign-board::before{
+    content:'';
+    position:absolute;inset:8px;
+    border:1px solid rgba(237,227,206,0.18);
+    border-radius:3px;
+    pointer-events:none;
+  }
+  .sign-board .sign-icon{width:46px;height:46px;margin:0 auto 1rem;opacity:0.9;}
+  .sign-board .sign-name{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.7rem;
+    color:var(--oat-light);
+    line-height:1.15;
+    margin-bottom:0.5rem;
+  }
+  .sign-board .sign-sub{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--amber-light);
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:6.5rem 0;}
+  .section-head{max-width:640px;margin-bottom:3.5rem;}
+  .section-head .label{color:var(--walnut);margin-bottom:0.9rem;display:block;}
+  .section-head h2{font-size:clamp(1.9rem,3.4vw,2.7rem);}
+  .section-head p{color:rgba(42,36,28,0.7);margin-top:1rem;max-width:52ch;}
+
+  /* ---------- WELCOME ---------- */
+  .welcome{background:var(--oat);}
+  .welcome-grid{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:4rem;
+    align-items:center;
+  }
+
+  .photo-block{
+    aspect-ratio:4/5;
+    border-radius:4px;
+    position:relative;
+    overflow:hidden;
+  }
+  .photo-block.tall{aspect-ratio:3/4;}
+  .photo-cabin{
+    background:
+      linear-gradient(180deg, rgba(36,49,42,0.15), rgba(26,36,29,0.55)),
+      linear-gradient(160deg,#8a6b4a 0%,#5b3a29 45%,#3a2517 100%);
+  }
+  .photo-cabin::after{
+    content:'';
+    position:absolute;inset:0;
+    background-image:repeating-linear-gradient(100deg, rgba(0,0,0,0.06) 0 2px, transparent 2px 14px);
+  }
+  .photo-breakfast{
+    background:
+      radial-gradient(circle at 30% 30%, rgba(201,138,60,0.5), transparent 55%),
+      linear-gradient(160deg,#dccaa0 0%,#c9a765 55%,#a9803f 100%);
+  }
+  .photo-forest{
+    background:linear-gradient(180deg,#3c4a37 0%,#24312a 60%,#1a241d 100%);
+  }
+  .photo-forest::after{
+    content:'';
+    position:absolute;inset:0;
+    background-image:repeating-linear-gradient(75deg, rgba(237,227,206,0.05) 0 3px, transparent 3px 22px);
+  }
+  .photo-tag{
+    position:absolute;bottom:14px;left:14px;
+    background:rgba(26,36,29,0.72);
+    color:var(--oat-light);
+    font-family:'Space Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    padding:0.35rem 0.6rem;
+    border-radius:2px;
+  }
+
+  .welcome-text h3{font-size:1.6rem;margin-bottom:1.1rem;}
+  .welcome-text p{color:rgba(42,36,28,0.75);margin-bottom:1.1rem;max-width:52ch;}
+  .signature{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    margin-top:1.5rem;
+    color:var(--walnut);
+  }
+
+  .stat-row{display:flex;gap:2.4rem;margin-top:2.2rem;flex-wrap:wrap;}
+  .stat-row div{border-left:2px solid var(--amber);padding-left:0.9rem;}
+  .stat-row strong{display:block;font-family:'Fraunces',serif;font-size:1.6rem;}
+  .stat-row span{font-size:0.8rem;color:rgba(42,36,28,0.6);}
+
+  /* ---------- ROOMS ---------- */
+  .rooms{background:var(--pine);color:var(--oat-light);}
+  .rooms .section-head .label{color:var(--amber-light);}
+  .rooms .section-head p{color:rgba(245,239,224,0.65);}
+
+  .room-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.8rem;
+  }
+
+  .room-card{
+    background:rgba(245,239,224,0.04);
+    border:1px solid rgba(245,239,224,0.12);
+    border-radius:4px;
+    overflow:hidden;
+    transition:transform 0.25s ease,border-color 0.25s ease;
+  }
+  .room-card:hover{transform:translateY(-6px);border-color:var(--amber-light);}
+
+  .room-photo{height:200px;position:relative;}
+  .room-photo.fern{background:linear-gradient(150deg,#5c6b4f,#33402a);}
+  .room-photo.cedar{background:linear-gradient(150deg,#8a6b4a,#4a3220);}
+  .room-photo.fox{background:linear-gradient(150deg,#a9713c,#6b4226);}
+
+  .room-ticket{
+    position:absolute;top:12px;right:12px;
+    background:var(--amber);
+    color:var(--pine-deep);
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    font-weight:700;
+    padding:0.3rem 0.55rem;
+    border-radius:2px;
+  }
+
+  .room-body{padding:1.5rem;}
+  .room-body h3{font-size:1.3rem;margin-bottom:0.4rem;}
+  .room-meta{
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    color:var(--amber-light);
+    text-transform:uppercase;
+    margin-bottom:0.8rem;
+  }
+  .room-body p{font-size:0.92rem;color:rgba(245,239,224,0.68);margin-bottom:1.2rem;}
+  .room-link{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    border-bottom:1px solid var(--amber-light);
+    padding-bottom:2px;
+  }
+
+  /* ---------- AMENITIES ---------- */
+  .amenities{background:var(--oat);}
+  .amenity-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2.2rem;
+  }
+  .amenity{text-align:left;}
+  .amenity svg{width:34px;height:34px;color:var(--walnut);margin-bottom:1rem;}
+  .amenity h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:0.4rem;}
+  .amenity p{font-size:0.88rem;color:rgba(42,36,28,0.65);}
+
+  /* ---------- REVIEWS ---------- */
+  .reviews{background:var(--cream-paper);position:relative;}
+  .review-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.8rem;
+  }
+  .postcard{
+    background:var(--oat-light);
+    border:1px solid rgba(42,36,28,0.1);
+    padding:1.8rem 1.6rem;
+    position:relative;
+    box-shadow:0 10px 24px rgba(42,36,28,0.06);
+    transform:rotate(var(--tilt,0deg));
+  }
+  .postcard:nth-child(1){--tilt:-1.4deg;}
+  .postcard:nth-child(2){--tilt:0.8deg;}
+  .postcard:nth-child(3){--tilt:-0.6deg;}
+
+  .washi{
+    position:absolute;top:-10px;left:24px;
+    width:60px;height:22px;
+    background:rgba(201,138,60,0.55);
+    transform:rotate(-3deg);
+  }
+
+  .postcard .stars{color:var(--amber);letter-spacing:2px;margin-bottom:0.9rem;font-size:0.9rem;}
+  .postcard p{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;line-height:1.5;margin-bottom:1.2rem;}
+  .postcard .guest{font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:rgba(42,36,28,0.55);}
+
+  /* ---------- BOOKING ---------- */
+  .booking{background:var(--walnut);color:var(--oat-light);}
+  .booking-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4rem;
+    align-items:start;
+  }
+  .booking-info h2{font-size:clamp(1.9rem,3.2vw,2.6rem);margin-bottom:1.2rem;}
+  .booking-info p{color:rgba(245,239,224,0.75);max-width:44ch;margin-bottom:1.6rem;}
+  .booking-info .label{color:var(--amber-light);margin-bottom:0.9rem;display:block;}
+
+  .contact-line{display:flex;gap:0.8rem;align-items:center;margin-bottom:0.7rem;font-size:0.92rem;}
+  .contact-line svg{width:18px;height:18px;flex-shrink:0;color:var(--amber-light);}
+
+  form{
+    background:rgba(245,239,224,0.06);
+    border:1px solid rgba(245,239,224,0.15);
+    border-radius:4px;
+    padding:2rem;
+    display:grid;
+    gap:1.1rem;
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
+  label{font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--amber-light);display:block;margin-bottom:0.45rem;}
+  input,select{
+    width:100%;
+    background:rgba(245,239,224,0.08);
+    border:1px solid rgba(245,239,224,0.25);
+    border-radius:2px;
+    padding:0.7rem 0.8rem;
+    color:var(--oat-light);
+    font-family:'Karla',sans-serif;
+    font-size:0.92rem;
+  }
+  input::placeholder{color:rgba(245,239,224,0.4);}
+  input:focus,select:focus{outline:2px solid var(--amber-light);outline-offset:1px;}
+  select option{color:var(--ink);}
+
+  .submit-btn{
+    background:var(--amber);
+    color:var(--pine-deep);
+    border:none;
+    padding:0.95rem;
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+    border-radius:2px;
+    cursor:pointer;
+    transition:background 0.2s ease;
+    margin-top:0.3rem;
+  }
+  .submit-btn:hover{background:var(--amber-light);}
+  .form-note{font-size:0.76rem;color:rgba(245,239,224,0.5);text-align:center;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--pine-deep);
+    color:rgba(245,239,224,0.7);
+    padding:3.5rem 0 2rem;
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr;
+    gap:3rem;
+    padding-bottom:2.5rem;
+    border-bottom:1px solid rgba(245,239,224,0.1);
+  }
+  .footer-logo{
+    font-family:'Fraunces',serif;
+    font-size:1.3rem;
+    color:var(--oat-light);
+    margin-bottom:0.8rem;
+  }
+  footer p{font-size:0.88rem;max-width:32ch;}
+  footer h5{font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber-light);margin-bottom:1rem;}
+  footer ul{list-style:none;display:grid;gap:0.6rem;}
+  footer ul a{font-size:0.9rem;}
+  footer ul a:hover{color:var(--amber-light);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:1.6rem;font-size:0.78rem;color:rgba(245,239,224,0.45);
+    flex-wrap:wrap;gap:0.8rem;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;text-align:left;padding-top:8rem;}
+    .sign-wrap{margin-top:2.5rem;}
+    .welcome-grid{grid-template-columns:1fr;}
+    .room-grid{grid-template-columns:1fr 1fr;}
+    .amenity-grid{grid-template-columns:1fr 1fr;}
+    .review-grid{grid-template-columns:1fr;}
+    .booking-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;gap:2rem;}
+  }
+  @media (max-width:640px){
+    .nav-links{display:none;}
+    .menu-toggle{display:block;}
+    .room-grid{grid-template-columns:1fr;}
+    .amenity-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+    section{padding:4rem 0;}
+  }
+</style>
 </head>
 <body>
 
-  <header class="top-bar">
-    <div class="top-bar-left">
-      <button class="icon-btn" onclick="openModal('menuModal')"><i class="fa-solid fa-bars"></i></button>
-      <button class="icon-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></button>
-    </div>
-    <div class="top-bar-right">
-      <div class="account-selector" onclick="openModal('statusModal')">
-        <div class="acc-icon"><i class="fa-solid fa-dollar-sign"></i></div>
-        <div class="acc-balance" id="accountBalance">Connecting...</div>
-      </div>
-      <button class="auth-btn" onclick="openModal('settingsModal')"><i class="fa-solid fa-gear"></i> Setup</button>
-    </div>
-  </header>
+<div class="grain"></div>
 
-  <div class="banner-wrap"><div class="banner" id="statusBanner"></div></div>
-
-  <nav class="nav-tabs">
-    <div class="nav-tab active" onclick="switchNavTab('manual', this)"><i class="fa-solid fa-tv"></i> Manual Trader</div>
-    <div class="nav-tab" onclick="switchNavTab('bot', this)"><i class="fa-solid fa-robot"></i> Even/Odd Auto Bot</div>
+<header>
+  <nav>
+    <div class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4 L28 16 H23 V27 H9 V16 H4 Z" fill="#5B3A29"/>
+        <rect x="14" y="19" width="4" height="8" fill="#EDE3CE"/>
+      </svg>
+      The Hollow Fox Inn
+    </div>
+    <div class="nav-links">
+      <a href="#welcome">About</a>
+      <a href="#rooms">Rooms</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#booking" class="nav-cta">Check Availability</a>
+    </div>
+    <button class="menu-toggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
   </nav>
+</header>
 
-  <main class="app-container">
-
-    <div class="glass-card" id="globalMarketCard">
-      <button class="market-dropdown-btn" onclick="openModal('marketModal')">
-        <div class="market-info">
-          <div class="market-icon"><i class="fa-solid fa-chart-simple"></i></div>
-          <div class="market-details">
-            <div class="market-name" id="selectedMarketName">Volatility 100 (1s) Index</div>
-            <div class="market-price"><span id="livePrice">Connecting...</span></div>
-          </div>
-        </div>
-        <i class="fa-solid fa-chevron-down" style="color: var(--text-muted);"></i>
-      </button>
-    </div>
-
-    <div id="manualView" class="tab-view active">
-      <div class="digits-stats-grid" id="digitsStatsGrid"></div>
-
-      <div class="glass-card">
-        <div class="trade-type-selector" onclick="openModal('tradeTypeModal')">
-          <div class="trade-type-info">
-            <i class="fa-solid fa-arrows-up-down" style="color: var(--accent-red);"></i>
-            <span id="selectedTradeTypeName">Over/Under</span>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
-        </div>
-
-        <div class="digits-selector-grid" id="digitButtonsGrid"></div>
-
-        <div class="inputs-grid">
-          <div class="input-box">
-            <label>Ticks</label>
-            <select id="manualTicks">
-              <option value="1">1 Tick</option>
-              <option value="2">2 Ticks</option>
-              <option value="5" selected>5 Ticks</option>
-              <option value="10">10 Ticks</option>
-            </select>
-          </div>
-          <div class="input-box">
-            <label>Stake (USD)</label>
-            <input type="number" id="manualStake" value="10.00" step="1" min="1" />
-          </div>
-        </div>
-
-        <div class="action-buttons-grid" id="actionButtonsContainer"></div>
-      </div>
-
-      <div class="glass-card">
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">Recent Contracts</div>
-        <div class="trades-list" id="manualLog"><div class="empty-log">No contracts yet</div></div>
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">Nestled in Cedar Hollow Valley</div>
+      <h1>Slow mornings, <em>woodsmoke</em> &amp; a porch that waits for you.</h1>
+      <p>Three cozy rooms, a table set for breakfast at 8, and a hundred acres of forest to get pleasantly lost in.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn-primary">Check Availability</a>
+        <a href="#rooms" class="btn-ghost">See the Rooms</a>
       </div>
     </div>
-
-    <div id="botView" class="tab-view">
-      <div class="glass-card">
-        <h3 style="font-size: 15px; margin-bottom: 8px;">Even / Odd Strategy Bot</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-          Executes Even/Odd trades based on Most/Least digit parity & sequence conditions.
-        </p>
-
-        <div class="inputs-grid">
-          <div class="input-box"><label>Base Stake ($)</label><input type="number" id="botStake" value="2.00" step="0.5" /></div>
-          <div class="input-box"><label>Take Profit ($)</label><input type="number" id="botTP" value="20.00" /></div>
-        </div>
-        <div class="inputs-grid">
-          <div class="input-box"><label>Stop Loss ($)</label><input type="number" id="botSL" value="10.00" /></div>
-          <div class="input-box"><label>Martingale Multiplier</label><input type="number" id="botMartingale" value="2.0" step="0.1" /></div>
-        </div>
-
-        <div class="strategy-status-box">
-          <div class="status-step"><span>1. Most/Least Parity Split:</span><b id="step1Val">Checking...</b></div>
-          <div class="status-step"><span>2. Target Direction:</span><b id="step2Val">None</b></div>
-          <div class="status-step"><span>3. Trigger Sequence State:</span><b id="step3Val">Idle</b></div>
-        </div>
-
-        <button class="btn-full btn-cyan" id="botControlBtn" onclick="toggleAutoBot()">
-          <i class="fa-solid fa-play"></i> START AUTO BOT
-        </button>
-      </div>
-
-      <div class="glass-card">
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase;">Bot Activity Console</div>
-        <div class="trades-list" id="botLog"><div class="empty-log">Bot is idle</div></div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- SETTINGS MODAL: App ID + Token, both editable, no hardcoding -->
-  <div class="modal-overlay" id="settingsModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom: 4px; font-size: 16px;">Connection Setup</h3>
-      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">
-        Configure your Deriv App ID and API token. Nothing here is hardcoded into the app — it's stored only in this browser.
-      </p>
-
-      <div class="settings-field">
-        <label>App ID</label>
-        <input type="text" id="settingsAppId" placeholder="e.g. 1089" />
-        <div class="settings-preset-row">
-          <div class="preset-chip" id="presetTest" onclick="usePresetAppId('1089')">Use Test ID (1089)</div>
-          <div class="preset-chip" id="presetMine" onclick="usePresetAppId('33WuDUxWvmr2EMKgZI5ya')">Use My App ID</div>
-        </div>
-        <div class="settings-hint">
-          Start with the Test ID to confirm the connection works at all. If it connects, switch to your own App ID next — if that one fails while the test ID succeeds, the issue is specific to your registered app and worth raising with Deriv support.
-        </div>
-      </div>
-
-      <div class="settings-field">
-        <label>API Token</label>
-        <input type="text" id="settingsToken" placeholder="Paste your Deriv API token" />
-        <div class="settings-hint">
-          Generate one at app.deriv.com/account/api-token with Read + Trade scopes. Treat it like a password — anyone with it can trade on your account.
-        </div>
-      </div>
-
-      <button class="btn-full btn-cyan" onclick="saveSettings()" style="margin-top: 8px;">
-        <i class="fa-solid fa-plug"></i> Save & Connect
-      </button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="menuModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Menu</h3>
-      <div class="drawer-option" onclick="toggleTheme()">
-        <span><i class="fa-solid fa-circle-half-stroke" style="margin-right: 10px;"></i> Switch Theme</span>
-        <span id="themeLabel" style="font-size: 12px; color: var(--text-muted);">Dark</span>
-      </div>
-      <div class="drawer-option" onclick="openModal('settingsModal'); closeModal('menuModal');">
-        <span><i class="fa-solid fa-gear" style="margin-right: 10px;"></i> Connection Setup</span>
-      </div>
-      <div class="drawer-option" onclick="logout()">
-        <span style="color: var(--accent-red);"><i class="fa-solid fa-right-from-bracket" style="margin-right: 10px;"></i> Clear Token / Logout</span>
+    <div class="sign-wrap">
+      <div class="sign-chain"><span></span><span></span></div>
+      <div class="sign-board">
+        <svg class="sign-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6 L42 22 H35 V40 H13 V22 H6 Z" stroke="#EDE3CE" stroke-width="1.6"/>
+          <path d="M20 40 V29 H28 V40" stroke="#C98A3C" stroke-width="1.6"/>
+        </svg>
+        <div class="sign-name">Hollow Fox Inn</div>
+        <div class="sign-sub">Est. — a place to placeholder</div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="modal-overlay" id="marketModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Volatility Markets</h3>
-      <div id="marketList"></div>
+<section class="welcome" id="welcome">
+  <div class="wrap welcome-grid">
+    <div style="display:grid;gap:1.2rem;">
+      <div class="photo-block tall photo-cabin"><span class="photo-tag">the inn, dusk</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <div class="photo-block photo-breakfast"><span class="photo-tag">breakfast</span></div>
+        <div class="photo-block photo-forest"><span class="photo-tag">the trail</span></div>
+      </div>
+    </div>
+    <div class="welcome-text">
+      <span class="label" style="color:var(--walnut);display:block;margin-bottom:0.8rem;">Our Story</span>
+      <h3>A farmhouse we couldn't bear to leave empty.</h3>
+      <p>We bought this place for the porch and stayed for everything else — the wood stove that never quite goes out, the trail that starts behind the barn, the way the valley fills with fog most mornings until about nine.</p>
+      <p>We keep it small on purpose. Three rooms means we know your name by the time you've had your first coffee, and exactly how you take it by the second.</p>
+      <p class="signature">— Placeholder &amp; Placeholder, your hosts</p>
+      <div class="stat-row">
+        <div><strong>3</strong><span>Rooms, never more</span></div>
+        <div><strong>100+</strong><span>Acres to wander</span></div>
+        <div><strong>8AM</strong><span>Breakfast, always</span></div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="modal-overlay" id="tradeTypeModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Digit Contract Types</h3>
-      <div class="drawer-option" onclick="selectTradeType('Over/Under')"><span>Over / Under</span></div>
-      <div class="drawer-option" onclick="selectTradeType('Matches/Differs')"><span>Matches / Differs</span></div>
-      <div class="drawer-option" onclick="selectTradeType('Even/Odd')"><span>Even / Odd</span></div>
+<section class="rooms" id="rooms">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label">Where You'll Sleep</span>
+      <h2>Three rooms, each named for what you'll find outside the window.</h2>
+      <p>Every room opens onto the porch or the garden — no interior hallways to slip past quietly in your socks.</p>
     </div>
-  </div>
-
-  <div class="modal-overlay" id="statusModal">
-    <div class="modal-drawer">
-      <h3 style="margin-bottom: 16px; font-size: 16px;">Connection Status</h3>
-      <div style="font-size: 13px; line-height: 1.7; color: var(--text-muted);" id="statusModalBody">No status yet.</div>
-    </div>
-  </div>
-
-  <script>
-    // ---- Persisted connection settings (no hardcoded secrets) ----
-    const DEFAULT_APP_ID = '1089'; // Deriv's public test app_id — safe default so first load can always attempt a connection
-    let currentAppId = localStorage.getItem('deriv_app_id') || DEFAULT_APP_ID;
-    let currentToken = localStorage.getItem('deriv_token') || '';
-
-    let ws = null;
-    let wsReady = false;
-    let currentTickSubId = null;
-    let balanceSubscribed = false;
-    let reconnectTimer = null;
-    let pingTimer = null;
-
-    const app = {
-      balance: 0.00,
-      currency: 'USD',
-      symbol: '1HZ100V',
-      tradeType: 'Over/Under',
-      selectedDigit: 5,
-      botRunning: false,
-      botCurrentStake: 2.00,
-      botPnl: 0,
-      botState: 'SEARCHING_LEAST',
-      oppositeCount: 0,
-      targetTrade: null,
-      tickHistory: [],
-      digitsCounts: Array(10).fill(0),
-      markets: [
-        { name: 'Volatility 100 (1s) Index', symbol: '1HZ100V' },
-        { name: 'Volatility 75 (1s) Index', symbol: '1HZ75V' },
-        { name: 'Volatility 50 (1s) Index', symbol: '1HZ50V' },
-        { name: 'Volatility 25 (1s) Index', symbol: '1HZ25V' },
-        { name: 'Volatility 10 (1s) Index', symbol: '1HZ10V' }
-      ]
-    };
-
-    // ---------------- UI helpers ----------------
-    function setBanner(msg, kind) {
-      const el = document.getElementById('statusBanner');
-      if (!msg) { el.classList.remove('show'); el.innerText = ''; return; }
-      el.innerText = msg;
-      el.className = 'banner show ' + (kind || 'error');
-      document.getElementById('statusModalBody').innerText = msg;
-    }
-
-    function setTradeButtonsEnabled(enabled) {
-      document.querySelectorAll('.action-btn, #botControlBtn').forEach(btn => { btn.disabled = !enabled; });
-    }
-
-    function openModal(id) {
-      if (id === 'settingsModal') {
-        document.getElementById('settingsAppId').value = currentAppId;
-        document.getElementById('settingsToken').value = currentToken;
-        highlightPreset();
-      }
-      document.getElementById(id).style.display = 'flex';
-    }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    window.onclick = (e) => { if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none'; };
-
-    function usePresetAppId(id) {
-      document.getElementById('settingsAppId').value = id;
-      highlightPreset();
-    }
-    function highlightPreset() {
-      const val = document.getElementById('settingsAppId').value.trim();
-      document.getElementById('presetTest').classList.toggle('active', val === '1089');
-      document.getElementById('presetMine').classList.toggle('active', val === '33WuDUxWvmr2EMKgZI5ya');
-    }
-
-    function saveSettings() {
-      const newAppId = document.getElementById('settingsAppId').value.trim() || DEFAULT_APP_ID;
-      const newToken = document.getElementById('settingsToken').value.trim();
-
-      currentAppId = newAppId;
-      currentToken = newToken;
-      localStorage.setItem('deriv_app_id', currentAppId);
-      localStorage.setItem('deriv_token', currentToken);
-
-      closeModal('settingsModal');
-      document.getElementById('accountBalance').innerText = 'Connecting...';
-      setBanner(null);
-      initWebSocket();
-    }
-
-    function logout() {
-      localStorage.removeItem('deriv_token');
-      currentToken = '';
-      document.getElementById('accountBalance').innerText = 'No Token';
-      setTradeButtonsEnabled(false);
-      closeModal('menuModal');
-    }
-
-    // ---------------- WebSocket lifecycle ----------------
-    function initWebSocket() {
-      if (ws) { try { ws.onclose = null; ws.close(); } catch (e) {} }
-      clearInterval(pingTimer);
-      wsReady = false;
-      balanceSubscribed = false;
-      currentTickSubId = null;
-      setTradeButtonsEnabled(false);
-
-      ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${currentAppId}`);
-
-      ws.onopen = () => {
-        wsReady = true;
-        setBanner(null);
-        if (currentToken) {
-          ws.send(JSON.stringify({ authorize: currentToken }));
-        } else {
-          document.getElementById('accountBalance').innerText = 'No Token';
-          setBanner('Connected, but no API token set yet. Tap "Setup" to add one.', 'warn');
-        }
-        subscribeSymbol(app.symbol);
-
-        // Keep the session alive — Deriv closes idle WS sessions after ~2 minutes
-        pingTimer = setInterval(() => {
-          if (wsReady) ws.send(JSON.stringify({ ping: 1 }));
-        }, 30000);
-      };
-
-      ws.onerror = (e) => {
-        console.error('WebSocket error:', e);
-      };
-
-      ws.onmessage = (e) => {
-        let data;
-        try { data = JSON.parse(e.data); }
-        catch (err) { console.error('Bad WS message:', err, e.data); return; }
-
-        if (data.error) {
-          console.error('Deriv API error:', data.error);
-          const code = data.error.code || 'UnknownError';
-          const message = data.error.message || 'Unknown error';
-          setBanner(`${code}: ${message}`, 'error');
-          if (data.msg_type === 'authorize') {
-            document.getElementById('accountBalance').innerText = code;
-            setTradeButtonsEnabled(false);
-          }
-          return;
-        }
-
-        if (data.msg_type === 'authorize') {
-          app.currency = data.authorize.currency;
-          app.balance = parseFloat(data.authorize.balance);
-          document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
-          setTradeButtonsEnabled(true);
-          setBanner(`Connected and authorized (app_id=${currentAppId}).`, 'ok');
-          setTimeout(() => setBanner(null), 4000);
-          if (!balanceSubscribed) {
-            balanceSubscribed = true;
-            ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
-          }
-        }
-
-        if (data.msg_type === 'balance') {
-          app.balance = parseFloat(data.balance.balance);
-          document.getElementById('accountBalance').innerText = `${app.balance.toFixed(2)} ${app.currency}`;
-        }
-
-        if (data.msg_type === 'tick' && data.tick) {
-          currentTickSubId = data.tick.id || currentTickSubId;
-          const rawPrice = data.tick.quote.toFixed(data.tick.pip_size);
-          const lastDigit = parseInt(rawPrice.slice(-1));
-          document.getElementById('livePrice').innerText = rawPrice;
-
-          app.tickHistory.push(lastDigit);
-          if (app.tickHistory.length > 100) {
-            const removed = app.tickHistory.shift();
-            app.digitsCounts[removed]--;
-          }
-          app.digitsCounts[lastDigit]++;
-          renderDigitsStats();
-          processBotStrategy(lastDigit);
-        }
-
-        if (data.msg_type === 'history' && data.history) {
-          app.tickHistory = [];
-          app.digitsCounts = Array(10).fill(0);
-          data.history.prices.forEach(p => {
-            const rawPrice = parseFloat(p).toFixed(data.pip_size || 2);
-            const digit = parseInt(rawPrice.slice(-1));
-            app.tickHistory.push(digit);
-            app.digitsCounts[digit]++;
-          });
-          renderDigitsStats();
-        }
-
-        if (data.msg_type === 'buy') {
-          const log = document.getElementById('manualLog');
-          const empty = log.querySelector('.empty-log');
-          if (empty) empty.remove();
-          log.innerHTML = `
-            <div class="trade-log-item">
-              <div>Contract ID: <b>#${data.buy.contract_id}</b></div>
-              <div style="color: var(--accent-cyan)">EXECUTED</div>
-            </div>
-          ` + log.innerHTML;
-        }
-      };
-
-      ws.onclose = (evt) => {
-        wsReady = false;
-        clearInterval(pingTimer);
-        setTradeButtonsEnabled(false);
-        console.warn('WS closed. code=', evt.code, 'reason=', evt.reason, 'app_id=', currentAppId);
-        setBanner(`Disconnected (code ${evt.code}${evt.reason ? ': ' + evt.reason : ''}), app_id=${currentAppId}. Reconnecting in 3s...`, 'warn');
-        clearTimeout(reconnectTimer);
-        reconnectTimer = setTimeout(initWebSocket, 3000);
-      };
-    }
-
-    function subscribeSymbol(symbol) {
-      if (!wsReady) return;
-      if (currentTickSubId) { ws.send(JSON.stringify({ forget: currentTickSubId })); currentTickSubId = null; }
-      else { ws.send(JSON.stringify({ forget_all: 'ticks' })); }
-
-      app.tickHistory = [];
-      app.digitsCounts = Array(10).fill(0);
-      renderDigitsStats();
-
-      ws.send(JSON.stringify({
-        ticks_history: symbol, adjust_start_time: 1, count: 100, end: 'latest', start: 1, style: 'ticks', subscribe: 1
-      }));
-    }
-
-    // ---------------- Nav / theme / modals ----------------
-    function switchNavTab(tab, element) {
-      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      document.getElementById(tab + 'View').classList.add('active');
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('light-theme');
-      const isLight = document.body.classList.contains('light-theme');
-      document.getElementById('themeLabel').innerText = isLight ? 'Light' : 'Dark';
-      closeModal('menuModal');
-    }
-
-    function selectMarket(name, symbol) {
-      app.symbol = symbol;
-      document.getElementById('selectedMarketName').innerText = name;
-      subscribeSymbol(symbol);
-      closeModal('marketModal');
-    }
-
-    function selectTradeType(type) {
-      app.tradeType = type;
-      document.getElementById('selectedTradeTypeName').innerText = type;
-      closeModal('tradeTypeModal');
-      renderDigitSelector();
-      updatePayouts();
-    }
-
-    function setDigit(digit) { app.selectedDigit = digit; renderDigitSelector(); updatePayouts(); }
-
-    // ---------------- Digit stats ----------------
-    function updateDigitStatsData() {
-      const total = app.tickHistory.length || 1;
-      let maxVal = -1, minVal = Infinity, maxDigit = 0, minDigit = 0;
-      app.digitsCounts.forEach((cnt, idx) => {
-        if (cnt > maxVal) { maxVal = cnt; maxDigit = idx; }
-        if (cnt < minVal) { minVal = cnt; minDigit = idx; }
-      });
-      app.digitsData = app.digitsCounts.map((cnt, idx) => ({
-        num: idx, pct: ((cnt / total) * 100).toFixed(1), isHighest: idx === maxDigit, isLowest: idx === minDigit
-      }));
-      return { maxDigit, minDigit };
-    }
-
-    function renderDigitsStats() {
-      updateDigitStatsData();
-      const container = document.getElementById('digitsStatsGrid');
-      container.innerHTML = app.digitsData.map(item => `
-        <div class="digit-circle-item">
-          <div class="circle-stat ${item.isHighest ? 'highest' : ''} ${item.isLowest ? 'lowest' : ''}">
-            <span class="num">${item.num}</span>
-            <span class="pct">${item.pct}%</span>
-          </div>
-          ${item.isHighest ? '<div class="indicator-arrow"></div>' : ''}
-          ${item.isLowest ? '<div class="indicator-arrow down"></div>' : ''}
+    <div class="room-grid">
+      <div class="room-card">
+        <div class="room-photo fern"><span class="room-ticket">$140/night</span></div>
+        <div class="room-body">
+          <h3>The Fern Room</h3>
+          <div class="room-meta">Queen bed · Garden view</div>
+          <p>Ground floor, closest to the kitchen — you'll smell breakfast before your alarm does.</p>
+          <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
-      `).join('');
-    }
-
-    function renderDigitSelector() {
-      const container = document.getElementById('digitButtonsGrid');
-      if (app.tradeType === 'Even/Odd') { container.style.display = 'none'; return; }
-      container.style.display = 'grid';
-      container.innerHTML = Array.from({length: 10}, (_, i) => `
-        <button class="digit-btn ${app.selectedDigit === i ? 'active' : ''}" onclick="setDigit(${i})">${i}</button>
-      `).join('');
-    }
-
-    function updatePayouts() {
-      const container = document.getElementById('actionButtonsContainer');
-      let label1 = "Higher", label2 = "Lower";
-      if (app.tradeType === 'Over/Under') { label1 = "Over"; label2 = "Under"; }
-      else if (app.tradeType === 'Matches/Differs') { label1 = "Matches"; label2 = "Differs"; }
-      else if (app.tradeType === 'Even/Odd') { label1 = "Even"; label2 = "Odd"; }
-
-      const enabled = wsReady && currentToken;
-      container.innerHTML = `
-        <button class="action-btn btn-over" onclick="executeManualTrade('${label1}')" ${enabled ? '' : 'disabled'}>
-          <div class="action-btn-header">${label1}</div>
-        </button>
-        <button class="action-btn btn-under" onclick="executeManualTrade('${label2}')" ${enabled ? '' : 'disabled'}>
-          <div class="action-btn-header">${label2}</div>
-        </button>
-      `;
-    }
-
-    function renderMarketsList() {
-      document.getElementById('marketList').innerHTML = app.markets.map(m => `
-        <div class="drawer-option" onclick="selectMarket('${m.name}', '${m.symbol}')">
-          <span>${m.name}</span>
-          <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: var(--text-muted);"></i>
+      </div>
+      <div class="room-card">
+        <div class="room-photo cedar"><span class="room-ticket">$165/night</span></div>
+        <div class="room-body">
+          <h3>The Cedar Room</h3>
+          <div class="room-meta">King bed · Private balcony</div>
+          <p>Our largest room, with a clawfoot tub and a balcony that catches the last of the evening light.</p>
+          <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
-      `).join('');
-    }
+      </div>
+      <div class="room-card">
+        <div class="room-photo fox"><span class="room-ticket">$155/night</span></div>
+        <div class="room-body">
+          <h3>The Fox Den</h3>
+          <div class="room-meta">Two twins · Forest view</div>
+          <p>Tucked under the eaves — the quietest room in the house, favored by early sleepers.</p>
+          <a href="#booking" class="room-link">Reserve this room →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // ---------------- Trading ----------------
-    function executeManualTrade(choice) {
-      if (!currentToken) { openModal('settingsModal'); return; }
-      if (!wsReady) { setBanner('Not connected yet — please wait.', 'warn'); return; }
+<section class="amenities" id="amenities">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label" style="color:var(--walnut);">What's Included</span>
+      <h2>The small things we get right</h2>
+    </div>
+    <div class="amenity-grid">
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 10h16v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8z"/><path d="M4 10l8-6 8 6"/></svg>
+        <h4>Home-cooked breakfast</h4>
+        <p>Eggs from our own hens, bread baked that morning, coffee that doesn't quit.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v6M8 5l4 3 4-3"/><path d="M4 22c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+        <h4>Wood-burning stoves</h4>
+        <p>Every room has one, stocked and ready — we'll show you how it likes to be lit.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+        <h4>Trailhead access</h4>
+        <p>Maps and walking sticks by the door — the loop trail starts right behind the barn.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+        <h4>No screens, on purpose</h4>
+        <p>Weak signal by design. Board games, a full bookshelf, and a porch swing instead.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      const stake = parseFloat(document.getElementById('manualStake').value);
-      const ticks = parseInt(document.getElementById('manualTicks').value);
-      if (isNaN(stake) || stake <= 0) { setBanner('Enter a valid stake amount.', 'warn'); return; }
-      if (isNaN(ticks) || ticks <= 0) { setBanner('Enter a valid tick duration.', 'warn'); return; }
+<section class="reviews" id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label" style="color:var(--walnut);">From the Guestbook</span>
+      <h2>What people tell us on their way out</h2>
+    </div>
+    <div class="review-grid">
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>We came for one night and stayed for three. The Cedar Room's tub alone was worth the drive.</p>
+        <div class="guest">— M. Alvarez, Fern Room guest</div>
+      </div>
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>Breakfast at 8 became the best part of our morning, not just a meal we showed up for.</p>
+        <div class="guest">— T. Okafor, Fox Den guest</div>
+      </div>
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>The trail behind the barn turned into a two-hour walk we didn't plan on. Exactly the reset we needed.</p>
+        <div class="guest">— R. Bennett, Cedar Room guest</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-      let contractType = 'DIGITOVER';
-      if (choice === 'Under') contractType = 'DIGITUNDER';
-      if (choice === 'Even') contractType = 'DIGITEVEN';
-      if (choice === 'Odd') contractType = 'DIGITODD';
-      if (choice === 'Matches') contractType = 'DIGITMATCH';
-      if (choice === 'Differs') contractType = 'DIGITDIFF';
+<section class="booking" id="booking">
+  <div class="wrap booking-grid">
+    <div class="booking-info">
+      <span class="label">Ready When You Are</span>
+      <h2>Check what's open</h2>
+      <p>Send us your dates and we'll confirm within a day — no booking fees, no middleman, just us checking the calendar on the kitchen wall.</p>
+      <div style="margin-top:2rem;">
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.9 2.2z"/></svg>
+          (555) 019-2837
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          stay@hollowfoxinn.example
+        </div>
+        <div class="contact-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          412 Cedar Hollow Rd, placeholder, ST
+        </div>
+      </div>
+    </div>
 
-      const parameters = {
-        amount: stake, basis: 'stake', contract_type: contractType, currency: app.currency,
-        duration: ticks, duration_unit: 't', symbol: app.symbol
-      };
-      if (['DIGITOVER', 'DIGITUNDER', 'DIGITMATCH', 'DIGITDIFF'].includes(contractType)) {
-        parameters.barrier = app.selectedDigit.toString();
-      }
+    <form onsubmit="event.preventDefault(); alert('Thanks! Replace this with your real booking system to receive requests.');">
+      <div class="form-row">
+        <div>
+          <label for="checkin">Check-in</label>
+          <input type="date" id="checkin" required>
+        </div>
+        <div>
+          <label for="checkout">Check-out</label>
+          <input type="date" id="checkout" required>
+        </div>
+      </div>
+      <div>
+        <label for="guests">Guests</label>
+        <select id="guests">
+          <option>1 guest</option>
+          <option>2 guests</option>
+          <option>3 guests</option>
+          <option>4 guests</option>
+        </select>
+      </div>
+      <div>
+        <label for="room">Preferred room</label>
+        <select id="room">
+          <option>No preference</option>
+          <option>The Fern Room</option>
+          <option>The Cedar Room</option>
+          <option>The Fox Den</option>
+        </select>
+      </div>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your full name" required>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="submit-btn">Request These Dates</button>
+      <p class="form-note">This form is a placeholder — connect it to email or a booking platform to go live.</p>
+    </form>
+  </div>
+</section>
 
-      ws.send(JSON.stringify({ buy: 1, price: stake, parameters }));
-    }
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">The Hollow Fox Inn</div>
+        <p>A small bed &amp; breakfast at the edge of Cedar Hollow Valley. Three rooms, one table, breakfast at eight.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="#welcome">About</a></li>
+          <li><a href="#rooms">Rooms</a></li>
+          <li><a href="#amenities">Amenities</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="tel:5550192837">(555) 019-2837</a></li>
+          <li><a href="mailto:stay@hollowfoxinn.example">stay@hollowfoxinn.example</a></li>
+          <li><a href="#booking">Check Availability</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 The Hollow Fox Inn — placeholder name, swap freely</span>
+      <span>Built with care, one porch light at a time</span>
+    </div>
+  </div>
+</footer>
 
-    function toggleAutoBot() {
-      if (!currentToken) { openModal('settingsModal'); return; }
-      const btn = document.getElementById('botControlBtn');
-      app.botRunning = !app.botRunning;
-      if (app.botRunning) {
-        btn.innerHTML = `<i class="fa-solid fa-stop"></i> STOP AUTO BOT`;
-        btn.className = "btn-full btn-red";
-        app.botCurrentStake = parseFloat(document.getElementById('botStake').value);
-        app.botState = 'SEARCHING_LEAST';
-        app.oppositeCount = 0;
-        app.botPnl = 0;
-      } else {
-        btn.innerHTML = `<i class="fa-solid fa-play"></i> START AUTO BOT`;
-        btn.className = "btn-full btn-cyan";
-        document.getElementById('step3Val').innerText = "Idle";
-      }
-    }
-
-    function processBotStrategy(lastDigit) {
-      if (!app.botRunning) return;
-      const { maxDigit, minDigit } = updateDigitStatsData();
-      const isMaxEven = maxDigit % 2 === 0;
-      const isMinEven = minDigit % 2 === 0;
-      const validParitySplit = (isMaxEven !== isMinEven);
-
-      const step1El = document.getElementById('step1Val');
-      const step2El = document.getElementById('step2Val');
-      const step3El = document.getElementById('step3Val');
-
-      step1El.innerText = validParitySplit ? `Valid (Max:${maxDigit}, Min:${minDigit})` : `Invalid Parity (Both ${isMaxEven ? 'Even' : 'Odd'})`;
-
-      if (!validParitySplit) {
-        app.botState = 'SEARCHING_LEAST';
-        app.oppositeCount = 0;
-        step2El.innerText = "Waiting...";
-        step3El.innerText = "Paused: Parity condition not met";
-        return;
-      }
-
-      app.targetTrade = isMaxEven ? 'Even' : 'Odd';
-      const oppositeSide = isMaxEven ? 'Odd' : 'Even';
-      step2El.innerText = `Trade ${app.targetTrade}`;
-
-      const isCurrentDigitEven = (lastDigit % 2 === 0);
-      const isCurrentOpposite = isMaxEven ? !isCurrentDigitEven : isCurrentDigitEven;
-
-      if (app.botState === 'SEARCHING_LEAST') {
-        step3El.innerText = `Waiting for tick arrow on Least Digit (${minDigit})...`;
-        if (lastDigit === minDigit) {
-          app.botState = 'COUNTING_OPPOSITES';
-          app.oppositeCount = 0;
-          step3El.innerText = `Hit Min Digit (${minDigit})! Counting ${oppositeSide} ticks...`;
-        }
-      } else if (app.botState === 'COUNTING_OPPOSITES') {
-        if (isCurrentOpposite) {
-          app.oppositeCount++;
-          step3El.innerText = `Opposite (${oppositeSide}) ticks: ${app.oppositeCount}/3`;
-        } else {
-          if (app.oppositeCount >= 3) {
-            step3El.innerText = `Entry triggered on ${app.targetTrade}! Executing...`;
-            executeManualTrade(app.targetTrade);
-            app.botState = 'SEARCHING_LEAST';
-            app.oppositeCount = 0;
-          } else {
-            app.oppositeCount = 0;
-            step3El.innerText = `Reset: Hit ${app.targetTrade} before 3 opposite ticks. Counting again...`;
-          }
-        }
-      }
-    }
-
-    // ---------------- Boot ----------------
-    renderDigitSelector();
-    updatePayouts();
-    renderMarketsList();
-    setTradeButtonsEnabled(false);
-    initWebSocket();
-  </script>
 </body>
 </html>
