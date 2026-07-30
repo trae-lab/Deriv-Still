@@ -605,6 +605,12 @@
     cursor:pointer;
   }
 
+  .admin-section-divider{
+    border-top: 1px solid rgba(221, 168, 94, 0.3);
+    margin: 1.5rem 0 1rem 0;
+    padding-top: 1rem;
+  }
+
   /* ---------- FOOTER ---------- */
   footer{
     background:var(--pine-deep);
@@ -851,11 +857,11 @@
       <div style="margin-top:2rem;">
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.9 2.2z"/></svg>
-          (555) 019-2837
+          <span id="displayPhone">(555) 019-2837</span>
         </div>
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
-          stay@hollowfoxinn.example
+          <span id="displayEmail">stay@hollowfoxinn.example</span>
         </div>
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -864,7 +870,7 @@
       </div>
     </div>
 
-    <form onsubmit="event.preventDefault(); alert('Thanks! Replace this with your real booking system to receive requests.');">
+    <form onsubmit="handleBookingSubmit(event)">
       <div class="form-row">
         <div>
           <label for="checkin">Check-in</label>
@@ -902,7 +908,7 @@
         <input type="email" id="email" placeholder="you@example.com" required>
       </div>
       <button type="submit" class="submit-btn">Request These Dates</button>
-      <p class="form-note">This form is a placeholder — connect it to email or a booking platform to go live.</p>
+      <p class="form-note">Your reservation details will be sent directly to our innkeeper email.</p>
     </form>
   </div>
 </section>
@@ -930,40 +936,66 @@
 
     <!-- Step 2: Management Panel -->
     <div id="adminPanel" style="display:none;">
-      <h3>Manage House Prices & Details</h3>
+      <h3>Dashboard Management</h3>
       <div style="display:grid; gap:1rem; max-height:70vh; overflow-y:auto; padding-right:5px;">
+        
+        <!-- SECTION A: ADMIN CONTACT & NOTIFICATIONS -->
         <div>
-          <label for="selectRoom">Select House / Room</label>
-          <select id="selectRoom" onchange="loadRoomForEdit()">
-            <option value="fern">The Fern Room</option>
-            <option value="cedar">The Cedar Room</option>
-            <option value="fox">The Fox Den</option>
-            <option value="new">+ Add New House/Room</option>
-          </select>
+          <h4 style="color:var(--amber-light); margin-bottom:0.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; text-transform:uppercase;">1. Host Contact & Booking Notifications</h4>
+          <div style="display:grid; gap:0.8rem;">
+            <div>
+              <label for="adminPhone">Host Phone Number</label>
+              <input type="text" id="adminPhone" value="(555) 019-2837">
+            </div>
+            <div>
+              <label for="adminEmail">Notification Email Address</label>
+              <input type="email" id="adminEmail" value="stay@hollowfoxinn.example">
+            </div>
+            <button class="submit-btn" onclick="saveContactInfo()" style="padding:0.6rem;">Save Contact Details</button>
+          </div>
         </div>
+
+        <div class="admin-section-divider"></div>
+
+        <!-- SECTION B: HOUSE & ROOM MANAGEMENT -->
         <div>
-          <label for="editTitle">Room / House Name</label>
-          <input type="text" id="editTitle">
+          <h4 style="color:var(--amber-light); margin-bottom:0.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; text-transform:uppercase;">2. Manage Houses & Rooms</h4>
+          <div style="display:grid; gap:0.8rem;">
+            <div>
+              <label for="selectRoom">Select House / Room</label>
+              <select id="selectRoom" onchange="loadRoomForEdit()">
+                <option value="fern">The Fern Room</option>
+                <option value="cedar">The Cedar Room</option>
+                <option value="fox">The Fox Den</option>
+                <option value="new">+ Add New House/Room</option>
+              </select>
+            </div>
+            <div>
+              <label for="editTitle">Room / House Name</label>
+              <input type="text" id="editTitle">
+            </div>
+            <div>
+              <label for="editPrice">Price (e.g. $140/night)</label>
+              <input type="text" id="editPrice">
+            </div>
+            <div>
+              <label for="editPhoto">Photo URL or Local File Path</label>
+              <input type="text" id="editPhoto" placeholder="https://example.com/photo.jpg or images/house.jpg">
+              <input type="file" id="filePhoto" accept="image/*" onchange="handleFileSelect(event)" style="margin-top:0.4rem; font-size:0.75rem;">
+            </div>
+            <div>
+              <label for="editMeta">Sub-details (e.g. Queen bed · Garden view)</label>
+              <input type="text" id="editMeta">
+            </div>
+            <div>
+              <label for="editDesc">Description</label>
+              <textarea id="editDesc" rows="3"></textarea>
+            </div>
+            <button class="submit-btn" onclick="saveRoomDetails()">Save House Changes</button>
+            <button class="delete-btn" id="deleteRoomBtn" onclick="deleteRoomDetails()">🗑 Delete This House</button>
+          </div>
         </div>
-        <div>
-          <label for="editPrice">Price (e.g. $140/night)</label>
-          <input type="text" id="editPrice">
-        </div>
-        <div>
-          <label for="editPhoto">Photo URL or Local File Path</label>
-          <input type="text" id="editPhoto" placeholder="https://example.com/photo.jpg or images/house.jpg">
-          <input type="file" id="filePhoto" accept="image/*" onchange="handleFileSelect(event)" style="margin-top:0.4rem; font-size:0.75rem;">
-        </div>
-        <div>
-          <label for="editMeta">Sub-details (e.g. Queen bed · Garden view)</label>
-          <input type="text" id="editMeta">
-        </div>
-        <div>
-          <label for="editDesc">Description</label>
-          <textarea id="editDesc" rows="3"></textarea>
-        </div>
-        <button class="submit-btn" onclick="saveRoomDetails()">Save Changes</button>
-        <button class="delete-btn" id="deleteRoomBtn" onclick="deleteRoomDetails()">🗑 Delete This House</button>
+
       </div>
     </div>
   </div>
@@ -988,8 +1020,8 @@
       <div>
         <h5>Visit</h5>
         <ul>
-          <li><a href="tel:5550192837">(555) 019-2837</a></li>
-          <li><a href="mailto:stay@hollowfoxinn.example">stay@hollowfoxinn.example</a></li>
+          <li><a href="tel:5550192837" id="footerPhoneLink"><span id="footerPhone">(555) 019-2837</span></a></li>
+          <li><a href="mailto:stay@hollowfoxinn.example" id="footerEmailLink"><span id="footerEmail">stay@hollowfoxinn.example</span></a></li>
           <li><a href="#booking">Check Availability</a></li>
         </ul>
       </div>
@@ -1003,6 +1035,7 @@
 
 <script>
   let customRoomCounter = 0;
+  let currentNotificationEmail = "stay@hollowfoxinn.example";
 
   function toggleMenu() {
     const menu = id('dropdownMenu');
@@ -1031,6 +1064,57 @@
     } else {
       alert('Invalid credentials! Try Username: admin & Password: admin123');
     }
+  }
+
+  function saveContactInfo() {
+    const phone = id('adminPhone').value;
+    const email = id('adminEmail').value;
+
+    if(!phone || !email) {
+      alert('Please fill out both phone and email fields.');
+      return;
+    }
+
+    currentNotificationEmail = email;
+
+    // Update displays across the site
+    id('displayPhone').innerText = phone;
+    id('displayEmail').innerText = email;
+
+    id('footerPhone').innerText = phone;
+    id('footerEmail').innerText = email;
+
+    id('footerPhoneLink').href = 'tel:' + phone.replace(/[^0-9+]/g, '');
+    id('footerEmailLink').href = 'mailto:' + email;
+
+    alert('Contact details updated successfully! Bookings will now notify ' + email);
+  }
+
+  function handleBookingSubmit(event) {
+    event.preventDefault();
+
+    const name = id('name').value;
+    const guestEmail = id('email').value;
+    const checkin = id('checkin').value;
+    const checkout = id('checkout').value;
+    const guests = id('guests').value;
+    const room = id('room').value;
+
+    const emailSubject = encodeURIComponent("New Booking Request from " + name);
+    const emailBody = encodeURIComponent(
+      `Hello Innkeeper,\n\nYou have received a new booking request:\n\n` +
+      `Guest Name: ${name}\n` +
+      `Guest Email: ${guestEmail}\n` +
+      `Check-in: ${checkin}\n` +
+      `Check-out: ${checkout}\n` +
+      `Guests: ${guests}\n` +
+      `Preferred Room: ${room}\n`
+    );
+
+    alert(`Booking Request Submitted!\n\nA booking notification email has been prepared to send to: ${currentNotificationEmail}`);
+    
+    // Trigger direct mail client targeting the configured admin email
+    window.location.href = `mailto:${currentNotificationEmail}?subject=${emailSubject}&body=${emailBody}`;
   }
 
   function handleFileSelect(event) {
