@@ -83,6 +83,13 @@
     padding:1.1rem 6vw;
     max-width:1180px;
     margin:0 auto;
+    position:relative;
+  }
+
+  .nav-left-group{
+    display:flex;
+    align-items:center;
+    gap:1rem;
   }
 
   .logo{
@@ -118,7 +125,53 @@
   }
   .nav-cta:hover{background:var(--amber);}
 
-  .menu-toggle{display:none;background:none;border:none;cursor:pointer;}
+  .menu-toggle{
+    background:none;
+    border:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:4px;
+  }
+
+  /* Dropdown Menu from 3 lines */
+  .mobile-menu{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:6vw;
+    background:var(--oat-light);
+    border:1px solid rgba(42,36,28,0.15);
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    border-radius:4px;
+    padding:1rem;
+    width:220px;
+    z-index:200;
+    flex-direction:column;
+    gap:0.8rem;
+  }
+
+  .mobile-menu.active{
+    display:flex;
+  }
+
+  .mobile-menu a, .mobile-menu button{
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--ink);
+    cursor:pointer;
+    padding:0.4rem 0;
+    border-bottom:1px solid rgba(42,36,28,0.05);
+  }
+
+  .mobile-menu button.admin-btn{
+    color:var(--walnut);
+    font-weight:700;
+  }
 
   /* ---------- HERO ---------- */
   .hero{
@@ -364,6 +417,7 @@
   .room-photo.fern{background:linear-gradient(150deg,#5c6b4f,#33402a);}
   .room-photo.cedar{background:linear-gradient(150deg,#8a6b4a,#4a3220);}
   .room-photo.fox{background:linear-gradient(150deg,#a9713c,#6b4226);}
+  .room-photo.custom{background:linear-gradient(150deg,#4a5c51,#223328);}
 
   .room-ticket{
     position:absolute;top:12px;right:12px;
@@ -461,7 +515,7 @@
   }
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
   label{font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--amber-light);display:block;margin-bottom:0.45rem;}
-  input,select{
+  input,select,textarea{
     width:100%;
     background:rgba(245,239,224,0.08);
     border:1px solid rgba(245,239,224,0.25);
@@ -471,8 +525,8 @@
     font-family:'Karla',sans-serif;
     font-size:0.92rem;
   }
-  input::placeholder{color:rgba(245,239,224,0.4);}
-  input:focus,select:focus{outline:2px solid var(--amber-light);outline-offset:1px;}
+  input::placeholder, textarea::placeholder{color:rgba(245,239,224,0.4);}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--amber-light);outline-offset:1px;}
   select option{color:var(--ink);}
 
   .submit-btn{
@@ -491,6 +545,45 @@
   }
   .submit-btn:hover{background:var(--amber-light);}
   .form-note{font-size:0.76rem;color:rgba(245,239,224,0.5);text-align:center;}
+
+  /* ---------- ADMIN MODAL & SECTION ---------- */
+  .admin-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(26,36,29,0.85);
+    backdrop-filter:blur(5px);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+  }
+  .admin-modal.active{display:flex;}
+  .admin-box{
+    background:var(--pine-deep);
+    border:1px solid var(--amber-light);
+    border-radius:6px;
+    width:100%;
+    max-width:480px;
+    padding:2rem;
+    color:var(--oat-light);
+    position:relative;
+  }
+  .admin-box h3{
+    font-size:1.5rem;
+    margin-bottom:1rem;
+    color:var(--amber-light);
+  }
+  .close-admin{
+    position:absolute;
+    top:1rem;
+    right:1rem;
+    background:none;
+    border:none;
+    color:var(--oat-light);
+    font-size:1.2rem;
+    cursor:pointer;
+  }
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -535,7 +628,6 @@
   }
   @media (max-width:640px){
     .nav-links{display:none;}
-    .menu-toggle{display:block;}
     .room-grid{grid-template-columns:1fr;}
     .amenity-grid{grid-template-columns:1fr;}
     .form-row{grid-template-columns:1fr;}
@@ -549,13 +641,29 @@
 
 <header>
   <nav>
-    <div class="logo">
-      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16 4 L28 16 H23 V27 H9 V16 H4 Z" fill="#5B3A29"/>
-        <rect x="14" y="19" width="4" height="8" fill="#EDE3CE"/>
-      </svg>
-      The Hollow Fox Inn
+    <div class="nav-left-group">
+      <button class="menu-toggle" aria-label="Menu" onclick="toggleMenu()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4 L28 16 H23 V27 H9 V16 H4 Z" fill="#5B3A29"/>
+          <rect x="14" y="19" width="4" height="8" fill="#EDE3CE"/>
+        </svg>
+        The Hollow Fox Inn
+      </div>
     </div>
+
+    <!-- Dropdown menu triggered by the 3-line icon -->
+    <div class="mobile-menu" id="dropdownMenu">
+      <a href="#welcome" onclick="toggleMenu()">About</a>
+      <a href="#rooms" onclick="toggleMenu()">Rooms</a>
+      <a href="#amenities" onclick="toggleMenu()">Amenities</a>
+      <a href="#reviews" onclick="toggleMenu()">Reviews</a>
+      <a href="#booking" onclick="toggleMenu()">Check Availability</a>
+      <button class="admin-btn" onclick="toggleMenu(); openAdminLogin();">⚙ Admin Portal</button>
+    </div>
+
     <div class="nav-links">
       <a href="#welcome">About</a>
       <a href="#rooms">Rooms</a>
@@ -563,9 +671,6 @@
       <a href="#reviews">Reviews</a>
       <a href="#booking" class="nav-cta">Check Availability</a>
     </div>
-    <button class="menu-toggle" aria-label="Menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
-    </button>
   </nav>
 </header>
 
@@ -625,31 +730,31 @@
       <h2>Three rooms, each named for what you'll find outside the window.</h2>
       <p>Every room opens onto the porch or the garden — no interior hallways to slip past quietly in your socks.</p>
     </div>
-    <div class="room-grid">
+    <div class="room-grid" id="roomContainer">
       <div class="room-card">
-        <div class="room-photo fern"><span class="room-ticket">$140/night</span></div>
+        <div class="room-photo fern"><span class="room-ticket" id="price-fern">$140/night</span></div>
         <div class="room-body">
-          <h3>The Fern Room</h3>
-          <div class="room-meta">Queen bed · Garden view</div>
-          <p>Ground floor, closest to the kitchen — you'll smell breakfast before your alarm does.</p>
+          <h3 id="name-fern">The Fern Room</h3>
+          <div class="room-meta" id="meta-fern">Queen bed · Garden view</div>
+          <p id="desc-fern">Ground floor, closest to the kitchen — you'll smell breakfast before your alarm does.</p>
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       </div>
       <div class="room-card">
-        <div class="room-photo cedar"><span class="room-ticket">$165/night</span></div>
+        <div class="room-photo cedar"><span class="room-ticket" id="price-cedar">$165/night</span></div>
         <div class="room-body">
-          <h3>The Cedar Room</h3>
-          <div class="room-meta">King bed · Private balcony</div>
-          <p>Our largest room, with a clawfoot tub and a balcony that catches the last of the evening light.</p>
+          <h3 id="name-cedar">The Cedar Room</h3>
+          <div class="room-meta" id="meta-cedar">King bed · Private balcony</div>
+          <p id="desc-cedar">Our largest room, with a clawfoot tub and a balcony that catches the last of the evening light.</p>
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       </div>
       <div class="room-card">
-        <div class="room-photo fox"><span class="room-ticket">$155/night</span></div>
+        <div class="room-photo fox"><span class="room-ticket" id="price-fox">$155/night</span></div>
         <div class="room-body">
-          <h3>The Fox Den</h3>
-          <div class="room-meta">Two twins · Forest view</div>
-          <p>Tucked under the eaves — the quietest room in the house, favored by early sleepers.</p>
+          <h3 id="name-fox">The Fox Den</h3>
+          <div class="room-meta" id="meta-fox">Two twins · Forest view</div>
+          <p id="desc-fox">Tucked under the eaves — the quietest room in the house, favored by early sleepers.</p>
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
       </div>
@@ -782,6 +887,62 @@
   </div>
 </section>
 
+<!-- ADMIN MODAL PORTAL -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-box">
+    <button class="close-admin" onclick="closeAdminModal()">✕</button>
+    
+    <!-- Step 1: Login Form -->
+    <div id="adminLoginForm">
+      <h3>Admin Login</h3>
+      <div style="display:grid; gap:1rem;">
+        <div>
+          <label for="adminUser">Username</label>
+          <input type="text" id="adminUser" placeholder="admin">
+        </div>
+        <div>
+          <label for="adminPass">Password</label>
+          <input type="password" id="adminPass" placeholder="admin123">
+        </div>
+        <button class="submit-btn" onclick="loginAdmin()">Log In</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Management Panel -->
+    <div id="adminPanel" style="display:none;">
+      <h3>Manage House Prices & Details</h3>
+      <div style="display:grid; gap:1rem; max-height:70vh; overflow-y:auto; padding-right:5px;">
+        <div>
+          <label for="selectRoom">Select Room to Edit or Add New</label>
+          <select id="selectRoom" onchange="loadRoomForEdit()">
+            <option value="fern">The Fern Room</option>
+            <option value="cedar">The Cedar Room</option>
+            <option value="fox">The Fox Den</option>
+            <option value="new">+ Add New House/Room</option>
+          </select>
+        </div>
+        <div>
+          <label for="editTitle">Room / House Name</label>
+          <input type="text" id="editTitle">
+        </div>
+        <div>
+          <label for="editPrice">Price (e.g. $140/night)</label>
+          <input type="text" id="editPrice">
+        </div>
+        <div>
+          <label for="editMeta">Sub-details (e.g. Queen bed · Garden view)</label>
+          <input type="text" id="editMeta">
+        </div>
+        <div>
+          <label for="editDesc">Description</label>
+          <textarea id="editDesc" rows="3"></textarea>
+        </div>
+        <button class="submit-btn" onclick="saveRoomDetails()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
     <div class="footer-grid">
@@ -813,6 +974,84 @@
     </div>
   </div>
 </footer>
+
+<script>
+  function toggleMenu() {
+    const menu = id('dropdownMenu');
+    menu.classList.toggle('active');
+  }
+
+  function id(name) { return document.getElementById(name); }
+
+  function openAdminLogin() {
+    id('adminModal').classList.add('active');
+  }
+
+  function closeAdminModal() {
+    id('adminModal').classList.remove('active');
+  }
+
+  function loginAdmin() {
+    const u = id('adminUser').value;
+    const p = id('adminPass').value;
+    
+    // Default admin credentials (User: admin | Pass: admin123)
+    if(u === 'admin' && p === 'admin123') {
+      id('adminLoginForm').style.display = 'none';
+      id('adminPanel').style.display = 'block';
+      loadRoomForEdit();
+    } else {
+      alert('Invalid credentials! Try Username: admin & Password: admin123');
+    }
+  }
+
+  function loadRoomForEdit() {
+    const selected = id('selectRoom').value;
+    if(selected === 'new') {
+      id('editTitle').value = '';
+      id('editPrice').value = '';
+      id('editMeta').value = '';
+      id('editDesc').value = '';
+    } else {
+      id('editTitle').value = id('name-' + selected).innerText;
+      id('editPrice').value = id('price-' + selected).innerText;
+      id('editMeta').value = id('meta-' + selected).innerText;
+      id('editDesc').value = id('desc-' + selected).innerText;
+    }
+  }
+
+  function saveRoomDetails() {
+    const selected = id('selectRoom').value;
+    const title = id('editTitle').value;
+    const price = id('editPrice').value;
+    const meta = id('editMeta').value;
+    const desc = id('editDesc').value;
+
+    if(selected === 'new') {
+      const container = id('roomContainer');
+      const newCard = document.createElement('div');
+      newCard.className = 'room-card';
+      newCard.innerHTML = `
+        <div class="room-photo custom"><span class="room-ticket">${price}</span></div>
+        <div class="room-body">
+          <h3>${title}</h3>
+          <div class="room-meta">${meta}</div>
+          <p>${desc}</p>
+          <a href="#booking" class="room-link">Reserve this room →</a>
+        </div>
+      `;
+      container.appendChild(newCard);
+      alert('New room added successfully!');
+    } else {
+      id('name-' + selected).innerText = title;
+      id('price-' + selected).innerText = price;
+      id('meta-' + selected).innerText = meta;
+      id('desc-' + selected).innerText = desc;
+      alert('Room updated successfully!');
+    }
+    closeAdminModal();
+  }
+</script>
 
 </body>
 </html>
