@@ -83,13 +83,6 @@
     padding:1.1rem 6vw;
     max-width:1180px;
     margin:0 auto;
-    position:relative;
-  }
-
-  .nav-left-group{
-    display:flex;
-    align-items:center;
-    gap:1rem;
   }
 
   .logo{
@@ -125,52 +118,20 @@
   }
   .nav-cta:hover{background:var(--amber);}
 
-  .menu-toggle{
-    background:none;
-    border:none;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:4px;
-  }
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;}
 
-  /* Dropdown Menu from 3 lines */
-  .mobile-menu{
-    display:none;
-    position:absolute;
-    top:100%;
-    left:6vw;
-    background:var(--oat-light);
-    border:1px solid rgba(42,36,28,0.15);
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-    border-radius:4px;
-    padding:1rem;
-    width:220px;
-    z-index:200;
-    flex-direction:column;
-    gap:0.8rem;
+  .admin-toggle{
+    background:none;border:none;cursor:pointer;
+    padding:0.4rem;border-radius:3px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.2s ease;
   }
-
-  .mobile-menu.active{
-    display:flex;
-  }
-
-  .mobile-menu a, .mobile-menu button{
-    font-family:'Space Mono',monospace;
-    font-size:0.85rem;
-    text-align:left;
-    background:none;
-    border:none;
-    color:var(--ink);
-    cursor:pointer;
-    padding:0.4rem 0;
-    border-bottom:1px solid rgba(42,36,28,0.05);
-  }
-
-  .mobile-menu button.admin-btn{
-    color:var(--walnut);
-    font-weight:700;
+  .admin-toggle:hover{background:rgba(42,36,28,0.08);}
+  .admin-toggle.is-logged-in{position:relative;}
+  .admin-toggle.is-logged-in::after{
+    content:'';position:absolute;top:2px;right:2px;
+    width:7px;height:7px;border-radius:50%;background:var(--amber);
+    box-shadow:0 0 0 2px var(--oat);
   }
 
   /* ---------- HERO ---------- */
@@ -328,6 +289,71 @@
   .section-head h2{font-size:clamp(1.9rem,3.4vw,2.7rem);}
   .section-head p{color:rgba(42,36,28,0.7);margin-top:1rem;max-width:52ch;}
 
+  /* ---------- WELCOME ---------- */
+  .welcome{background:var(--oat);}
+  .welcome-grid{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:4rem;
+    align-items:center;
+  }
+
+  .photo-block{
+    aspect-ratio:4/5;
+    border-radius:4px;
+    position:relative;
+    overflow:hidden;
+  }
+  .photo-block.tall{aspect-ratio:3/4;}
+  .photo-cabin{
+    background:
+      linear-gradient(180deg, rgba(36,49,42,0.15), rgba(26,36,29,0.55)),
+      linear-gradient(160deg,#8a6b4a 0%,#5b3a29 45%,#3a2517 100%);
+  }
+  .photo-cabin::after{
+    content:'';
+    position:absolute;inset:0;
+    background-image:repeating-linear-gradient(100deg, rgba(0,0,0,0.06) 0 2px, transparent 2px 14px);
+  }
+  .photo-breakfast{
+    background:
+      radial-gradient(circle at 30% 30%, rgba(201,138,60,0.5), transparent 55%),
+      linear-gradient(160deg,#dccaa0 0%,#c9a765 55%,#a9803f 100%);
+  }
+  .photo-forest{
+    background:linear-gradient(180deg,#3c4a37 0%,#24312a 60%,#1a241d 100%);
+  }
+  .photo-forest::after{
+    content:'';
+    position:absolute;inset:0;
+    background-image:repeating-linear-gradient(75deg, rgba(237,227,206,0.05) 0 3px, transparent 3px 22px);
+  }
+  .photo-tag{
+    position:absolute;bottom:14px;left:14px;
+    background:rgba(26,36,29,0.72);
+    color:var(--oat-light);
+    font-family:'Space Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    padding:0.35rem 0.6rem;
+    border-radius:2px;
+  }
+
+  .welcome-text h3{font-size:1.6rem;margin-bottom:1.1rem;}
+  .welcome-text p{color:rgba(42,36,28,0.75);margin-bottom:1.1rem;max-width:52ch;}
+  .signature{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    margin-top:1.5rem;
+    color:var(--walnut);
+  }
+
+  .stat-row{display:flex;gap:2.4rem;margin-top:2.2rem;flex-wrap:wrap;}
+  .stat-row div{border-left:2px solid var(--amber);padding-left:0.9rem;}
+  .stat-row strong{display:block;font-family:'Fraunces',serif;font-size:1.6rem;}
+  .stat-row span{font-size:0.8rem;color:rgba(42,36,28,0.6);}
+
   /* ---------- ROOMS ---------- */
   .rooms{background:var(--pine);color:var(--oat-light);}
   .rooms .section-head .label{color:var(--amber-light);}
@@ -348,16 +374,10 @@
   }
   .room-card:hover{transform:translateY(-6px);border-color:var(--amber-light);}
 
-  .room-photo{
-    height:200px;
-    position:relative;
-    background-size:cover;
-    background-position:center;
-  }
-  .room-photo.fern{background-image:linear-gradient(150deg,#5c6b4f,#33402a);}
-  .room-photo.cedar{background-image:linear-gradient(150deg,#8a6b4a,#4a3220);}
-  .room-photo.fox{background-image:linear-gradient(150deg,#a9713c,#6b4226);}
-  .room-photo.custom{background-image:linear-gradient(150deg,#4a5c51,#223328);}
+  .room-photo{height:200px;position:relative;}
+  .room-photo.fern{background:linear-gradient(150deg,#5c6b4f,#33402a);}
+  .room-photo.cedar{background:linear-gradient(150deg,#8a6b4a,#4a3220);}
+  .room-photo.fox{background:linear-gradient(150deg,#a9713c,#6b4226);}
 
   .room-ticket{
     position:absolute;top:12px;right:12px;
@@ -388,6 +408,48 @@
     padding-bottom:2px;
   }
 
+  /* ---------- AMENITIES ---------- */
+  .amenities{background:var(--oat);}
+  .amenity-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2.2rem;
+  }
+  .amenity{text-align:left;}
+  .amenity svg{width:34px;height:34px;color:var(--walnut);margin-bottom:1rem;}
+  .amenity h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:0.4rem;}
+  .amenity p{font-size:0.88rem;color:rgba(42,36,28,0.65);}
+
+  /* ---------- REVIEWS ---------- */
+  .reviews{background:var(--cream-paper);position:relative;}
+  .review-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.8rem;
+  }
+  .postcard{
+    background:var(--oat-light);
+    border:1px solid rgba(42,36,28,0.1);
+    padding:1.8rem 1.6rem;
+    position:relative;
+    box-shadow:0 10px 24px rgba(42,36,28,0.06);
+    transform:rotate(var(--tilt,0deg));
+  }
+  .postcard:nth-child(1){--tilt:-1.4deg;}
+  .postcard:nth-child(2){--tilt:0.8deg;}
+  .postcard:nth-child(3){--tilt:-0.6deg;}
+
+  .washi{
+    position:absolute;top:-10px;left:24px;
+    width:60px;height:22px;
+    background:rgba(201,138,60,0.55);
+    transform:rotate(-3deg);
+  }
+
+  .postcard .stars{color:var(--amber);letter-spacing:2px;margin-bottom:0.9rem;font-size:0.9rem;}
+  .postcard p{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;line-height:1.5;margin-bottom:1.2rem;}
+  .postcard .guest{font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:rgba(42,36,28,0.55);}
+
   /* ---------- BOOKING ---------- */
   .booking{background:var(--walnut);color:var(--oat-light);}
   .booking-grid{
@@ -413,7 +475,7 @@
   }
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
   label{font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--amber-light);display:block;margin-bottom:0.45rem;}
-  input,select,textarea{
+  input,select{
     width:100%;
     background:rgba(245,239,224,0.08);
     border:1px solid rgba(245,239,224,0.25);
@@ -423,8 +485,8 @@
     font-family:'Karla',sans-serif;
     font-size:0.92rem;
   }
-  input::placeholder, textarea::placeholder{color:rgba(245,239,224,0.4);}
-  input:focus,select:focus,textarea:focus{outline:2px solid var(--amber-light);outline-offset:1px;}
+  input::placeholder{color:rgba(245,239,224,0.4);}
+  input:focus,select:focus{outline:2px solid var(--amber-light);outline-offset:1px;}
   select option{color:var(--ink);}
 
   .submit-btn{
@@ -442,67 +504,7 @@
     margin-top:0.3rem;
   }
   .submit-btn:hover{background:var(--amber-light);}
-  .delete-btn{
-    background:#8b3a3a;
-    color:#ffffff;
-    border:none;
-    padding:0.75rem;
-    font-family:'Space Mono',monospace;
-    font-weight:700;
-    font-size:0.8rem;
-    letter-spacing:0.03em;
-    border-radius:2px;
-    cursor:pointer;
-    transition:background 0.2s ease;
-    margin-top:0.5rem;
-  }
-  .delete-btn:hover{background:#a64242;}
   .form-note{font-size:0.76rem;color:rgba(245,239,224,0.5);text-align:center;}
-
-  /* ---------- ADMIN MODAL & SECTION ---------- */
-  .admin-modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(26,36,29,0.85);
-    backdrop-filter:blur(5px);
-    z-index:1000;
-    align-items:center;
-    justify-content:center;
-    padding:1rem;
-  }
-  .admin-modal.active{display:flex;}
-  .admin-box{
-    background:var(--pine-deep);
-    border:1px solid var(--amber-light);
-    border-radius:6px;
-    width:100%;
-    max-width:480px;
-    padding:2rem;
-    color:var(--oat-light);
-    position:relative;
-  }
-  .admin-box h3{
-    font-size:1.5rem;
-    margin-bottom:1rem;
-    color:var(--amber-light);
-  }
-  .close-admin{
-    position:absolute;
-    top:1rem;
-    right:1rem;
-    background:none;
-    border:none;
-    color:var(--oat-light);
-    font-size:1.2rem;
-    cursor:pointer;
-  }
-
-  .admin-section-divider{
-    border-top: 1px solid rgba(221, 168, 94, 0.3);
-    margin: 1.5rem 0 1rem 0;
-    padding-top: 1rem;
-  }
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -512,7 +514,7 @@
   }
   .footer-grid{
     display:grid;
-    grid-template-columns:1.4fr 1fr;
+    grid-template-columns:1.4fr 1fr 1fr;
     gap:3rem;
     padding-bottom:2.5rem;
     border-bottom:1px solid rgba(245,239,224,0.1);
@@ -538,15 +540,141 @@
   @media (max-width:960px){
     .hero-grid{grid-template-columns:1fr;text-align:left;padding-top:8rem;}
     .sign-wrap{margin-top:2.5rem;}
+    .welcome-grid{grid-template-columns:1fr;}
     .room-grid{grid-template-columns:1fr 1fr;}
+    .amenity-grid{grid-template-columns:1fr 1fr;}
+    .review-grid{grid-template-columns:1fr;}
     .booking-grid{grid-template-columns:1fr;}
     .footer-grid{grid-template-columns:1fr;gap:2rem;}
   }
   @media (max-width:640px){
     .nav-links{display:none;}
+    .menu-toggle{display:block;}
     .room-grid{grid-template-columns:1fr;}
+    .amenity-grid{grid-template-columns:1fr;}
     .form-row{grid-template-columns:1fr;}
     section{padding:4rem 0;}
+  }
+
+  /* ---------- ADMIN MODAL / PANEL ---------- */
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(26,36,29,0.6);
+    z-index:1000;
+    align-items:flex-start;
+    justify-content:center;
+    padding:4vh 1rem;
+    overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+
+  .modal-box{
+    background:var(--oat-light);
+    border-radius:6px;
+    width:100%;
+    max-width:420px;
+    padding:2.2rem;
+    margin-top:4vh;
+    position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+  .modal-box.wide{max-width:760px;}
+
+  .modal-close{
+    position:absolute;top:1rem;right:1rem;
+    background:none;border:none;cursor:pointer;
+    width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);
+  }
+  .modal-close:hover{background:rgba(42,36,28,0.08);}
+
+  .modal-box h3{font-size:1.4rem;margin-bottom:0.4rem;}
+  .modal-sub{font-size:0.85rem;color:rgba(42,36,28,0.6);margin-bottom:1.6rem;}
+
+  .field{margin-bottom:1rem;}
+  .field label{
+    font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;
+    letter-spacing:0.08em;color:var(--walnut);display:block;margin-bottom:0.4rem;
+  }
+  .field input, .field textarea{
+    width:100%;padding:0.7rem 0.85rem;border:1px solid rgba(42,36,28,0.2);
+    border-radius:3px;font-family:'Karla',sans-serif;font-size:0.92rem;background:#fff;
+  }
+  .field textarea{resize:vertical;min-height:70px;}
+  .field input:focus, .field textarea:focus{outline:2px solid var(--amber);outline-offset:1px;}
+
+  .modal-error{
+    background:rgba(180,60,50,0.1);color:#a33;
+    padding:0.6rem 0.8rem;border-radius:3px;
+    font-size:0.85rem;margin-bottom:1rem;display:none;
+  }
+  .modal-error.show{display:block;}
+
+  .btn-full{
+    width:100%;background:var(--walnut);color:var(--oat-light);border:none;
+    padding:0.85rem;border-radius:3px;font-family:'Space Mono',monospace;
+    font-size:0.85rem;font-weight:700;cursor:pointer;transition:background 0.2s ease;
+  }
+  .btn-full:hover{background:var(--amber);}
+
+  .admin-tabs{display:flex;gap:0.5rem;margin-bottom:1.6rem;border-bottom:1px solid rgba(42,36,28,0.12);}
+  .admin-tab{
+    background:none;border:none;padding:0.7rem 1rem;cursor:pointer;
+    font-family:'Space Mono',monospace;font-size:0.78rem;text-transform:uppercase;
+    letter-spacing:0.06em;color:rgba(42,36,28,0.5);border-bottom:2px solid transparent;
+  }
+  .admin-tab.active{color:var(--walnut);border-bottom-color:var(--amber);}
+
+  .admin-pane{display:none;}
+  .admin-pane.active{display:block;}
+
+  .admin-room-card{
+    border:1px solid rgba(42,36,28,0.14);border-radius:4px;
+    padding:1.2rem;margin-bottom:1.2rem;background:rgba(237,227,206,0.35);
+  }
+  .admin-room-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;}
+  .admin-room-head strong{font-family:'Fraunces',serif;font-size:1.05rem;}
+  .btn-small{
+    background:var(--walnut);color:var(--oat-light);border:none;
+    padding:0.5rem 0.9rem;border-radius:3px;font-family:'Space Mono',monospace;
+    font-size:0.72rem;cursor:pointer;transition:background 0.2s ease;
+  }
+  .btn-small:hover{background:var(--amber);}
+  .btn-small.danger{background:#a33;}
+  .btn-small.danger:hover{background:#c44;}
+  .btn-small.ghost{background:transparent;border:1px solid rgba(42,36,28,0.25);color:var(--ink);}
+
+  .admin-room-row{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;}
+  @media (max-width:520px){.admin-room-row{grid-template-columns:1fr;}}
+
+  .img-preview-wrap{display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;}
+  .img-preview{
+    width:80px;height:60px;border-radius:3px;object-fit:cover;
+    background:rgba(42,36,28,0.1);border:1px solid rgba(42,36,28,0.15);
+  }
+  .file-note{font-size:0.72rem;color:rgba(42,36,28,0.5);margin-top:0.3rem;}
+
+  .add-room-btn{
+    width:100%;border:1.5px dashed rgba(42,36,28,0.3);background:transparent;
+    padding:1rem;border-radius:4px;font-family:'Space Mono',monospace;
+    font-size:0.82rem;color:var(--walnut);cursor:pointer;transition:border-color 0.2s ease,color 0.2s ease;
+  }
+  .add-room-btn:hover{border-color:var(--amber);color:var(--amber);}
+
+  .save-toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--pine-deep);color:var(--oat-light);padding:0.8rem 1.4rem;
+    border-radius:4px;font-family:'Space Mono',monospace;font-size:0.82rem;
+    z-index:1200;opacity:0;pointer-events:none;transition:all 0.3s ease;
+  }
+  .save-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .logged-in-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(122,81,56,0.1);padding:0.7rem 1rem;border-radius:3px;
+    margin-bottom:1.6rem;font-size:0.85rem;
   }
 </style>
 </head>
@@ -556,9 +684,9 @@
 
 <header>
   <nav>
-    <div class="nav-left-group">
-      <button class="menu-toggle" aria-label="Menu" onclick="toggleMenu()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button class="admin-toggle" id="adminToggle" aria-label="Admin menu" title="Admin">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
       </button>
       <div class="logo">
         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -568,18 +696,16 @@
         The Hollow Fox Inn
       </div>
     </div>
-
-    <!-- Dropdown menu triggered by the 3-line icon -->
-    <div class="mobile-menu" id="dropdownMenu">
-      <a href="#rooms" onclick="toggleMenu()">Rooms</a>
-      <a href="#booking" onclick="toggleMenu()">Check Availability</a>
-      <button class="admin-btn" onclick="toggleMenu(); openAdminLogin();">⚙ Admin Portal</button>
-    </div>
-
     <div class="nav-links">
+      <a href="#welcome">About</a>
       <a href="#rooms">Rooms</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#reviews">Reviews</a>
       <a href="#booking" class="nav-cta">Check Availability</a>
     </div>
+    <button class="menu-toggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2A241C" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
   </nav>
 </header>
 
@@ -608,6 +734,30 @@
   </div>
 </section>
 
+<section class="welcome" id="welcome">
+  <div class="wrap welcome-grid">
+    <div style="display:grid;gap:1.2rem;">
+      <div class="photo-block tall photo-cabin"><span class="photo-tag">the inn, dusk</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+        <div class="photo-block photo-breakfast"><span class="photo-tag">breakfast</span></div>
+        <div class="photo-block photo-forest"><span class="photo-tag">the trail</span></div>
+      </div>
+    </div>
+    <div class="welcome-text">
+      <span class="label" style="color:var(--walnut);display:block;margin-bottom:0.8rem;">Our Story</span>
+      <h3>A farmhouse we couldn't bear to leave empty.</h3>
+      <p>We bought this place for the porch and stayed for everything else — the wood stove that never quite goes out, the trail that starts behind the barn, the way the valley fills with fog most mornings until about nine.</p>
+      <p>We keep it small on purpose. Three rooms means we know your name by the time you've had your first coffee, and exactly how you take it by the second.</p>
+      <p class="signature">— Placeholder &amp; Placeholder, your hosts</p>
+      <div class="stat-row">
+        <div><strong>3</strong><span>Rooms, never more</span></div>
+        <div><strong>100+</strong><span>Acres to wander</span></div>
+        <div><strong>8AM</strong><span>Breakfast, always</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="rooms" id="rooms">
   <div class="wrap">
     <div class="section-head">
@@ -615,33 +765,65 @@
       <h2>Three rooms, each named for what you'll find outside the window.</h2>
       <p>Every room opens onto the porch or the garden — no interior hallways to slip past quietly in your socks.</p>
     </div>
-    <div class="room-grid" id="roomContainer">
-      <div class="room-card" id="card-fern">
-        <div class="room-photo fern" id="photo-fern"><span class="room-ticket" id="price-fern">$140/night</span></div>
-        <div class="room-body">
-          <h3 id="name-fern">The Fern Room</h3>
-          <div class="room-meta" id="meta-fern">Queen bed · Garden view</div>
-          <p id="desc-fern">Ground floor, closest to the kitchen — you'll smell breakfast before your alarm does.</p>
-          <a href="#booking" class="room-link">Reserve this room →</a>
-        </div>
+    <div class="room-grid" id="roomsGrid"><!-- rendered by JS --></div>
+  </div>
+</section>
+
+<section class="amenities" id="amenities">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label" style="color:var(--walnut);">What's Included</span>
+      <h2>The small things we get right</h2>
+    </div>
+    <div class="amenity-grid">
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 10h16v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8z"/><path d="M4 10l8-6 8 6"/></svg>
+        <h4>Home-cooked breakfast</h4>
+        <p>Eggs from our own hens, bread baked that morning, coffee that doesn't quit.</p>
       </div>
-      <div class="room-card" id="card-cedar">
-        <div class="room-photo cedar" id="photo-cedar"><span class="room-ticket" id="price-cedar">$165/night</span></div>
-        <div class="room-body">
-          <h3 id="name-cedar">The Cedar Room</h3>
-          <div class="room-meta" id="meta-cedar">King bed · Private balcony</div>
-          <p id="desc-cedar">Our largest room, with a clawfoot tub and a balcony that catches the last of the evening light.</p>
-          <a href="#booking" class="room-link">Reserve this room →</a>
-        </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v6M8 5l4 3 4-3"/><path d="M4 22c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+        <h4>Wood-burning stoves</h4>
+        <p>Every room has one, stocked and ready — we'll show you how it likes to be lit.</p>
       </div>
-      <div class="room-card" id="card-fox">
-        <div class="room-photo fox" id="photo-fox"><span class="room-ticket" id="price-fox">$155/night</span></div>
-        <div class="room-body">
-          <h3 id="name-fox">The Fox Den</h3>
-          <div class="room-meta" id="meta-fox">Two twins · Forest view</div>
-          <p id="desc-fox">Tucked under the eaves — the quietest room in the house, favored by early sleepers.</p>
-          <a href="#booking" class="room-link">Reserve this room →</a>
-        </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+        <h4>Trailhead access</h4>
+        <p>Maps and walking sticks by the door — the loop trail starts right behind the barn.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+        <h4>No screens, on purpose</h4>
+        <p>Weak signal by design. Board games, a full bookshelf, and a porch swing instead.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="label" style="color:var(--walnut);">From the Guestbook</span>
+      <h2>What people tell us on their way out</h2>
+    </div>
+    <div class="review-grid">
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>We came for one night and stayed for three. The Cedar Room's tub alone was worth the drive.</p>
+        <div class="guest">— M. Alvarez, Fern Room guest</div>
+      </div>
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>Breakfast at 8 became the best part of our morning, not just a meal we showed up for.</p>
+        <div class="guest">— T. Okafor, Fox Den guest</div>
+      </div>
+      <div class="postcard">
+        <div class="washi"></div>
+        <div class="stars">★★★★★</div>
+        <p>The trail behind the barn turned into a two-hour walk we didn't plan on. Exactly the reset we needed.</p>
+        <div class="guest">— R. Bennett, Cedar Room guest</div>
       </div>
     </div>
   </div>
@@ -656,20 +838,20 @@
       <div style="margin-top:2rem;">
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.9 2.2z"/></svg>
-          <span id="displayPhone">(555) 019-2837</span>
+          <span id="contactPhone">(555) 019-2837</span>
         </div>
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
-          <span id="displayEmail">stay@hollowfoxinn.example</span>
+          <span id="contactEmail">stay@hollowfoxinn.example</span>
         </div>
         <div class="contact-line">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          412 Cedar Hollow Rd, placeholder, ST
+          <span id="contactLocation">412 Cedar Hollow Rd, placeholder, ST</span>
         </div>
       </div>
     </div>
 
-    <form onsubmit="handleBookingSubmit(event)">
+    <form id="bookingForm" onsubmit="submitBooking(event)">
       <div class="form-row">
         <div>
           <label for="checkin">Check-in</label>
@@ -691,12 +873,7 @@
       </div>
       <div>
         <label for="room">Preferred room</label>
-        <select id="room">
-          <option>No preference</option>
-          <option>The Fern Room</option>
-          <option>The Cedar Room</option>
-          <option>The Fox Den</option>
-        </select>
+        <select id="room"><!-- rendered by JS --></select>
       </div>
       <div>
         <label for="name">Name</label>
@@ -706,99 +883,11 @@
         <label for="email">Email</label>
         <input type="email" id="email" placeholder="you@example.com" required>
       </div>
-      <button type="submit" class="submit-btn">Request These Dates</button>
-      <p class="form-note">Your reservation details will be sent directly to our innkeeper email.</p>
+      <button type="submit" class="submit-btn">Request These Dates via WhatsApp</button>
+      <p class="form-note">This opens WhatsApp with your request pre-filled — just hit send.</p>
     </form>
   </div>
 </section>
-
-<!-- ADMIN MODAL PORTAL -->
-<div class="admin-modal" id="adminModal">
-  <div class="admin-box">
-    <button class="close-admin" onclick="closeAdminModal()">✕</button>
-    
-    <!-- Step 1: Login Form -->
-    <div id="adminLoginForm">
-      <h3>Admin Login</h3>
-      <div style="display:grid; gap:1rem;">
-        <div>
-          <label for="adminUser">Username</label>
-          <input type="text" id="adminUser" placeholder="admin">
-        </div>
-        <div>
-          <label for="adminPass">Password</label>
-          <input type="password" id="adminPass" placeholder="admin123">
-        </div>
-        <button class="submit-btn" onclick="loginAdmin()">Log In</button>
-      </div>
-    </div>
-
-    <!-- Step 2: Management Panel -->
-    <div id="adminPanel" style="display:none;">
-      <h3>Dashboard Management</h3>
-      <div style="display:grid; gap:1rem; max-height:70vh; overflow-y:auto; padding-right:5px;">
-        
-        <!-- SECTION A: ADMIN CONTACT & NOTIFICATIONS -->
-        <div>
-          <h4 style="color:var(--amber-light); margin-bottom:0.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; text-transform:uppercase;">1. Host Contact & Booking Notifications</h4>
-          <div style="display:grid; gap:0.8rem;">
-            <div>
-              <label for="adminPhone">Host Phone Number</label>
-              <input type="text" id="adminPhone" value="(555) 019-2837">
-            </div>
-            <div>
-              <label for="adminEmail">Notification Email Address</label>
-              <input type="email" id="adminEmail" value="stay@hollowfoxinn.example">
-            </div>
-            <button class="submit-btn" onclick="saveContactInfo()" style="padding:0.6rem;">Save Contact Details</button>
-          </div>
-        </div>
-
-        <div class="admin-section-divider"></div>
-
-        <!-- SECTION B: HOUSE & ROOM MANAGEMENT -->
-        <div>
-          <h4 style="color:var(--amber-light); margin-bottom:0.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; text-transform:uppercase;">2. Manage Houses & Rooms</h4>
-          <div style="display:grid; gap:0.8rem;">
-            <div>
-              <label for="selectRoom">Select House / Room</label>
-              <select id="selectRoom" onchange="loadRoomForEdit()">
-                <option value="fern">The Fern Room</option>
-                <option value="cedar">The Cedar Room</option>
-                <option value="fox">The Fox Den</option>
-                <option value="new">+ Add New House/Room</option>
-              </select>
-            </div>
-            <div>
-              <label for="editTitle">Room / House Name</label>
-              <input type="text" id="editTitle">
-            </div>
-            <div>
-              <label for="editPrice">Price (e.g. $140/night)</label>
-              <input type="text" id="editPrice">
-            </div>
-            <div>
-              <label for="editPhoto">Photo URL or Local File Path</label>
-              <input type="text" id="editPhoto" placeholder="https://example.com/photo.jpg or images/house.jpg">
-              <input type="file" id="filePhoto" accept="image/*" onchange="handleFileSelect(event)" style="margin-top:0.4rem; font-size:0.75rem;">
-            </div>
-            <div>
-              <label for="editMeta">Sub-details (e.g. Queen bed · Garden view)</label>
-              <input type="text" id="editMeta">
-            </div>
-            <div>
-              <label for="editDesc">Description</label>
-              <textarea id="editDesc" rows="3"></textarea>
-            </div>
-            <button class="submit-btn" onclick="saveRoomDetails()">Save House Changes</button>
-            <button class="delete-btn" id="deleteRoomBtn" onclick="deleteRoomDetails()">🗑 Delete This House</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <footer>
   <div class="wrap">
@@ -808,10 +897,19 @@
         <p>A small bed &amp; breakfast at the edge of Cedar Hollow Valley. Three rooms, one table, breakfast at eight.</p>
       </div>
       <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="#welcome">About</a></li>
+          <li><a href="#rooms">Rooms</a></li>
+          <li><a href="#amenities">Amenities</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+      <div>
         <h5>Visit</h5>
         <ul>
-          <li><a href="tel:5550192837" id="footerPhoneLink"><span id="footerPhone">(555) 019-2837</span></a></li>
-          <li><a href="mailto:stay@hollowfoxinn.example" id="footerEmailLink"><span id="footerEmail">stay@hollowfoxinn.example</span></a></li>
+          <li><a href="tel:5550192837" id="footerPhoneLink">(555) 019-2837</a></li>
+          <li><a href="mailto:stay@hollowfoxinn.example" id="footerEmailLink">stay@hollowfoxinn.example</a></li>
           <li><a href="#booking">Check Availability</a></li>
         </ul>
       </div>
@@ -823,213 +921,391 @@
   </div>
 </footer>
 
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="closeLogin" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </button>
+    <h3>Admin Login</h3>
+    <p class="modal-sub">Manage rooms, prices, photos and contact details.</p>
+    <div class="modal-error" id="loginError">Incorrect username or password.</div>
+    <form onsubmit="handleLogin(event)">
+      <div class="field">
+        <label for="loginUser">Username</label>
+        <input type="text" id="loginUser" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-full">Log In</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD MODAL -->
+<div class="modal-overlay" id="adminOverlay">
+  <div class="modal-box wide">
+    <button class="modal-close" id="closeAdmin" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </button>
+    <h3>Admin Dashboard</h3>
+    <p class="modal-sub">Changes save to this browser and update the live site instantly.</p>
+
+    <div class="logged-in-bar">
+      <span>Logged in as <strong id="loggedInName">Admin</strong></span>
+      <button class="btn-small ghost" onclick="handleLogout()">Log Out</button>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="rooms" onclick="switchTab('rooms')">Rooms</button>
+      <button class="admin-tab" data-tab="settings" onclick="switchTab('settings')">Contact &amp; WhatsApp</button>
+    </div>
+
+    <div class="admin-pane active" id="pane-rooms">
+      <div id="adminRoomsList"><!-- rendered by JS --></div>
+      <button class="add-room-btn" onclick="addRoom()">+ Add a new room</button>
+    </div>
+
+    <div class="admin-pane" id="pane-settings">
+      <div class="field">
+        <label for="setWhatsapp">WhatsApp number (with country code)</label>
+        <input type="text" id="setWhatsapp" placeholder="+254758845400">
+      </div>
+      <div class="field">
+        <label for="setPhone">Display phone number</label>
+        <input type="text" id="setPhone" placeholder="+254758845400">
+      </div>
+      <div class="field">
+        <label for="setEmail">Contact email</label>
+        <input type="email" id="setEmail" placeholder="stay@yourinn.example">
+      </div>
+      <div class="field">
+        <label for="setLocation">Location / address</label>
+        <input type="text" id="setLocation" placeholder="Street, town, country">
+      </div>
+      <button class="btn-full" onclick="saveSettings()">Save Contact Details</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-toast" id="saveToast">Saved</div>
+
 <script>
-  let customRoomCounter = 0;
-  let currentNotificationEmail = "stay@hollowfoxinn.example";
+  /* ---------------- DATA MODEL ---------------- */
+  const STORAGE_KEY = 'hollowFoxData';
 
-  function toggleMenu() {
-    const menu = id('dropdownMenu');
-    menu.classList.toggle('active');
-  }
+  const defaultData = {
+    settings: {
+      whatsapp: '+254758845400',
+      phone: '+254758845400',
+      email: 'stay@hollowfoxinn.example',
+      location: '412 Cedar Hollow Rd, placeholder, ST'
+    },
+    admin: { username: 'Admin', password: 'bnb123' },
+    rooms: [
+      { id: 'room-fern', name: 'The Fern Room', price: 140, meta: 'Queen bed · Garden view',
+        desc: "Ground floor, closest to the kitchen — you'll smell breakfast before your alarm does.",
+        image: null, fallback: 'fern' },
+      { id: 'room-cedar', name: 'The Cedar Room', price: 165, meta: 'King bed · Private balcony',
+        desc: 'Our largest room, with a clawfoot tub and a balcony that catches the last of the evening light.',
+        image: null, fallback: 'cedar' },
+      { id: 'room-fox', name: 'The Fox Den', price: 155, meta: 'Two twins · Forest view',
+        desc: 'Tucked under the eaves — the quietest room in the house, favored by early sleepers.',
+        image: null, fallback: 'fox' }
+    ]
+  };
 
-  function id(name) { return document.getElementById(name); }
-
-  function openAdminLogin() {
-    id('adminModal').classList.add('active');
-  }
-
-  function closeAdminModal() {
-    id('adminModal').classList.remove('active');
-  }
-
-  function loginAdmin() {
-    const u = id('adminUser').value;
-    const p = id('adminPass').value;
-    
-    // Default admin credentials (User: admin | Pass: admin123)
-    if(u === 'admin' && p === 'admin123') {
-      id('adminLoginForm').style.display = 'none';
-      id('adminPanel').style.display = 'block';
-      loadRoomForEdit();
-    } else {
-      alert('Invalid credentials! Try Username: admin & Password: admin123');
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return JSON.parse(JSON.stringify(defaultData));
+      return JSON.parse(raw);
+    }catch(e){
+      return JSON.parse(JSON.stringify(defaultData));
     }
   }
 
-  function saveContactInfo() {
-    const phone = id('adminPhone').value;
-    const email = id('adminEmail').value;
-
-    if(!phone || !email) {
-      alert('Please fill out both phone and email fields.');
-      return;
-    }
-
-    currentNotificationEmail = email;
-
-    // Update displays across the site
-    id('displayPhone').innerText = phone;
-    id('displayEmail').innerText = email;
-
-    id('footerPhone').innerText = phone;
-    id('footerEmail').innerText = email;
-
-    id('footerPhoneLink').href = 'tel:' + phone.replace(/[^0-9+]/g, '');
-    id('footerEmailLink').href = 'mailto:' + email;
-
-    alert('Contact details updated successfully! Bookings will now notify ' + email);
-  }
-
-  function handleBookingSubmit(event) {
-    event.preventDefault();
-
-    const name = id('name').value;
-    const guestEmail = id('email').value;
-    const checkin = id('checkin').value;
-    const checkout = id('checkout').value;
-    const guests = id('guests').value;
-    const room = id('room').value;
-
-    const emailSubject = encodeURIComponent("New Booking Request from " + name);
-    const emailBody = encodeURIComponent(
-      `Hello Innkeeper,\n\nYou have received a new booking request:\n\n` +
-      `Guest Name: ${name}\n` +
-      `Guest Email: ${guestEmail}\n` +
-      `Check-in: ${checkin}\n` +
-      `Check-out: ${checkout}\n` +
-      `Guests: ${guests}\n` +
-      `Preferred Room: ${room}\n`
-    );
-
-    alert(`Booking Request Submitted!\n\nA booking notification email has been prepared to send to: ${currentNotificationEmail}`);
-    
-    // Trigger direct mail client targeting the configured admin email
-    window.location.href = `mailto:${currentNotificationEmail}?subject=${emailSubject}&body=${emailBody}`;
-  }
-
-  function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        id('editPhoto').value = e.target.result;
-      };
-      reader.readAsDataURL(file);
+  function saveData(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }catch(e){
+      alert('Could not save — your browser storage may be full. Try using smaller photos.');
     }
   }
 
-  function loadRoomForEdit() {
-    const selected = id('selectRoom').value;
-    const delBtn = id('deleteRoomBtn');
+  let appData = loadData();
+  let isLoggedIn = (sessionStorage.getItem('hollowFoxSession') === 'true');
+  const pendingImages = {}; // roomId -> dataURL, staged before save
 
-    if(selected === 'new') {
-      id('editTitle').value = '';
-      id('editPrice').value = '';
-      id('editPhoto').value = '';
-      id('filePhoto').value = '';
-      id('editMeta').value = '';
-      id('editDesc').value = '';
-      delBtn.style.display = 'none';
-    } else {
-      delBtn.style.display = 'block';
-      id('editTitle').value = id('name-' + selected) ? id('name-' + selected).innerText : '';
-      id('editPrice').value = id('price-' + selected) ? id('price-' + selected).innerText : '';
-      id('editMeta').value = id('meta-' + selected) ? id('meta-' + selected).innerText : '';
-      id('editDesc').value = id('desc-' + selected) ? id('desc-' + selected).innerText : '';
-      
-      const photoElem = id('photo-' + selected);
-      if(photoElem) {
-        const bg = photoElem.style.backgroundImage;
-        id('editPhoto').value = bg ? bg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '') : '';
-      }
-      id('filePhoto').value = '';
-    }
-  }
-
-  function saveRoomDetails() {
-    const selected = id('selectRoom').value;
-    const title = id('editTitle').value;
-    const price = id('editPrice').value;
-    const photo = id('editPhoto').value;
-    const meta = id('editMeta').value;
-    const desc = id('editDesc').value;
-
-    if(selected === 'new') {
-      customRoomCounter++;
-      const newKey = 'custom_' + customRoomCounter;
-      const container = id('roomContainer');
-      const newCard = document.createElement('div');
-      newCard.className = 'room-card';
-      newCard.id = 'card-' + newKey;
-
-      const photoStyle = photo ? `background-image: url('${photo}');` : '';
-
-      newCard.innerHTML = `
-        <div class="room-photo custom" id="photo-${newKey}" style="${photoStyle}">
-          <span class="room-ticket" id="price-${newKey}">${price}</span>
+  /* ---------------- PUBLIC SITE RENDER ---------------- */
+  function renderPublicSite(){
+    // rooms grid
+    const grid = document.getElementById('roomsGrid');
+    grid.innerHTML = appData.rooms.map(r => `
+      <div class="room-card">
+        <div class="room-photo ${r.image ? '' : r.fallback}" ${r.image ? `style="background-image:url('${r.image}');background-size:cover;background-position:center;"` : ''}>
+          <span class="room-ticket">$${r.price}/night</span>
         </div>
         <div class="room-body">
-          <h3 id="name-${newKey}">${title}</h3>
-          <div class="room-meta" id="meta-${newKey}">${meta}</div>
-          <p id="desc-${newKey}">${desc}</p>
-          <a href="#booking" class="room-link">Reserve this room →</a>
+          <h3>${escapeHtml(r.name)}</h3>
+          <div class="room-meta">${escapeHtml(r.meta)}</div>
+          <p>${escapeHtml(r.desc)}</p>
+          <a href="#booking" class="room-link" onclick="preselectRoom('${r.id}')">Reserve this room →</a>
         </div>
-      `;
-      container.appendChild(newCard);
+      </div>
+    `).join('');
 
-      // Add to select dropdown
-      const opt = document.createElement('option');
-      opt.value = newKey;
-      opt.innerText = title || ('New House ' + customRoomCounter);
-      id('selectRoom').insertBefore(opt, id('selectRoom').lastElementChild);
+    // booking room select
+    const sel = document.getElementById('room');
+    sel.innerHTML = '<option value="No preference">No preference</option>' +
+      appData.rooms.map(r => `<option value="${escapeHtml(r.name)}">${escapeHtml(r.name)}</option>`).join('');
 
-      alert('New house added successfully!');
-    } else {
-      if(id('name-' + selected)) id('name-' + selected).innerText = title;
-      if(id('price-' + selected)) id('price-' + selected).innerText = price;
-      if(id('meta-' + selected)) id('meta-' + selected).innerText = meta;
-      if(id('desc-' + selected)) id('desc-' + selected).innerText = desc;
-      
-      if(id('photo-' + selected) && photo) {
-        id('photo-' + selected).style.backgroundImage = `url('${photo}')`;
-      }
-
-      // Update dropdown option text
-      const selectElem = id('selectRoom');
-      for(let i = 0; i < selectElem.options.length; i++) {
-        if(selectElem.options[i].value === selected) {
-          selectElem.options[i].innerText = title;
-          break;
-        }
-      }
-
-      alert('House updated successfully!');
-    }
-    closeAdminModal();
+    // contact info
+    document.getElementById('contactPhone').textContent = appData.settings.phone;
+    document.getElementById('contactEmail').textContent = appData.settings.email;
+    document.getElementById('contactLocation').textContent = appData.settings.location;
+    document.getElementById('footerPhoneLink').textContent = appData.settings.phone;
+    document.getElementById('footerPhoneLink').href = 'tel:' + appData.settings.phone.replace(/[^\d+]/g,'');
+    document.getElementById('footerEmailLink').textContent = appData.settings.email;
+    document.getElementById('footerEmailLink').href = 'mailto:' + appData.settings.email;
   }
 
-  function deleteRoomDetails() {
-    const selected = id('selectRoom').value;
-    if(selected === 'new') return;
+  function preselectRoom(roomId){
+    const room = appData.rooms.find(r => r.id === roomId);
+    if(room) document.getElementById('room').value = room.name;
+  }
 
-    if(confirm('Are you sure you want to delete this house?')) {
-      const card = id('card-' + selected);
-      if(card) {
-        card.remove();
-      }
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
 
-      const selectElem = id('selectRoom');
-      for(let i = 0; i < selectElem.options.length; i++) {
-        if(selectElem.options[i].value === selected) {
-          selectElem.remove(i);
-          break;
-        }
-      }
+  /* ---------------- BOOKING -> WHATSAPP ---------------- */
+  function submitBooking(e){
+    e.preventDefault();
+    const checkin = document.getElementById('checkin').value;
+    const checkout = document.getElementById('checkout').value;
+    const guests = document.getElementById('guests').value;
+    const room = document.getElementById('room').value;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
 
-      alert('House removed successfully!');
-      loadRoomForEdit();
+    const lines = [
+      `New booking request — ${appData.settings.location ? 'Hollow Fox Inn' : ''}`.trim(),
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Room: ${room}`,
+      `Check-in: ${checkin}`,
+      `Check-out: ${checkout}`,
+      `Guests: ${guests}`
+    ];
+    const message = encodeURIComponent(lines.join('\n'));
+    const number = (appData.settings.whatsapp || '').replace(/[^\d]/g,'');
+    if(!number){
+      alert('No WhatsApp number is set up yet. Please contact the property directly.');
+      return;
+    }
+    window.open(`https://wa.me/${number}?text=${message}`, '_blank');
+  }
+
+  /* ---------------- ADMIN: LOGIN / LOGOUT ---------------- */
+  const adminToggle = document.getElementById('adminToggle');
+  const loginOverlay = document.getElementById('loginOverlay');
+  const adminOverlay = document.getElementById('adminOverlay');
+
+  adminToggle.addEventListener('click', () => {
+    if(isLoggedIn){
+      openAdminPanel();
+    }else{
+      document.getElementById('loginError').classList.remove('show');
+      loginOverlay.classList.add('open');
+    }
+  });
+
+  document.getElementById('closeLogin').addEventListener('click', () => loginOverlay.classList.remove('open'));
+  document.getElementById('closeAdmin').addEventListener('click', () => adminOverlay.classList.remove('open'));
+  [loginOverlay, adminOverlay].forEach(ov => {
+    ov.addEventListener('click', (e) => { if(e.target === ov) ov.classList.remove('open'); });
+  });
+
+  function handleLogin(e){
+    e.preventDefault();
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if(user === appData.admin.username && pass === appData.admin.password){
+      isLoggedIn = true;
+      sessionStorage.setItem('hollowFoxSession','true');
+      loginOverlay.classList.remove('open');
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
+      updateAdminBadge();
+      openAdminPanel();
+    }else{
+      document.getElementById('loginError').classList.add('show');
     }
   }
+
+  function handleLogout(){
+    isLoggedIn = false;
+    sessionStorage.removeItem('hollowFoxSession');
+    updateAdminBadge();
+    adminOverlay.classList.remove('open');
+  }
+
+  function updateAdminBadge(){
+    adminToggle.classList.toggle('is-logged-in', isLoggedIn);
+  }
+
+  function openAdminPanel(){
+    document.getElementById('loggedInName').textContent = appData.admin.username;
+    renderAdminRooms();
+    fillSettingsForm();
+    adminOverlay.classList.add('open');
+  }
+
+  function switchTab(tab){
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.admin-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + tab));
+  }
+
+  /* ---------------- ADMIN: ROOMS ---------------- */
+  function renderAdminRooms(){
+    const list = document.getElementById('adminRoomsList');
+    list.innerHTML = appData.rooms.map(r => `
+      <div class="admin-room-card" data-room="${r.id}">
+        <div class="admin-room-head">
+          <strong>${escapeHtml(r.name) || 'Untitled room'}</strong>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn-small" onclick="saveRoom('${r.id}')">Save</button>
+            <button class="btn-small danger" onclick="deleteRoom('${r.id}')">Delete</button>
+          </div>
+        </div>
+        <div class="img-preview-wrap">
+          <img class="img-preview" id="preview-${r.id}" src="${r.image || ''}" style="${r.image ? '' : 'display:none;'}">
+          <div>
+            <input type="file" accept="image/*" onchange="handleImageUpload(this,'${r.id}')">
+            <div class="file-note">Photos are auto-resized &amp; compressed to keep quality high but files small.</div>
+          </div>
+        </div>
+        <div class="admin-room-row">
+          <div class="field">
+            <label>Room name</label>
+            <input type="text" id="name-${r.id}" value="${escapeHtml(r.name)}">
+          </div>
+          <div class="field">
+            <label>Price per night ($)</label>
+            <input type="number" id="price-${r.id}" value="${r.price}" min="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Details (e.g. bed type · view)</label>
+          <input type="text" id="meta-${r.id}" value="${escapeHtml(r.meta)}">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="desc-${r.id}">${escapeHtml(r.desc)}</textarea>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function handleImageUpload(inputEl, roomId){
+    const file = inputEl.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxW = 1200;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        pendingImages[roomId] = dataUrl;
+        const preview = document.getElementById('preview-' + roomId);
+        preview.src = dataUrl;
+        preview.style.display = 'block';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function saveRoom(roomId){
+    const room = appData.rooms.find(r => r.id === roomId);
+    if(!room) return;
+    room.name = document.getElementById('name-' + roomId).value.trim() || 'Untitled room';
+    room.price = parseInt(document.getElementById('price-' + roomId).value, 10) || 0;
+    room.meta = document.getElementById('meta-' + roomId).value.trim();
+    room.desc = document.getElementById('desc-' + roomId).value.trim();
+    if(pendingImages[roomId]){
+      room.image = pendingImages[roomId];
+      delete pendingImages[roomId];
+    }
+    saveData();
+    renderAdminRooms();
+    renderPublicSite();
+    showToast('Room saved');
+  }
+
+  function deleteRoom(roomId){
+    if(!confirm('Delete this room? This cannot be undone.')) return;
+    appData.rooms = appData.rooms.filter(r => r.id !== roomId);
+    saveData();
+    renderAdminRooms();
+    renderPublicSite();
+    showToast('Room deleted');
+  }
+
+  function addRoom(){
+    const id = 'room-' + Date.now();
+    appData.rooms.push({
+      id, name: 'New Room', price: 100, meta: 'Bed type · view',
+      desc: 'Describe this room…', image: null, fallback: 'fern'
+    });
+    saveData();
+    renderAdminRooms();
+    renderPublicSite();
+    showToast('Room added — edit the details below');
+  }
+
+  /* ---------------- ADMIN: SETTINGS ---------------- */
+  function fillSettingsForm(){
+    document.getElementById('setWhatsapp').value = appData.settings.whatsapp;
+    document.getElementById('setPhone').value = appData.settings.phone;
+    document.getElementById('setEmail').value = appData.settings.email;
+    document.getElementById('setLocation').value = appData.settings.location;
+  }
+
+  function saveSettings(){
+    appData.settings.whatsapp = document.getElementById('setWhatsapp').value.trim();
+    appData.settings.phone = document.getElementById('setPhone').value.trim();
+    appData.settings.email = document.getElementById('setEmail').value.trim();
+    appData.settings.location = document.getElementById('setLocation').value.trim();
+    saveData();
+    renderPublicSite();
+    showToast('Contact details saved');
+  }
+
+  /* ---------------- TOAST ---------------- */
+  let toastTimer;
+  function showToast(msg){
+    const toast = document.getElementById('saveToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  /* ---------------- INIT ---------------- */
+  updateAdminBadge();
+  renderPublicSite();
 </script>
 
 </body>
