@@ -328,71 +328,6 @@
   .section-head h2{font-size:clamp(1.9rem,3.4vw,2.7rem);}
   .section-head p{color:rgba(42,36,28,0.7);margin-top:1rem;max-width:52ch;}
 
-  /* ---------- WELCOME ---------- */
-  .welcome{background:var(--oat);}
-  .welcome-grid{
-    display:grid;
-    grid-template-columns:0.85fr 1.15fr;
-    gap:4rem;
-    align-items:center;
-  }
-
-  .photo-block{
-    aspect-ratio:4/5;
-    border-radius:4px;
-    position:relative;
-    overflow:hidden;
-  }
-  .photo-block.tall{aspect-ratio:3/4;}
-  .photo-cabin{
-    background:
-      linear-gradient(180deg, rgba(36,49,42,0.15), rgba(26,36,29,0.55)),
-      linear-gradient(160deg,#8a6b4a 0%,#5b3a29 45%,#3a2517 100%);
-  }
-  .photo-cabin::after{
-    content:'';
-    position:absolute;inset:0;
-    background-image:repeating-linear-gradient(100deg, rgba(0,0,0,0.06) 0 2px, transparent 2px 14px);
-  }
-  .photo-breakfast{
-    background:
-      radial-gradient(circle at 30% 30%, rgba(201,138,60,0.5), transparent 55%),
-      linear-gradient(160deg,#dccaa0 0%,#c9a765 55%,#a9803f 100%);
-  }
-  .photo-forest{
-    background:linear-gradient(180deg,#3c4a37 0%,#24312a 60%,#1a241d 100%);
-  }
-  .photo-forest::after{
-    content:'';
-    position:absolute;inset:0;
-    background-image:repeating-linear-gradient(75deg, rgba(237,227,206,0.05) 0 3px, transparent 3px 22px);
-  }
-  .photo-tag{
-    position:absolute;bottom:14px;left:14px;
-    background:rgba(26,36,29,0.72);
-    color:var(--oat-light);
-    font-family:'Space Mono',monospace;
-    font-size:0.68rem;
-    letter-spacing:0.08em;
-    padding:0.35rem 0.6rem;
-    border-radius:2px;
-  }
-
-  .welcome-text h3{font-size:1.6rem;margin-bottom:1.1rem;}
-  .welcome-text p{color:rgba(42,36,28,0.75);margin-bottom:1.1rem;max-width:52ch;}
-  .signature{
-    font-family:'Fraunces',serif;
-    font-style:italic;
-    font-size:1.15rem;
-    margin-top:1.5rem;
-    color:var(--walnut);
-  }
-
-  .stat-row{display:flex;gap:2.4rem;margin-top:2.2rem;flex-wrap:wrap;}
-  .stat-row div{border-left:2px solid var(--amber);padding-left:0.9rem;}
-  .stat-row strong{display:block;font-family:'Fraunces',serif;font-size:1.6rem;}
-  .stat-row span{font-size:0.8rem;color:rgba(42,36,28,0.6);}
-
   /* ---------- ROOMS ---------- */
   .rooms{background:var(--pine);color:var(--oat-light);}
   .rooms .section-head .label{color:var(--amber-light);}
@@ -452,48 +387,6 @@
     border-bottom:1px solid var(--amber-light);
     padding-bottom:2px;
   }
-
-  /* ---------- AMENITIES ---------- */
-  .amenities{background:var(--oat);}
-  .amenity-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:2.2rem;
-  }
-  .amenity{text-align:left;}
-  .amenity svg{width:34px;height:34px;color:var(--walnut);margin-bottom:1rem;}
-  .amenity h4{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:0.4rem;}
-  .amenity p{font-size:0.88rem;color:rgba(42,36,28,0.65);}
-
-  /* ---------- REVIEWS ---------- */
-  .reviews{background:var(--cream-paper);position:relative;}
-  .review-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:1.8rem;
-  }
-  .postcard{
-    background:var(--oat-light);
-    border:1px solid rgba(42,36,28,0.1);
-    padding:1.8rem 1.6rem;
-    position:relative;
-    box-shadow:0 10px 24px rgba(42,36,28,0.06);
-    transform:rotate(var(--tilt,0deg));
-  }
-  .postcard:nth-child(1){--tilt:-1.4deg;}
-  .postcard:nth-child(2){--tilt:0.8deg;}
-  .postcard:nth-child(3){--tilt:-0.6deg;}
-
-  .washi{
-    position:absolute;top:-10px;left:24px;
-    width:60px;height:22px;
-    background:rgba(201,138,60,0.55);
-    transform:rotate(-3deg);
-  }
-
-  .postcard .stars{color:var(--amber);letter-spacing:2px;margin-bottom:0.9rem;font-size:0.9rem;}
-  .postcard p{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;line-height:1.5;margin-bottom:1.2rem;}
-  .postcard .guest{font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:rgba(42,36,28,0.55);}
 
   /* ---------- BOOKING ---------- */
   .booking{background:var(--walnut);color:var(--oat-light);}
@@ -619,7 +512,7 @@
   }
   .footer-grid{
     display:grid;
-    grid-template-columns:1.4fr 1fr 1fr;
+    grid-template-columns:1.4fr 1fr;
     gap:3rem;
     padding-bottom:2.5rem;
     border-bottom:1px solid rgba(245,239,224,0.1);
@@ -645,17 +538,13 @@
   @media (max-width:960px){
     .hero-grid{grid-template-columns:1fr;text-align:left;padding-top:8rem;}
     .sign-wrap{margin-top:2.5rem;}
-    .welcome-grid{grid-template-columns:1fr;}
     .room-grid{grid-template-columns:1fr 1fr;}
-    .amenity-grid{grid-template-columns:1fr 1fr;}
-    .review-grid{grid-template-columns:1fr;}
     .booking-grid{grid-template-columns:1fr;}
     .footer-grid{grid-template-columns:1fr;gap:2rem;}
   }
   @media (max-width:640px){
     .nav-links{display:none;}
     .room-grid{grid-template-columns:1fr;}
-    .amenity-grid{grid-template-columns:1fr;}
     .form-row{grid-template-columns:1fr;}
     section{padding:4rem 0;}
   }
@@ -682,19 +571,13 @@
 
     <!-- Dropdown menu triggered by the 3-line icon -->
     <div class="mobile-menu" id="dropdownMenu">
-      <a href="#welcome" onclick="toggleMenu()">About</a>
       <a href="#rooms" onclick="toggleMenu()">Rooms</a>
-      <a href="#amenities" onclick="toggleMenu()">Amenities</a>
-      <a href="#reviews" onclick="toggleMenu()">Reviews</a>
       <a href="#booking" onclick="toggleMenu()">Check Availability</a>
       <button class="admin-btn" onclick="toggleMenu(); openAdminLogin();">⚙ Admin Portal</button>
     </div>
 
     <div class="nav-links">
-      <a href="#welcome">About</a>
       <a href="#rooms">Rooms</a>
-      <a href="#amenities">Amenities</a>
-      <a href="#reviews">Reviews</a>
       <a href="#booking" class="nav-cta">Check Availability</a>
     </div>
   </nav>
@@ -720,30 +603,6 @@
         </svg>
         <div class="sign-name">Hollow Fox Inn</div>
         <div class="sign-sub">Est. — a place to placeholder</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="welcome" id="welcome">
-  <div class="wrap welcome-grid">
-    <div style="display:grid;gap:1.2rem;">
-      <div class="photo-block tall photo-cabin"><span class="photo-tag">the inn, dusk</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
-        <div class="photo-block photo-breakfast"><span class="photo-tag">breakfast</span></div>
-        <div class="photo-block photo-forest"><span class="photo-tag">the trail</span></div>
-      </div>
-    </div>
-    <div class="welcome-text">
-      <span class="label" style="color:var(--walnut);display:block;margin-bottom:0.8rem;">Our Story</span>
-      <h3>A farmhouse we couldn't bear to leave empty.</h3>
-      <p>We bought this place for the porch and stayed for everything else — the wood stove that never quite goes out, the trail that starts behind the barn, the way the valley fills with fog most mornings until about nine.</p>
-      <p>We keep it small on purpose. Three rooms means we know your name by the time you've had your first coffee, and exactly how you take it by the second.</p>
-      <p class="signature">— Placeholder &amp; Placeholder, your hosts</p>
-      <div class="stat-row">
-        <div><strong>3</strong><span>Rooms, never more</span></div>
-        <div><strong>100+</strong><span>Acres to wander</span></div>
-        <div><strong>8AM</strong><span>Breakfast, always</span></div>
       </div>
     </div>
   </div>
@@ -783,66 +642,6 @@
           <p id="desc-fox">Tucked under the eaves — the quietest room in the house, favored by early sleepers.</p>
           <a href="#booking" class="room-link">Reserve this room →</a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="amenities" id="amenities">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="label" style="color:var(--walnut);">What's Included</span>
-      <h2>The small things we get right</h2>
-    </div>
-    <div class="amenity-grid">
-      <div class="amenity">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 10h16v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8z"/><path d="M4 10l8-6 8 6"/></svg>
-        <h4>Home-cooked breakfast</h4>
-        <p>Eggs from our own hens, bread baked that morning, coffee that doesn't quit.</p>
-      </div>
-      <div class="amenity">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v6M8 5l4 3 4-3"/><path d="M4 22c0-4 3.5-7 8-7s8 3 8 7"/></svg>
-        <h4>Wood-burning stoves</h4>
-        <p>Every room has one, stocked and ready — we'll show you how it likes to be lit.</p>
-      </div>
-      <div class="amenity">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
-        <h4>Trailhead access</h4>
-        <p>Maps and walking sticks by the door — the loop trail starts right behind the barn.</p>
-      </div>
-      <div class="amenity">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
-        <h4>No screens, on purpose</h4>
-        <p>Weak signal by design. Board games, a full bookshelf, and a porch swing instead.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="reviews" id="reviews">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="label" style="color:var(--walnut);">From the Guestbook</span>
-      <h2>What people tell us on their way out</h2>
-    </div>
-    <div class="review-grid">
-      <div class="postcard">
-        <div class="washi"></div>
-        <div class="stars">★★★★★</div>
-        <p>We came for one night and stayed for three. The Cedar Room's tub alone was worth the drive.</p>
-        <div class="guest">— M. Alvarez, Fern Room guest</div>
-      </div>
-      <div class="postcard">
-        <div class="washi"></div>
-        <div class="stars">★★★★★</div>
-        <p>Breakfast at 8 became the best part of our morning, not just a meal we showed up for.</p>
-        <div class="guest">— T. Okafor, Fox Den guest</div>
-      </div>
-      <div class="postcard">
-        <div class="washi"></div>
-        <div class="stars">★★★★★</div>
-        <p>The trail behind the barn turned into a two-hour walk we didn't plan on. Exactly the reset we needed.</p>
-        <div class="guest">— R. Bennett, Cedar Room guest</div>
       </div>
     </div>
   </div>
@@ -1007,15 +806,6 @@
       <div>
         <div class="footer-logo">The Hollow Fox Inn</div>
         <p>A small bed &amp; breakfast at the edge of Cedar Hollow Valley. Three rooms, one table, breakfast at eight.</p>
-      </div>
-      <div>
-        <h5>Explore</h5>
-        <ul>
-          <li><a href="#welcome">About</a></li>
-          <li><a href="#rooms">Rooms</a></li>
-          <li><a href="#amenities">Amenities</a></li>
-          <li><a href="#reviews">Reviews</a></li>
-        </ul>
       </div>
       <div>
         <h5>Visit</h5>
