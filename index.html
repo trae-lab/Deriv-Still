@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mirasierra - Editable Stay Booking</title>
+  <title>Mirasierra - Booking System</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -26,14 +26,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
@@ -55,25 +47,27 @@
         <button id="nav-home" onclick="navigateTo('page-home')" class="px-6 py-2 rounded-full bg-black text-white text-xs font-semibold transition-all">
           Home
         </button>
-        <button id="nav-admin" onclick="navigateTo('page-admin')" class="px-6 py-2 rounded-full text-gray-600 text-xs font-semibold hover:text-black transition-all">
-          + Add New Property
-        </button>
         <button id="nav-search" onclick="navigateTo('page-search')" class="px-6 py-2 rounded-full text-gray-600 text-xs font-semibold hover:text-black transition-all">
           Find Stay
         </button>
+        <!-- Admin link (Only visible when logged in as Admin) -->
+        <button id="nav-admin" onclick="navigateTo('page-admin')" class="hidden px-6 py-2 rounded-full text-gray-600 text-xs font-semibold hover:text-black transition-all">
+          + Admin Panel
+        </button>
       </nav>
 
-      <!-- Right User Actions -->
+      <!-- Right Actions & Account Status -->
       <div class="flex items-center gap-3">
-        <button onclick="navigateTo('page-admin')" title="Add or Edit Stays" class="flex items-center gap-2 px-4 py-2 rounded-full bg-brandLime text-black font-bold text-xs shadow-sm hover:opacity-90 transition">
+        <!-- Add House Button (Admin Only) -->
+        <button id="admin-add-btn" onclick="navigateTo('page-admin')" class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-brandLime text-black font-bold text-xs shadow-sm hover:opacity-90 transition">
           <i data-lucide="plus" class="w-4 h-4"></i> Add House
         </button>
-        <div class="flex items-center gap-3 pl-2 border-l border-gray-200">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120" alt="Avatar" class="w-10 h-10 rounded-full object-cover ring-2 ring-brandLime">
-          <div class="hidden lg:block">
-            <p class="text-[10px] text-gray-400 font-medium">Good Morning</p>
-            <p class="text-xs font-bold text-gray-900">Brooklyn Simmons</p>
-          </div>
+
+        <!-- Dynamic User / Login Widget -->
+        <div id="auth-widget" class="flex items-center gap-3 pl-2 border-l border-gray-200">
+          <button onclick="navigateTo('page-login')" class="px-5 py-2 rounded-full bg-black text-white font-bold text-xs hover:bg-gray-800 transition">
+            Log In
+          </button>
         </div>
       </div>
 
@@ -92,15 +86,6 @@
           <p class="text-gray-400 text-2xl font-light">Unlock Your</p>
           <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mt-1">Perfect Stay Today!</h1>
         </div>
-
-        <!-- Filter Category Pills -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-          <button onclick="filterStays('all')" class="category-btn px-5 py-2.5 text-xs font-bold text-black bg-brandLime rounded-full shadow-sm whitespace-nowrap">All</button>
-          <button onclick="filterStays('Hotel')" class="category-btn px-5 py-2.5 text-xs font-semibold text-gray-600 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition whitespace-nowrap">Hotel</button>
-          <button onclick="filterStays('Villa')" class="category-btn px-5 py-2.5 text-xs font-semibold text-gray-600 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition whitespace-nowrap">Villa</button>
-          <button onclick="filterStays('Apartment')" class="category-btn px-5 py-2.5 text-xs font-semibold text-gray-600 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition whitespace-nowrap">Apartment</button>
-          <button onclick="filterStays('Campsite')" class="category-btn px-5 py-2.5 text-xs font-semibold text-gray-600 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition whitespace-nowrap">Campsite</button>
-        </div>
       </div>
 
       <!-- Dynamic Hotel Cards Grid -->
@@ -108,57 +93,49 @@
         <!-- Rendered dynamically via JavaScript -->
       </div>
 
-      <!-- Explore City / Directions Section -->
-      <div class="pt-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-2">Explore & Get Directions</h2>
-        <p class="text-xs text-gray-500 mb-4">Click any city below to open driving directions in Google Maps instantly.</p>
-        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2">
-          
-          <div onclick="openDirections('London, United Kingdom')" class="flex items-center gap-3 p-2 pr-6 bg-white rounded-full border border-gray-200/80 shadow-sm hover:shadow-md cursor-pointer transition group">
-            <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=120" class="w-12 h-12 rounded-full object-cover">
-            <div>
-              <span class="text-sm font-bold text-gray-800 block">London</span>
-              <span class="text-[10px] text-gray-400 group-hover:text-black flex items-center gap-1">Get Directions <i data-lucide="navigation" class="w-3 h-3"></i></span>
-            </div>
-          </div>
-
-          <div onclick="openDirections('Paris, France')" class="flex items-center gap-3 p-2 pr-6 bg-white rounded-full border border-gray-200/80 shadow-sm hover:shadow-md cursor-pointer transition group">
-            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=120" class="w-12 h-12 rounded-full object-cover">
-            <div>
-              <span class="text-sm font-bold text-gray-800 block">Paris</span>
-              <span class="text-[10px] text-gray-400 group-hover:text-black flex items-center gap-1">Get Directions <i data-lucide="navigation" class="w-3 h-3"></i></span>
-            </div>
-          </div>
-
-          <div onclick="openDirections('Madrid, Spain')" class="flex items-center gap-3 p-2 pr-6 bg-white rounded-full border border-gray-200/80 shadow-sm hover:shadow-md cursor-pointer transition group">
-            <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&q=80&w=120" class="w-12 h-12 rounded-full object-cover">
-            <div>
-              <span class="text-sm font-bold text-gray-800 block">Madrid</span>
-              <span class="text-[10px] text-gray-400 group-hover:text-black flex items-center gap-1">Get Directions <i data-lucide="navigation" class="w-3 h-3"></i></span>
-            </div>
-          </div>
-
-          <div onclick="openDirections('Amsterdam, Netherlands')" class="flex items-center gap-3 p-2 pr-6 bg-white rounded-full border border-gray-200/80 shadow-sm hover:shadow-md cursor-pointer transition group">
-            <img src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&q=80&w=120" class="w-12 h-12 rounded-full object-cover">
-            <div>
-              <span class="text-sm font-bold text-gray-800 block">Amsterdam</span>
-              <span class="text-[10px] text-gray-400 group-hover:text-black flex items-center gap-1">Get Directions <i data-lucide="navigation" class="w-3 h-3"></i></span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
     </div>
 
-    <!-- ==================== PAGE 2: ADD HOUSE (ADMIN FORM) ==================== -->
+    <!-- ==================== PAGE 2: UNIFIED LOGIN / SETTINGS PAGE ==================== -->
+    <div id="page-login" class="max-w-md mx-auto space-y-6 hidden">
+      <div class="text-center space-y-2">
+        <h1 class="text-3xl font-black text-gray-900">Sign In to Your Account</h1>
+        <p class="text-xs text-gray-500">Enter your credentials to access the user site or admin features.</p>
+      </div>
+
+      <!-- Demo Credentials Info Box -->
+      <div class="bg-gray-100 p-4 rounded-2xl text-xs space-y-1 border border-gray-200">
+        <p class="font-bold text-gray-800">Demo Account Credentials:</p>
+        <p class="text-gray-600">🛡️ <strong>Admin Mode:</strong> User: <code class="bg-white px-1.5 py-0.5 rounded border">admin</code> | Pass: <code class="bg-white px-1.5 py-0.5 rounded border">adminpassword</code></p>
+        <p class="text-gray-600">👤 <strong>User Mode:</strong> User: <code class="bg-white px-1.5 py-0.5 rounded border">user</code> | Pass: <code class="bg-white px-1.5 py-0.5 rounded border">userpassword</code></p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="bg-white p-8 rounded-3xl border border-gray-200/80 shadow-xl space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Username</label>
+          <input id="login-username" type="text" placeholder="e.g. admin or user" required class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brandLime">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Password</label>
+          <input id="login-password" type="password" placeholder="••••••••" required class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brandLime">
+        </div>
+
+        <p id="login-error" class="text-xs text-red-500 hidden">Invalid username or password.</p>
+
+        <button type="submit" class="w-full py-4 bg-brandLime text-black font-black text-sm rounded-2xl shadow-lg hover:opacity-90 transition">
+          Log In
+        </button>
+      </form>
+    </div>
+
+    <!-- ==================== PAGE 3: ADMIN PANEL (ADD HOUSE) ==================== -->
     <div id="page-admin" class="max-w-2xl mx-auto space-y-6 hidden">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-black text-gray-900">Add New Stay</h1>
-          <p class="text-xs text-gray-500 mt-1">Add a new house or hotel listing. It will immediately show up on your website.</p>
+          <h1 class="text-3xl font-black text-gray-900">Admin Control Panel</h1>
+          <p class="text-xs text-gray-500 mt-1">Add new house listings to your live platform.</p>
         </div>
-        <button onclick="resetDefaults()" class="text-xs text-red-500 hover:underline">Reset to Default Stays</button>
+        <button onclick="resetDefaults()" class="text-xs text-red-500 hover:underline">Reset to Defaults</button>
       </div>
 
       <form onsubmit="addHouse(event)" class="bg-white p-8 rounded-3xl border border-gray-200/80 shadow-xl space-y-4">
@@ -210,16 +187,16 @@
 
         <div>
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Description</label>
-          <textarea id="form-desc" rows="3" placeholder="Write a short description..." class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brandLime"></textarea>
+          <textarea id="form-desc" rows="3" placeholder="Short stay description..." class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brandLime"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-4 bg-brandLime text-black font-black text-sm rounded-2xl shadow-lg hover:opacity-90 active:scale-98 transition mt-2">
+        <button type="submit" class="w-full py-4 bg-brandLime text-black font-black text-sm rounded-2xl shadow-lg hover:opacity-90 transition mt-2">
           Publish Property Listing
         </button>
       </form>
     </div>
 
-    <!-- ==================== PAGE 3: HOTEL DETAILS ==================== -->
+    <!-- ==================== PAGE 4: HOTEL DETAILS ==================== -->
     <div id="page-details" class="space-y-8 hidden">
       <button onclick="navigateTo('page-home')" class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-black transition">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Explore
@@ -230,7 +207,7 @@
       </div>
     </div>
 
-    <!-- ==================== PAGE 4: FIND YOUR STAY (SEARCH) ==================== -->
+    <!-- ==================== PAGE 5: FIND YOUR STAY (SEARCH) ==================== -->
     <div id="page-search" class="max-w-3xl mx-auto space-y-8 hidden">
       <div class="text-center space-y-2">
         <p class="text-gray-400 text-2xl font-light">Find Your</p>
@@ -240,7 +217,7 @@
       <div class="bg-white p-8 rounded-3xl border border-gray-200/80 shadow-xl space-y-6">
         <div class="space-y-4">
           <div class="flex items-center justify-between px-5 py-4 bg-gray-50 rounded-2xl border border-gray-200/80">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 w-full">
               <i data-lucide="map-pin" class="w-5 h-5 text-gray-400"></i>
               <input id="search-location-input" type="text" placeholder="Where do you want to go?" class="bg-transparent border-none text-sm text-gray-700 focus:outline-none w-full">
             </div>
@@ -256,7 +233,7 @@
   </main>
 
   <script>
-    // Initial Stays Data
+    // Initial Default Stays Data
     const defaultStays = [
       {
         id: 1,
@@ -299,64 +276,65 @@
       }
     ];
 
-    // Load stays from LocalStorage or use Defaults
+    // App State Management
+    let currentUser = JSON.parse(localStorage.getItem('mirasierra_user')) || null;
     let stays = JSON.parse(localStorage.getItem('mirasierra_stays')) || defaultStays;
 
     function saveStays() {
       localStorage.setItem('mirasierra_stays', JSON.stringify(stays));
     }
 
-    // Function to render hotels to the grid
+    // Render All House Cards
     function renderGrid(data = stays) {
       const grid = document.getElementById('hotel-grid');
       grid.innerHTML = '';
 
       if (data.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 font-medium">No properties found. Add one using the button above!</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 font-medium">No properties available.</div>`;
         return;
       }
 
       data.forEach(stay => {
+        // Show delete button only if current logged in user is admin
+        const deleteButtonHTML = (currentUser && currentUser.role === 'admin') ? `
+          <button onclick="deleteHouse(${stay.id})" title="Delete Property" class="py-2 px-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        ` : '';
+
         grid.innerHTML += `
           <div class="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 border border-gray-100 flex flex-col justify-between">
             <div class="relative h-[280px] overflow-hidden cursor-pointer" onclick="viewDetails(${stay.id})">
               <img src="${stay.image}" alt="${stay.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               
-              <!-- Location Badge -->
               <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white flex items-center gap-1">
                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brandLime"></i> ${stay.location}
               </div>
 
-              <!-- Price Tag -->
               <div class="absolute bottom-4 right-4 text-right text-white">
                 <span class="text-brandLime text-2xl font-black">$${stay.price}</span>
                 <span class="text-xs text-gray-300">/night</span>
               </div>
             </div>
 
-            <!-- Content -->
             <div class="p-5 space-y-4">
               <div>
                 <span class="text-[10px] uppercase font-extrabold tracking-wider bg-brandLime px-2.5 py-1 rounded-md text-black mb-2 inline-block">${stay.category}</span>
                 <h3 onclick="viewDetails(${stay.id})" class="text-xl font-bold text-gray-900 leading-tight hover:text-gray-600 cursor-pointer">${stay.title}</h3>
               </div>
 
-              <!-- Specs -->
               <div class="flex items-center justify-between text-xs font-semibold text-gray-600 pt-2 border-t border-gray-100">
                 <span class="flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 text-yellow-500 fill-yellow-500"></i> ${stay.rating}</span>
                 <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> ${stay.beds} Beds</span>
                 <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> ${stay.baths} Bath</span>
               </div>
 
-              <!-- Action Bar (Directions + Delete) -->
               <div class="flex items-center justify-between gap-2 pt-2">
                 <button onclick="openDirections('${stay.location}')" class="flex-1 py-2 px-3 bg-gray-100 hover:bg-black hover:text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition">
                   <i data-lucide="navigation" class="w-3.5 h-3.5 text-brandLime"></i> Get Directions
                 </button>
-                <button onclick="deleteHouse(${stay.id})" title="Delete Property" class="py-2 px-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold transition">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                ${deleteButtonHTML}
               </div>
             </div>
           </div>
@@ -366,14 +344,82 @@
       lucide.createIcons();
     }
 
-    // Function to open Directions in Google Maps
+    // Google Maps Directions
     function openDirections(location) {
-      const encodedLoc = encodeURIComponent(location);
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedLoc}`;
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}`;
       window.open(mapsUrl, '_blank');
     }
 
-    // Function to Add a Property
+    // Authentication Handler
+    function handleLogin(event) {
+      event.preventDefault();
+      const userVal = document.getElementById('login-username').value.trim().toLowerCase();
+      const passVal = document.getElementById('login-password').value.trim();
+      const errEl = document.getElementById('login-error');
+
+      if (userVal === 'admin' && passVal === 'adminpassword') {
+        currentUser = { username: 'Brooklyn Simmons (Admin)', role: 'admin' };
+        localStorage.setItem('mirasierra_user', JSON.stringify(currentUser));
+        updateAuthUI();
+        navigateTo('page-admin');
+      } else if (userVal === 'user' && passVal === 'userpassword') {
+        currentUser = { username: 'Regular User', role: 'user' };
+        localStorage.setItem('mirasierra_user', JSON.stringify(currentUser));
+        updateAuthUI();
+        navigateTo('page-home');
+      } else {
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    // Logout
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem('mirasierra_user');
+      updateAuthUI();
+      navigateTo('page-home');
+    }
+
+    // Update Top Navigation Bar according to Role
+    function updateAuthUI() {
+      const authWidget = document.getElementById('auth-widget');
+      const adminNav = document.getElementById('nav-admin');
+      const adminAddBtn = document.getElementById('admin-add-btn');
+
+      if (currentUser) {
+        authWidget.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <p class="text-[10px] text-gray-400 font-medium capitalize">${currentUser.role} Mode</p>
+              <p class="text-xs font-bold text-gray-900">${currentUser.username}</p>
+            </div>
+            <button onclick="handleLogout()" class="px-3 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-100 transition">
+              Log Out
+            </button>
+          </div>
+        `;
+
+        if (currentUser.role === 'admin') {
+          adminNav.classList.remove('hidden');
+          adminAddBtn.classList.remove('hidden');
+        } else {
+          adminNav.classList.add('hidden');
+          adminAddBtn.classList.add('hidden');
+        }
+      } else {
+        authWidget.innerHTML = `
+          <button onclick="navigateTo('page-login')" class="px-5 py-2 rounded-full bg-black text-white font-bold text-xs hover:bg-gray-800 transition">
+            Log In
+          </button>
+        `;
+        adminNav.classList.add('hidden');
+        adminAddBtn.classList.add('hidden');
+      }
+
+      renderGrid();
+    }
+
+    // Add House (Admin Only)
     function addHouse(event) {
       event.preventDefault();
       
@@ -395,12 +441,12 @@
       saveStays();
       renderGrid();
       navigateTo('page-home');
-      alert('New stay added successfully!');
+      alert('New house published successfully!');
     }
 
-    // Delete Property
+    // Delete House (Admin Only)
     function deleteHouse(id) {
-      if (confirm('Are you sure you want to delete this stay listing?')) {
+      if (confirm('Are you sure you want to delete this property?')) {
         stays = stays.filter(s => s.id !== id);
         saveStays();
         renderGrid();
@@ -437,7 +483,7 @@
             <p class="text-xs text-gray-600 leading-relaxed">${stay.desc}</p>
 
             <button onclick="openDirections('${stay.location}')" class="w-full py-3.5 bg-black text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition">
-              <i data-lucide="navigation" class="w-4 h-4 text-brandLime"></i> Get Directions to Property
+              <i data-lucide="navigation" class="w-4 h-4 text-brandLime"></i> Get Directions
             </button>
 
             <div class="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -445,7 +491,7 @@
                 <span class="text-3xl font-black text-gray-900">$${stay.price}</span>
                 <span class="text-xs text-gray-400">/night</span>
               </div>
-              <button onclick="alert('Booking functionality initiated!')" class="px-8 py-3.5 bg-brandLime text-black font-bold text-sm rounded-full shadow-lg">
+              <button onclick="alert('Booking process initialized!')" class="px-8 py-3.5 bg-brandLime text-black font-bold text-sm rounded-full shadow-lg">
                 Book Now
               </button>
             </div>
@@ -455,12 +501,6 @@
 
       navigateTo('page-details');
       lucide.createIcons();
-    }
-
-    // Filter Stays
-    function filterStays(cat) {
-      if (cat === 'all') renderGrid(stays);
-      else renderGrid(stays.filter(s => s.category === cat));
     }
 
     // Search function
@@ -483,7 +523,7 @@
 
     // Page navigation helper
     function navigateTo(pageId) {
-      const pages = ['page-home', 'page-admin', 'page-details', 'page-search'];
+      const pages = ['page-home', 'page-login', 'page-admin', 'page-details', 'page-search'];
       pages.forEach(id => {
         const el = document.getElementById(id);
         if (id === pageId) el.classList.remove('hidden');
@@ -492,8 +532,8 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Initial Load
-    renderGrid();
+    // Initialize App
+    updateAuthUI();
   </script>
 </body>
 </html>
