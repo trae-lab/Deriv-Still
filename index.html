@@ -12,6 +12,7 @@
             --light: #f3f4f6;
             --white: #ffffff;
             --danger: #dc2626;
+            --muted: #6b7280;
         }
 
         * {
@@ -165,19 +166,45 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            transition: transform 0.15s, box-shadow 0.15s;
             border: 2px solid transparent;
             cursor: pointer;
+        }
+
+        .house-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(0,0,0,0.15);
         }
 
         .house-card.selected {
             border-color: var(--primary);
         }
 
+        .house-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+
         .house-img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            display: block;
+        }
+
+        .photo-count-badge {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.65);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .house-details {
@@ -192,7 +219,45 @@
         .house-price {
             font-weight: bold;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .house-location {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .house-meta-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.6rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid #f0f1f3;
+        }
+
+        .meta-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.82rem;
+            color: var(--dark);
+        }
+
+        .meta-pill svg {
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+
+        .view-details-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary);
         }
 
         /* Booking Form */
@@ -279,11 +344,24 @@
             background-color: #f8fafc;
         }
 
+        .admin-thumb-group {
+            display: flex;
+            gap: 0.25rem;
+        }
+
         .admin-thumb {
-            width: 60px;
-            height: 45px;
+            width: 44px;
+            height: 34px;
             object-fit: cover;
             border-radius: 4px;
+        }
+
+        .admin-meta-line {
+            font-size: 0.8rem;
+            color: var(--muted);
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.15rem;
         }
 
         .action-btns {
@@ -303,6 +381,7 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
+            padding: 1rem;
         }
 
         .modal-backdrop.active {
@@ -316,6 +395,12 @@
             width: 100%;
             max-width: 500px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content.wide {
+            max-width: 640px;
         }
 
         .image-preview {
@@ -337,6 +422,141 @@
             object-fit: cover;
             display: none;
         }
+
+        .upload-thumbs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .upload-thumb {
+            position: relative;
+            width: 72px;
+            height: 56px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .upload-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-thumb .remove-thumb {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.65);
+            color: white;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        /* Detail Modal Gallery */
+        .gallery-main-wrap {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f0f1f3;
+        }
+
+        .gallery-main-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.55);
+            color: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-nav-btn.prev { left: 0.6rem; }
+        .gallery-nav-btn.next { right: 0.6rem; }
+
+        .gallery-counter {
+            position: absolute;
+            bottom: 0.6rem;
+            right: 0.6rem;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+            overflow-x: auto;
+        }
+
+        .gallery-thumbs img {
+            width: 56px;
+            height: 42px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            flex-shrink: 0;
+        }
+
+        .gallery-thumbs img.active-thumb {
+            border-color: var(--primary);
+        }
+
+        .detail-meta-row {
+            display: flex;
+            gap: 1.25rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .detail-location {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 0.4rem;
+        }
+
+        .modal-close-x {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--muted);
+            line-height: 1;
+        }
+
+        .modal-content { position: relative; }
     </style>
 </head>
 <body>
@@ -430,7 +650,7 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
+                            <th>Photos</th>
                             <th>House Name</th>
                             <th>Price</th>
                             <th>Booked Ranges</th>
@@ -446,7 +666,8 @@
 
     <!-- ADMIN HOUSE ADD/EDIT MODAL -->
     <div class="modal-backdrop" id="houseModal">
-        <div class="modal-content">
+        <div class="modal-content wide">
+            <button type="button" class="modal-close-x" onclick="closeModal()">&times;</button>
             <h3 id="modalTitle" style="margin-bottom: 1rem;">Add New House</h3>
             <form id="houseForm">
                 <input type="hidden" id="editHouseId">
@@ -455,21 +676,31 @@
                     <input type="text" id="houseName" class="form-control" required placeholder="e.g. Sunset Studio">
                 </div>
                 <div class="form-group">
-                    <label for="housePrice">Price per Night</label>
-                    <input type="text" id="housePrice" class="form-control" required placeholder="e.g. $50 / night">
+                    <label for="houseLocation">Location</label>
+                    <input type="text" id="houseLocation" class="form-control" required placeholder="e.g. Nairobi, Kenya">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="housePrice">Price per Night</label>
+                        <input type="text" id="housePrice" class="form-control" required placeholder="e.g. $50 / night">
+                    </div>
+                    <div class="form-group">
+                        <label for="houseBedrooms">Bedrooms</label>
+                        <input type="number" id="houseBedrooms" class="form-control" min="0" value="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="houseBathrooms">Bathrooms</label>
+                    <input type="number" id="houseBathrooms" class="form-control" min="0" step="0.5" value="1" required>
                 </div>
                 <div class="form-group">
                     <label for="houseDesc">Description</label>
                     <textarea id="houseDesc" class="form-control" rows="2" placeholder="Brief description..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="housePhoto">Upload Photo (from Phone or PC)</label>
-                    <!-- File input accepting image uploads -->
-                    <input type="file" id="housePhoto" class="form-control" accept="image/*">
-                    <div class="image-preview" id="previewContainer">
-                        <span id="previewPlaceholder" style="color: #9ca3af; font-size: 0.85rem;">No photo chosen</span>
-                        <img id="previewImg" alt="House Preview">
-                    </div>
+                    <label for="housePhoto">Upload Photos (from Phone or PC) — you can select several</label>
+                    <input type="file" id="housePhoto" class="form-control" accept="image/*" multiple>
+                    <div class="upload-thumbs" id="uploadThumbs"></div>
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
@@ -480,31 +711,83 @@
         </div>
     </div>
 
+    <!-- CUSTOMER HOUSE DETAIL / GALLERY MODAL -->
+    <div class="modal-backdrop" id="detailModal">
+        <div class="modal-content wide">
+            <button type="button" class="modal-close-x" onclick="closeDetailModal()">&times;</button>
+            <h3 id="detailTitle" style="margin-bottom: 0.25rem; padding-right: 1.5rem;"></h3>
+            <div class="detail-location" id="detailLocation"></div>
+
+            <div class="gallery-main-wrap" style="margin-top: 1rem;">
+                <img id="galleryMainImg" alt="House photo">
+                <button type="button" class="gallery-nav-btn prev" onclick="galleryStep(-1)">&#8249;</button>
+                <button type="button" class="gallery-nav-btn next" onclick="galleryStep(1)">&#8250;</button>
+                <span class="gallery-counter" id="galleryCounter"></span>
+            </div>
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
+
+            <div class="detail-meta-row" id="detailMetaRow"></div>
+            <p id="detailDesc" style="color: var(--muted); font-size: 0.9rem;"></p>
+            <div class="house-price" id="detailPrice" style="margin-top: 0.75rem; font-size: 1.1rem;"></div>
+
+            <button type="button" class="btn-primary" style="margin-top: 1rem;" onclick="selectHouseFromDetail()">Select This House</button>
+        </div>
+    </div>
+
     <script>
         const HOST_PHONE_NUMBER = "254700000000";
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
 
+        // --- Icons (inline SVG, currentColor themed) ---
+        const ICON_BED = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9v9"/><path d="M2 12h20v6"/><path d="M22 12v6"/><path d="M4 12V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/><path d="M12 12V9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><path d="M2 18v2"/><path d="M22 18v2"/></svg>`;
+        const ICON_BATH = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-2.6 1L4 9"/><path d="M2 12h20v1a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5z"/><path d="M4 18v2"/><path d="M20 18v2"/><path d="M9 12V6a2 2 0 0 1 4 0"/></svg>`;
+        const ICON_PIN = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+        const ICON_PHOTOS = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L5 21"/></svg>`;
+
+        const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
+
         let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
         let selectedHouse = null;
-        let currentUploadedImageData = "";
+        let currentUploadedImages = []; // array of data URLs for the admin form
+
+        // Detail modal state
+        let detailHouse = null;
+        let detailIndex = 0;
 
         let houses = JSON.parse(localStorage.getItem("bnb_houses")) || [
             {
                 id: "h1",
                 name: "Sunset Studio Apartment",
                 price: "$50 / night",
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+                images: [
+                    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80"
+                ],
                 description: "Cozy 1-bedroom studio with high-speed Wi-Fi.",
+                location: "Nairobi, Kenya",
+                bedrooms: 1,
+                bathrooms: 1,
                 bookedDates: [{ start: "2026-09-15", end: "2026-09-20" }]
             }
         ];
+
+        // migrate any old single-"image" records to the "images" array shape
+        houses.forEach(h => {
+            if (!h.images) {
+                h.images = h.image ? [h.image] : [DEFAULT_IMAGE];
+            }
+            if (h.location === undefined) h.location = "Location not specified";
+            if (h.bedrooms === undefined) h.bedrooms = 1;
+            if (h.bathrooms === undefined) h.bathrooms = 1;
+        });
 
         function saveData() {
             try {
                 localStorage.setItem("bnb_houses", JSON.stringify(houses));
             } catch (e) {
-                alert("Storage limit reached. Try uploading smaller image files.");
+                alert("Storage limit reached. Try uploading smaller or fewer image files.");
             }
         }
 
@@ -572,53 +855,64 @@
             navigateTo("loginView");
         }
 
-        // PHOTO UPLOAD READER
+        // PHOTO UPLOAD READER (multiple files, appended to a working list)
         document.getElementById("housePhoto").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            if (file) {
+            const files = Array.from(e.target.files || []);
+            let remaining = files.length;
+            if (!remaining) return;
+
+            files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    currentUploadedImageData = event.target.result;
-                    showPreview(currentUploadedImageData);
+                    currentUploadedImages.push(event.target.result);
+                    renderUploadThumbs();
                 };
                 reader.readAsDataURL(file);
-            }
+            });
+
+            // allow re-selecting the same file(s) again later
+            e.target.value = "";
         });
 
-        function showPreview(src) {
-            const previewImg = document.getElementById("previewImg");
-            const placeholder = document.getElementById("previewPlaceholder");
-            if (src) {
-                previewImg.src = src;
-                previewImg.style.display = "block";
-                placeholder.style.display = "none";
-            } else {
-                previewImg.style.display = "none";
-                placeholder.style.display = "block";
-            }
+        function renderUploadThumbs() {
+            const wrap = document.getElementById("uploadThumbs");
+            wrap.innerHTML = "";
+            currentUploadedImages.forEach((src, idx) => {
+                const div = document.createElement("div");
+                div.className = "upload-thumb";
+                div.innerHTML = `<img src="${src}" alt="Upload ${idx + 1}"><button type="button" class="remove-thumb" onclick="removeUploadThumb(${idx})">&times;</button>`;
+                wrap.appendChild(div);
+            });
         }
 
-        // MODAL LOGIC
+        function removeUploadThumb(idx) {
+            currentUploadedImages.splice(idx, 1);
+            renderUploadThumbs();
+        }
+
+        // MODAL LOGIC (admin add/edit)
         function openModal(houseId = null) {
             const modal = document.getElementById("houseModal");
             const form = document.getElementById("houseForm");
             form.reset();
-            currentUploadedImageData = "";
+            currentUploadedImages = [];
 
             if (houseId) {
                 const house = houses.find(h => h.id === houseId);
                 document.getElementById("modalTitle").textContent = "Edit House";
                 document.getElementById("editHouseId").value = house.id;
                 document.getElementById("houseName").value = house.name;
+                document.getElementById("houseLocation").value = house.location || "";
                 document.getElementById("housePrice").value = house.price;
+                document.getElementById("houseBedrooms").value = house.bedrooms;
+                document.getElementById("houseBathrooms").value = house.bathrooms;
                 document.getElementById("houseDesc").value = house.description;
-                currentUploadedImageData = house.image;
-                showPreview(house.image);
+                currentUploadedImages = [...house.images];
             } else {
                 document.getElementById("modalTitle").textContent = "Add New House";
                 document.getElementById("editHouseId").value = "";
-                showPreview("");
             }
+            renderUploadThumbs();
             modal.classList.add("active");
         }
 
@@ -630,25 +924,33 @@
             e.preventDefault();
             const houseId = document.getElementById("editHouseId").value;
             const name = document.getElementById("houseName").value;
+            const location = document.getElementById("houseLocation").value;
             const price = document.getElementById("housePrice").value;
+            const bedrooms = parseFloat(document.getElementById("houseBedrooms").value) || 0;
+            const bathrooms = parseFloat(document.getElementById("houseBathrooms").value) || 0;
             const description = document.getElementById("houseDesc").value;
-            const defaultImage = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
 
-            const imageUrl = currentUploadedImageData || defaultImage;
+            const images = currentUploadedImages.length ? [...currentUploadedImages] : [DEFAULT_IMAGE];
 
             if (houseId) {
                 const house = houses.find(h => h.id === houseId);
                 house.name = name;
+                house.location = location;
                 house.price = price;
+                house.bedrooms = bedrooms;
+                house.bathrooms = bathrooms;
                 house.description = description;
-                house.image = imageUrl;
+                house.images = images;
             } else {
                 houses.push({
                     id: "h_" + Date.now(),
                     name,
+                    location,
                     price,
+                    bedrooms,
+                    bathrooms,
                     description,
-                    image: imageUrl,
+                    images,
                     bookedDates: []
                 });
             }
@@ -657,6 +959,14 @@
             closeModal();
             renderAdminTable();
         });
+
+        // META PILLS (shared markup for bed/bath/location)
+        function metaPillsHTML(house) {
+            return `
+                <span class="meta-pill">${ICON_BED}${house.bedrooms} bed${house.bedrooms == 1 ? '' : 's'}</span>
+                <span class="meta-pill">${ICON_BATH}${house.bathrooms} bath${house.bathrooms == 1 ? '' : 's'}</span>
+            `;
+        }
 
         // CUSTOMER VIEW LOGIC
         function renderCustomerHouses() {
@@ -667,18 +977,83 @@
                 const isSelected = selectedHouse && selectedHouse.id === house.id;
                 const card = document.createElement("div");
                 card.className = `house-card ${isSelected ? 'selected' : ''}`;
-                card.onclick = () => selectHouse(house);
+                card.onclick = () => openDetailModal(house.id);
+
+                const photoCount = house.images.length;
 
                 card.innerHTML = `
-                    <img src="${house.image}" alt="${house.name}" class="house-img">
+                    <div class="house-img-wrap">
+                        <img src="${house.images[0]}" alt="${house.name}" class="house-img">
+                        ${photoCount > 1 ? `<span class="photo-count-badge">${ICON_PHOTOS} ${photoCount}</span>` : ''}
+                    </div>
                     <div class="house-details">
                         <span class="house-title">${house.name}</span>
                         <div class="house-price">${house.price}</div>
-                        <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 0.75rem;">${house.description}</p>
+                        <div class="house-location">${ICON_PIN}${house.location}</div>
+                        <p style="font-size: 0.85rem; color: #6b7280;">${house.description}</p>
+                        <div class="house-meta-row">${metaPillsHTML(house)}</div>
+                        <span class="view-details-link">View photos & details →</span>
                     </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // DETAIL / GALLERY MODAL
+        function openDetailModal(houseId) {
+            detailHouse = houses.find(h => h.id === houseId);
+            if (!detailHouse) return;
+            detailIndex = 0;
+
+            document.getElementById("detailTitle").textContent = detailHouse.name;
+            document.getElementById("detailLocation").innerHTML = `${ICON_PIN}${detailHouse.location}`;
+            document.getElementById("detailDesc").textContent = detailHouse.description;
+            document.getElementById("detailPrice").textContent = detailHouse.price;
+            document.getElementById("detailMetaRow").innerHTML = metaPillsHTML(detailHouse);
+
+            renderGalleryThumbs();
+            updateGalleryMain();
+
+            document.getElementById("detailModal").classList.add("active");
+        }
+
+        function closeDetailModal() {
+            document.getElementById("detailModal").classList.remove("active");
+        }
+
+        function renderGalleryThumbs() {
+            const wrap = document.getElementById("galleryThumbs");
+            wrap.innerHTML = "";
+            if (detailHouse.images.length <= 1) return;
+            detailHouse.images.forEach((src, idx) => {
+                const img = document.createElement("img");
+                img.src = src;
+                img.className = idx === detailIndex ? "active-thumb" : "";
+                img.onclick = (ev) => { ev.stopPropagation(); detailIndex = idx; updateGalleryMain(); };
+                wrap.appendChild(img);
+            });
+        }
+
+        function updateGalleryMain() {
+            document.getElementById("galleryMainImg").src = detailHouse.images[detailIndex];
+            document.getElementById("galleryCounter").textContent = `${detailIndex + 1} / ${detailHouse.images.length}`;
+            document.querySelectorAll("#galleryThumbs img").forEach((img, idx) => {
+                img.classList.toggle("active-thumb", idx === detailIndex);
+            });
+        }
+
+        function galleryStep(dir) {
+            if (!detailHouse) return;
+            const len = detailHouse.images.length;
+            detailIndex = (detailIndex + dir + len) % len;
+            updateGalleryMain();
+        }
+
+        function selectHouseFromDetail() {
+            if (!detailHouse) return;
+            selectHouse(detailHouse);
+            closeDetailModal();
+            document.getElementById("selectedHouseInput").scrollIntoView({ behavior: "smooth", block: "center" });
         }
 
         function selectHouse(house) {
@@ -746,6 +1121,7 @@
 
 *Booking Details:*
 • *House:* ${selectedHouse.name}
+• *Location:* ${selectedHouse.location}
 • *Check-in:* ${checkIn}
 • *Check-out:* ${checkOut}
 • *Guest Name:* ${guestName}
@@ -771,9 +1147,19 @@ Please confirm availability and share payment details. Thank you!`;
                     ? house.bookedDates.map(r => `${r.start} to ${r.end}`).join("<br>") 
                     : "<em>None</em>";
 
+                const thumbsHTML = house.images.slice(0, 3).map(src => `<img src="${src}" class="admin-thumb" alt="thumb">`).join("");
+                const moreCount = house.images.length > 3 ? `<span style="font-size:0.75rem;color:var(--muted);align-self:center;">+${house.images.length - 3}</span>` : "";
+
                 tr.innerHTML = `
-                    <td><img src="${house.image}" class="admin-thumb" alt="thumb"></td>
-                    <td><strong>${house.name}</strong></td>
+                    <td><div class="admin-thumb-group">${thumbsHTML}${moreCount}</div></td>
+                    <td>
+                        <strong>${house.name}</strong>
+                        <div class="admin-meta-line">
+                            <span>${ICON_PIN}&nbsp;${house.location}</span>
+                            <span>${ICON_BED}&nbsp;${house.bedrooms}</span>
+                            <span>${ICON_BATH}&nbsp;${house.bathrooms}</span>
+                        </div>
+                    </td>
                     <td>${house.price}</td>
                     <td><small>${bookedText}</small></td>
                     <td class="action-btns">
