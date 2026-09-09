@@ -557,6 +557,63 @@
         }
 
         .modal-content { position: relative; }
+
+        /* Bottom Navigation */
+        body {
+            padding-bottom: 6.5rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 1.1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.4rem;
+            padding: 0.5rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 8px 24px rgba(31, 41, 55, 0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.4);
+            z-index: 200;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--dark);
+            font-size: 0.68rem;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item:not(.active):hover {
+            background: rgba(5, 150, 105, 0.1);
+        }
+
+        @media (max-width: 420px) {
+            .nav-item { padding: 0.5rem 0.8rem; }
+        }
     </style>
 </head>
 <body>
@@ -639,6 +696,11 @@
         </section>
 
         <!-- ADMIN PORTAL VIEW -->
+        <!-- ACCOUNT VIEW -->
+        <section id="accountView" class="view-section">
+            <div class="auth-container" id="accountCard"></div>
+        </section>
+
         <section id="adminView" class="view-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2>Admin Management Dashboard</h2>
@@ -663,6 +725,13 @@
         </section>
 
     </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button type="button" class="nav-item" id="navHomeBtn" onclick="goHome()"></button>
+        <button type="button" class="nav-item" id="navBookingBtn" onclick="goBooking()"></button>
+        <button type="button" class="nav-item" id="navAccountBtn" onclick="goAccount()"></button>
+    </nav>
 
     <!-- ADMIN HOUSE ADD/EDIT MODAL -->
     <div class="modal-backdrop" id="houseModal">
@@ -744,6 +813,9 @@
         const ICON_BATH = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-2.6 1L4 9"/><path d="M2 12h20v1a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5z"/><path d="M4 18v2"/><path d="M20 18v2"/><path d="M9 12V6a2 2 0 0 1 4 0"/></svg>`;
         const ICON_PIN = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
         const ICON_PHOTOS = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5a2 2 0 0 0-2.8 0L5 21"/></svg>`;
+        const ICON_HOME = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>`;
+        const ICON_CART = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"/></svg>`;
+        const ICON_ACCOUNT = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
 
         const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
 
@@ -792,7 +864,14 @@
         }
 
         // NAVIGATION
-        function navigateTo(viewId) {
+        let activeBottomTab = 'home';
+
+        function defaultBottomTabFor(viewId) {
+            if (viewId === 'customerView') return 'home';
+            return 'account'; // loginView, accountView, adminView
+        }
+
+        function navigateTo(viewId, bottomTab) {
             document.querySelectorAll(".view-section").forEach(el => el.classList.remove("active"));
             
             if (viewId === 'adminView' && (!currentUser || currentUser.role !== 'admin')) {
@@ -805,6 +884,68 @@
 
             if (viewId === 'customerView') renderCustomerHouses();
             if (viewId === 'adminView') renderAdminTable();
+            if (viewId === 'accountView') renderAccountView();
+
+            activeBottomTab = bottomTab || defaultBottomTabFor(viewId);
+            renderBottomNav();
+            window.scrollTo({ top: viewId === 'customerView' && bottomTab !== 'booking' ? 0 : window.scrollY, behavior: 'auto' });
+        }
+
+        // BOTTOM NAVIGATION
+        function renderBottomNav() {
+            const items = [
+                { key: 'home', icon: ICON_HOME, label: 'Home' },
+                { key: 'booking', icon: ICON_CART, label: 'Bookings' },
+                { key: 'account', icon: ICON_ACCOUNT, label: 'Account' }
+            ];
+            document.getElementById('navHomeBtn').innerHTML = `${ICON_HOME}<span>Home</span>`;
+            document.getElementById('navBookingBtn').innerHTML = `${ICON_CART}<span>Bookings</span>`;
+            document.getElementById('navAccountBtn').innerHTML = `${ICON_ACCOUNT}<span>Account</span>`;
+            document.getElementById('navHomeBtn').classList.toggle('active', activeBottomTab === 'home');
+            document.getElementById('navBookingBtn').classList.toggle('active', activeBottomTab === 'booking');
+            document.getElementById('navAccountBtn').classList.toggle('active', activeBottomTab === 'account');
+        }
+
+        function goHome() {
+            navigateTo('customerView', 'home');
+        }
+
+        function goBooking() {
+            navigateTo('customerView', 'booking');
+            const target = document.querySelector('.booking-container');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function goAccount() {
+            if (currentUser) {
+                navigateTo('accountView', 'account');
+            } else {
+                navigateTo('loginView', 'account');
+            }
+        }
+
+        function renderAccountView() {
+            const card = document.getElementById('accountCard');
+            if (!currentUser) {
+                card.innerHTML = `
+                    <h2>My Account</h2>
+                    <p class="auth-sub">You're not logged in yet.</p>
+                    <button class="btn-primary" onclick="navigateTo('loginView','account')">Log In</button>
+                `;
+                return;
+            }
+            card.innerHTML = `
+                <div style="display:flex; justify-content:center; margin-bottom:1rem; color: var(--primary);">${ICON_ACCOUNT}</div>
+                <h2 style="text-align:center;">${currentUser.email}</h2>
+                <p class="auth-sub" style="text-align:center;">
+                    <span style="display:inline-block; padding:0.25rem 0.75rem; border-radius:999px; background:var(--light); font-weight:600; font-size:0.78rem; color: var(--dark);">${currentUser.role.toUpperCase()}</span>
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem;">
+                    ${currentUser.role === 'admin' ? `<button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="navigateTo('adminView','account')">Admin Portal</button>` : ''}
+                    <button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="goHome()">Browse Properties</button>
+                    <button class="btn-sm btn-danger" style="width:100%; padding:0.7rem;" onclick="logout()">Log Out</button>
+                </div>
+            `;
         }
 
         function updateNavUI() {
