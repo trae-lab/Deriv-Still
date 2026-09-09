@@ -12,7 +12,6 @@
             --light: #f3f4f6;
             --white: #ffffff;
             --danger: #dc2626;
-            --warning: #d97706;
         }
 
         * {
@@ -28,7 +27,6 @@
             line-height: 1.6;
         }
 
-        /* Navbar & Header */
         header {
             background-color: var(--white);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -89,7 +87,7 @@
             display: block;
         }
 
-        /* Login Container */
+        /* Auth Container */
         .auth-container {
             background: var(--white);
             max-width: 400px;
@@ -111,7 +109,7 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Forms & Inputs */
+        /* Forms */
         .form-group {
             margin-bottom: 1.25rem;
         }
@@ -169,7 +167,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
             border: 2px solid transparent;
-            position: relative;
+            cursor: pointer;
         }
 
         .house-card.selected {
@@ -197,7 +195,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Form Container Styles */
+        /* Booking Form */
         .booking-container {
             background: var(--white);
             padding: 2rem;
@@ -274,31 +272,83 @@
             padding: 0.75rem;
             border-bottom: 1px solid #e5e7eb;
             text-align: left;
+            vertical-align: middle;
         }
 
         .admin-table th {
             background-color: #f8fafc;
         }
 
+        .admin-thumb {
+            width: 60px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
         .action-btns {
             display: flex;
             gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            background: #f9fafb;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header>
         <h1 onclick="navigateTo('customerView')">StayEase BnB</h1>
-        <div class="user-nav" id="userNav">
-            <!-- Dynamic JS injection for login/logout buttons -->
-        </div>
+        <div class="user-nav" id="userNav"></div>
     </header>
 
     <div class="container">
 
-        <!-- LOGIN VIEW (Single login for Customer and Admin) -->
+        <!-- LOGIN VIEW -->
         <section id="loginView" class="view-section active">
             <div class="auth-container">
                 <h2>Welcome Back</h2>
@@ -372,7 +422,7 @@
         <section id="adminView" class="view-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2>Admin Management Dashboard</h2>
-                <button class="btn-sm btn-outline" onclick="openHouseModal()">+ Add New House</button>
+                <button class="btn-sm btn-outline" onclick="openModal()">+ Add New House</button>
             </div>
 
             <div class="admin-card">
@@ -380,58 +430,85 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>House Name</th>
                             <th>Price</th>
                             <th>Booked Ranges</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="adminHouseTable">
-                        <!-- Admin house rows dynamically injected -->
-                    </tbody>
+                    <tbody id="adminHouseTable"></tbody>
                 </table>
             </div>
         </section>
 
     </div>
 
-    <script>
-        // CONFIGURATION: Host Phone Number for WhatsApp Redirects
-        const HOST_PHONE_NUMBER = "254700000000";
+    <!-- ADMIN HOUSE ADD/EDIT MODAL -->
+    <div class="modal-backdrop" id="houseModal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-bottom: 1rem;">Add New House</h3>
+            <form id="houseForm">
+                <input type="hidden" id="editHouseId">
+                <div class="form-group">
+                    <label for="houseName">House Name</label>
+                    <input type="text" id="houseName" class="form-control" required placeholder="e.g. Sunset Studio">
+                </div>
+                <div class="form-group">
+                    <label for="housePrice">Price per Night</label>
+                    <input type="text" id="housePrice" class="form-control" required placeholder="e.g. $50 / night">
+                </div>
+                <div class="form-group">
+                    <label for="houseDesc">Description</label>
+                    <textarea id="houseDesc" class="form-control" rows="2" placeholder="Brief description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="housePhoto">Upload Photo (from Phone or PC)</label>
+                    <!-- File input accepting image uploads -->
+                    <input type="file" id="housePhoto" class="form-control" accept="image/*">
+                    <div class="image-preview" id="previewContainer">
+                        <span id="previewPlaceholder" style="color: #9ca3af; font-size: 0.85rem;">No photo chosen</span>
+                        <img id="previewImg" alt="House Preview">
+                    </div>
+                </div>
 
-        // ADMIN CREDENTIALS
+                <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn-primary">Save House</button>
+                    <button type="button" class="btn-sm btn-outline" style="width: 100%;" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const HOST_PHONE_NUMBER = "254700000000";
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
 
-        // Application State
-        let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null; // { email, role }
+        let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
         let selectedHouse = null;
+        let currentUploadedImageData = "";
 
-        // Default Data Store (Loaded from LocalStorage if available)
         let houses = JSON.parse(localStorage.getItem("bnb_houses")) || [
             {
                 id: "h1",
                 name: "Sunset Studio Apartment",
                 price: "$50 / night",
                 image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
-                description: "Cozy 1-bedroom studio with high-speed Wi-Fi and city view.",
+                description: "Cozy 1-bedroom studio with high-speed Wi-Fi.",
                 bookedDates: [{ start: "2026-09-15", end: "2026-09-20" }]
-            },
-            {
-                id: "h2",
-                name: "Ocean View Villa",
-                price: "$120 / night",
-                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
-                description: "Spacious 3-bedroom villa with private balcony and pool access.",
-                bookedDates: [{ start: "2026-09-10", end: "2026-09-14" }]
             }
         ];
 
         function saveData() {
-            localStorage.setItem("bnb_houses", JSON.stringify(houses));
+            try {
+                localStorage.setItem("bnb_houses", JSON.stringify(houses));
+            } catch (e) {
+                alert("Storage limit reached. Try uploading smaller image files.");
+            }
         }
 
-        // --- NAVIGATION CONTROLLER ---
+        // NAVIGATION
         function navigateTo(viewId) {
             document.querySelectorAll(".view-section").forEach(el => el.classList.remove("active"));
             
@@ -451,7 +528,7 @@
             const userNav = document.getElementById("userNav");
             if (currentUser) {
                 userNav.innerHTML = `
-                    <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()} (${currentUser.email})</span>
+                    <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()}</span>
                     ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin Portal</button>' : ''}
                     <button class="btn-sm btn-outline" onclick="navigateTo('customerView')">View Houses</button>
                     <button class="btn-sm btn-danger" onclick="logout()">Logout</button>
@@ -464,29 +541,27 @@
             }
         }
 
-        // --- AUTHENTICATION ---
+        // AUTH
         document.getElementById("loginForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const email = document.getElementById("loginEmail").value.trim();
             const pass = document.getElementById("loginPassword").value.trim();
             const authError = document.getElementById("authError");
 
-            // Check if input matches Admin credentials
             if (email === ADMIN_USER && pass === ADMIN_PASS) {
-                currentUser = { email: email, role: 'admin' };
+                currentUser = { email, role: 'admin' };
                 localStorage.setItem("currentUser", JSON.stringify(currentUser));
                 authError.style.display = "none";
                 this.reset();
                 navigateTo("adminView");
             } else if (email && pass) {
-                // Regular customer login (accepts any other credentials for demo purposes)
-                currentUser = { email: email, role: 'customer' };
+                currentUser = { email, role: 'customer' };
                 localStorage.setItem("currentUser", JSON.stringify(currentUser));
                 authError.style.display = "none";
                 this.reset();
                 navigateTo("customerView");
             } else {
-                authError.textContent = "Invalid login credentials.";
+                authError.textContent = "Invalid login details.";
                 authError.style.display = "block";
             }
         });
@@ -497,7 +572,93 @@
             navigateTo("loginView");
         }
 
-        // --- CUSTOMER VIEW LOGIC ---
+        // PHOTO UPLOAD READER
+        document.getElementById("housePhoto").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentUploadedImageData = event.target.result;
+                    showPreview(currentUploadedImageData);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function showPreview(src) {
+            const previewImg = document.getElementById("previewImg");
+            const placeholder = document.getElementById("previewPlaceholder");
+            if (src) {
+                previewImg.src = src;
+                previewImg.style.display = "block";
+                placeholder.style.display = "none";
+            } else {
+                previewImg.style.display = "none";
+                placeholder.style.display = "block";
+            }
+        }
+
+        // MODAL LOGIC
+        function openModal(houseId = null) {
+            const modal = document.getElementById("houseModal");
+            const form = document.getElementById("houseForm");
+            form.reset();
+            currentUploadedImageData = "";
+
+            if (houseId) {
+                const house = houses.find(h => h.id === houseId);
+                document.getElementById("modalTitle").textContent = "Edit House";
+                document.getElementById("editHouseId").value = house.id;
+                document.getElementById("houseName").value = house.name;
+                document.getElementById("housePrice").value = house.price;
+                document.getElementById("houseDesc").value = house.description;
+                currentUploadedImageData = house.image;
+                showPreview(house.image);
+            } else {
+                document.getElementById("modalTitle").textContent = "Add New House";
+                document.getElementById("editHouseId").value = "";
+                showPreview("");
+            }
+            modal.classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("houseModal").classList.remove("active");
+        }
+
+        document.getElementById("houseForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const houseId = document.getElementById("editHouseId").value;
+            const name = document.getElementById("houseName").value;
+            const price = document.getElementById("housePrice").value;
+            const description = document.getElementById("houseDesc").value;
+            const defaultImage = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
+
+            const imageUrl = currentUploadedImageData || defaultImage;
+
+            if (houseId) {
+                const house = houses.find(h => h.id === houseId);
+                house.name = name;
+                house.price = price;
+                house.description = description;
+                house.image = imageUrl;
+            } else {
+                houses.push({
+                    id: "h_" + Date.now(),
+                    name,
+                    price,
+                    description,
+                    image: imageUrl,
+                    bookedDates: []
+                });
+            }
+
+            saveData();
+            closeModal();
+            renderAdminTable();
+        });
+
+        // CUSTOMER VIEW LOGIC
         function renderCustomerHouses() {
             const container = document.getElementById("customerHousesGrid");
             container.innerHTML = "";
@@ -598,7 +759,7 @@ Please confirm availability and share payment details. Thank you!`;
         document.getElementById("checkIn").addEventListener("change", validateAvailability);
         document.getElementById("checkOut").addEventListener("change", validateAvailability);
 
-        // --- ADMIN VIEW LOGIC ---
+        // ADMIN TABLE LOGIC
         function renderAdminTable() {
             const tbody = document.getElementById("adminHouseTable");
             tbody.innerHTML = "";
@@ -611,55 +772,18 @@ Please confirm availability and share payment details. Thank you!`;
                     : "<em>None</em>";
 
                 tr.innerHTML = `
+                    <td><img src="${house.image}" class="admin-thumb" alt="thumb"></td>
                     <td><strong>${house.name}</strong></td>
                     <td>${house.price}</td>
                     <td><small>${bookedText}</small></td>
                     <td class="action-btns">
-                        <button class="btn-sm btn-outline" onclick="editHousePrice('${house.id}')">Edit Info</button>
+                        <button class="btn-sm btn-outline" onclick="openModal('${house.id}')">Edit</button>
                         <button class="btn-sm btn-outline" onclick="addBookedRange('${house.id}')">+ Block Dates</button>
                         <button class="btn-sm btn-danger" onclick="deleteHouse('${house.id}')">Delete</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        function openHouseModal() {
-            const name = prompt("Enter House Name:");
-            if (!name) return;
-            const price = prompt("Enter Price (e.g., $80 / night):");
-            if (!price) return;
-            const description = prompt("Enter Brief Description:");
-            const image = prompt("Enter Image URL (or leave default):") || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
-
-            const newHouse = {
-                id: "h_" + Date.now(),
-                name,
-                price,
-                description: description || "Comfortable stay.",
-                image,
-                bookedDates: []
-            };
-
-            houses.push(newHouse);
-            saveData();
-            renderAdminTable();
-        }
-
-        function editHousePrice(houseId) {
-            const house = houses.find(h => h.id === houseId);
-            if (!house) return;
-
-            const newName = prompt("Update House Name:", house.name);
-            const newPrice = prompt("Update Price:", house.price);
-            const newDesc = prompt("Update Description:", house.description);
-
-            if (newName) house.name = newName;
-            if (newPrice) house.price = newPrice;
-            if (newDesc) house.description = newDesc;
-
-            saveData();
-            renderAdminTable();
         }
 
         function addBookedRange(houseId) {
@@ -684,7 +808,7 @@ Please confirm availability and share payment details. Thank you!`;
             }
         }
 
-        // Initialize App View
+        // INITIALIZATION
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("checkIn").min = today;
         document.getElementById("checkOut").min = today;
