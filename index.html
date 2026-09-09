@@ -3,483 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>StayEase BnB - Bookings & Inquiries</title>
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-hover: #047857;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        /* House Grid Styles */
+        .houses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .house-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .house-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .house-card.selected {
+            border-color: var(--primary);
+        }
+
+        .house-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .house-details {
+            padding: 1.25rem;
+        }
+
+        .house-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .house-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-available {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-booked {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .house-price {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Form Container Styles */
+        .booking-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status-message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        .status-message.success {
+            background-color: #d1fae5;
+            color: #065f46;
+            display: block;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+        }
+
+        .btn-whatsapp:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <span class="logo-icon">⬡</span>
-                <h1>MyDash</h1>
-            </div>
-            <nav class="nav-menu">
-                <button class="nav-item active" data-section="dashboard">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
+
+    <header>
+        <h1>StayEase BnB Bookings</h1>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">1. Select a House</h2>
+        <div class="houses-grid" id="housesContainer"></div>
+
+        <h2 class="section-title">2. Check Availability & Send Payment Inquiry</h2>
+        <div class="booking-container">
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="selectedHouseInput">Selected House</label>
+                    <input type="text" id="selectedHouseInput" class="form-control" readonly placeholder="Please select a house above">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkIn">Check-in Date</label>
+                        <input type="date" id="checkIn" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkOut">Check-out Date</label>
+                        <input type="date" id="checkOut" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="guestName">Your Full Name</label>
+                    <input type="text" id="guestName" class="form-control" placeholder="e.g. Jane Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="guestsCount">Number of Guests</label>
+                    <input type="number" id="guestsCount" class="form-control" min="1" value="1" required>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+
+                <button type="submit" id="whatsappBtn" class="btn-whatsapp" disabled>
+                    Inquire & Request Payment Details on WhatsApp
                 </button>
-                <button class="nav-item" data-section="calendar">
-                    <span class="nav-icon">📅</span>
-                    <span>Calendar</span>
-                </button>
-                <button class="nav-item" data-section="notes">
-                    <span class="nav-icon">📝</span>
-                    <span>Notes</span>
-                </button>
-                <button class="nav-item" data-section="budget">
-                    <span class="nav-icon">💰</span>
-                    <span>Budget</span>
-                </button>
-                <button class="nav-item" data-section="shopping">
-                    <span class="nav-icon">🛒</span>
-                    <span>Shopping</span>
-                </button>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="darkModeToggle" class="theme-toggle">
-                    <span class="nav-icon">🌙</span>
-                    <span>Dark Mode</span>
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="header">
-                <div class="header-left">
-                    <button class="menu-toggle" id="menuToggle">☰</button>
-                    <div class="greeting">
-                        <h2 id="greetingText">Good Morning!</h2>
-                        <p id="dateDisplay"></p>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="search-bar">
-                        <input type="text" placeholder="Search..." id="globalSearch">
-                        <span class="search-icon">🔍</span>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Dashboard Section -->
-            <section class="content-section active" id="dashboard">
-                <div class="dashboard-grid">
-                    <div class="dash-card overview-card">
-                        <h3>📅 Upcoming Events</h3>
-                        <div id="dashUpcomingEvents" class="dash-list"></div>
-                    </div>
-                    <div class="dash-card overview-card">
-                        <h3>📝 Recent Notes</h3>
-                        <div id="dashRecentNotes" class="dash-list"></div>
-                    </div>
-                    <div class="dash-card overview-card">
-                        <h3>💰 Budget Summary</h3>
-                        <div id="dashBudgetSummary" class="dash-list"></div>
-                    </div>
-                    <div class="dash-card overview-card">
-                        <h3>🛒 Shopping List</h3>
-                        <div id="dashShoppingPreview" class="dash-list"></div>
-                    </div>
-                    <div class="dash-card wide-card">
-                        <h3>📊 Monthly Spending</h3>
-                        <div class="spending-chart" id="spendingChart"></div>
-                    </div>
-                    <div class="dash-card">
-                        <h3>⚡ Quick Actions</h3>
-                        <div class="quick-actions">
-                            <button class="quick-btn" onclick="quickAction('calendar')">+ Event</button>
-                            <button class="quick-btn" onclick="quickAction('notes')">+ Note</button>
-                            <button class="quick-btn" onclick="quickAction('budget')">+ Expense</button>
-                            <button class="quick-btn" onclick="quickAction('shopping')">+ Item</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Calendar Section -->
-            <section class="content-section" id="calendar">
-                <div class="section-header">
-                    <h2>Calendar</h2>
-                    <button class="btn-primary" id="addEventBtn">+ Add Event</button>
-                </div>
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button class="cal-nav" id="prevMonth">❮</button>
-                        <h3 id="calendarMonthYear"></h3>
-                        <button class="cal-nav" id="nextMonth">❯</button>
-                        <button class="btn-secondary" id="todayBtn">Today</button>
-                    </div>
-                    <div class="calendar-weekdays">
-                        <div>Sun</div><div>Mon</div><div>Tue</div>
-                        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                </div>
-                <div class="events-panel">
-                    <h3>Events for <span id="selectedDateLabel">today</span></h3>
-                    <div id="eventsList" class="events-list"></div>
-                </div>
-
-                <!-- Event Modal -->
-                <div class="modal-overlay" id="eventModal">
-                    <div class="modal">
-                        <div class="modal-header">
-                            <h3 id="eventModalTitle">Add Event</h3>
-                            <button class="modal-close" onclick="closeModal('eventModal')">✕</button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="eventId">
-                            <div class="form-group">
-                                <label>Event Title</label>
-                                <input type="text" id="eventTitle" placeholder="Enter event title">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Date</label>
-                                    <input type="date" id="eventDate">
-                                </div>
-                                <div class="form-group">
-                                    <label>Time</label>
-                                    <input type="time" id="eventTime">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select id="eventCategory">
-                                    <option value="personal">🟢 Personal</option>
-                                    <option value="work">🔵 Work</option>
-                                    <option value="health">🔴 Health</option>
-                                    <option value="social">🟡 Social</option>
-                                    <option value="other">🟣 Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea id="eventDescription" placeholder="Add description..." rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
-                            <button class="btn-primary" id="saveEventBtn">Save Event</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Notes Section -->
-            <section class="content-section" id="notes">
-                <div class="section-header">
-                    <h2>Notes</h2>
-                    <button class="btn-primary" id="addNoteBtn">+ New Note</button>
-                </div>
-                <div class="notes-toolbar">
-                    <div class="notes-filter">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="personal">Personal</button>
-                        <button class="filter-btn" data-filter="work">Work</button>
-                        <button class="filter-btn" data-filter="ideas">Ideas</button>
-                        <button class="filter-btn" data-filter="todo">To-Do</button>
-                    </div>
-                    <div class="notes-search">
-                        <input type="text" placeholder="Search notes..." id="notesSearch">
-                    </div>
-                </div>
-                <div class="notes-grid" id="notesGrid"></div>
-
-                <!-- Note Modal -->
-                <div class="modal-overlay" id="noteModal">
-                    <div class="modal modal-large">
-                        <div class="modal-header">
-                            <h3 id="noteModalTitle">New Note</h3>
-                            <button class="modal-close" onclick="closeModal('noteModal')">✕</button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="noteId">
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" id="noteTitle" placeholder="Note title">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select id="noteCategory">
-                                        <option value="personal">Personal</option>
-                                        <option value="work">Work</option>
-                                        <option value="ideas">Ideas</option>
-                                        <option value="todo">To-Do</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Color</label>
-                                    <div class="color-picker">
-                                        <button class="color-opt active" data-color="#fef3c7" style="background:#fef3c7"></button>
-                                        <button class="color-opt" data-color="#dbeafe" style="background:#dbeafe"></button>
-                                        <button class="color-opt" data-color="#dcfce7" style="background:#dcfce7"></button>
-                                        <button class="color-opt" data-color="#fce7f3" style="background:#fce7f3"></button>
-                                        <button class="color-opt" data-color="#e0e7ff" style="background:#e0e7ff"></button>
-                                        <button class="color-opt" data-color="#fff" style="background:#fff; border:1px solid #ddd"></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Content</label>
-                                <textarea id="noteContent" placeholder="Write your note..." rows="10"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-danger" id="deleteNoteBtn" style="display:none">Delete</button>
-                            <div class="footer-right">
-                                <button class="btn-secondary" onclick="closeModal('noteModal')">Cancel</button>
-                                <button class="btn-primary" id="saveNoteBtn">Save Note</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Budget Section -->
-            <section class="content-section" id="budget">
-                <div class="section-header">
-                    <h2>Budget</h2>
-                    <button class="btn-primary" id="addExpenseBtn">+ Add Expense</button>
-                </div>
-
-                <div class="budget-tabs">
-                    <button class="budget-tab active" data-tab="overview">Overview</button>
-                    <button class="budget-tab" data-tab="subscriptions">Subscriptions</button>
-                    <button class="budget-tab" data-tab="bills">Bills</button>
-                    <button class="budget-tab" data-tab="expenses">All Expenses</button>
-                </div>
-
-                <!-- Budget Overview -->
-                <div class="budget-panel active" id="budgetOverview">
-                    <div class="budget-summary-cards">
-                        <div class="budget-stat-card income">
-                            <div class="stat-icon">💵</div>
-                            <div class="stat-info">
-                                <span class="stat-label">Monthly Income</span>
-                                <span class="stat-value" id="monthlyIncome">$0</span>
-                                <button class="edit-income-btn" id="editIncomeBtn">Edit</button>
-                            </div>
-                        </div>
-                        <div class="budget-stat-card expenses">
-                            <div class="stat-icon">💸</div>
-                            <div class="stat-info">
-                                <span class="stat-label">Total Expenses</span>
-                                <span class="stat-value" id="totalExpenses">$0</span>
-                            </div>
-                        </div>
-                        <div class="budget-stat-card remaining">
-                            <div class="stat-icon">🏦</div>
-                            <div class="stat-info">
-                                <span class="stat-label">Remaining</span>
-                                <span class="stat-value" id="remainingBudget">$0</span>
-                            </div>
-                        </div>
-                        <div class="budget-stat-card subscriptions-stat">
-                            <div class="stat-icon">🔄</div>
-                            <div class="stat-info">
-                                <span class="stat-label">Subscriptions</span>
-                                <span class="stat-value" id="totalSubscriptions">$0</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="budget-breakdown">
-                        <h3>Spending by Category</h3>
-                        <div id="categoryBreakdown" class="category-bars"></div>
-                    </div>
-                </div>
-
-                <!-- Subscriptions Panel -->
-                <div class="budget-panel" id="budgetSubscriptions">
-                    <div class="sub-header">
-                        <h3>Active Subscriptions</h3>
-                        <button class="btn-primary btn-sm" id="addSubscriptionBtn">+ Add</button>
-                    </div>
-                    <div id="subscriptionsList" class="items-list"></div>
-                </div>
-
-                <!-- Bills Panel -->
-                <div class="budget-panel" id="budgetBills">
-                    <div class="sub-header">
-                        <h3>Monthly Bills</h3>
-                        <button class="btn-primary btn-sm" id="addBillBtn">+ Add</button>
-                    </div>
-                    <div id="billsList" class="items-list"></div>
-                </div>
-
-                <!-- All Expenses Panel -->
-                <div class="budget-panel" id="budgetExpenses">
-                    <div class="sub-header">
-                        <h3>All Expenses This Month</h3>
-                        <select id="expenseMonthFilter">
-                            <option value="">This Month</option>
-                        </select>
-                    </div>
-                    <div id="expensesList" class="items-list"></div>
-                </div>
-
-                <!-- Expense Modal -->
-                <div class="modal-overlay" id="expenseModal">
-                    <div class="modal">
-                        <div class="modal-header">
-                            <h3 id="expenseModalTitle">Add Expense</h3>
-                            <button class="modal-close" onclick="closeModal('expenseModal')">✕</button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="expenseId">
-                            <div class="form-group">
-                                <label>Type</label>
-                                <select id="expenseType">
-                                    <option value="expense">One-time Expense</option>
-                                    <option value="subscription">Subscription</option>
-                                    <option value="bill">Bill</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" id="expenseName" placeholder="e.g., Netflix, Electric Bill">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Amount ($)</label>
-                                    <input type="number" id="expenseAmount" placeholder="0.00" step="0.01">
-                                </div>
-                                <div class="form-group">
-                                    <label>Date</label>
-                                    <input type="date" id="expenseDate">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select id="expenseCategorySelect">
-                                    <option value="housing">🏠 Housing</option>
-                                    <option value="utilities">⚡ Utilities</option>
-                                    <option value="food">🍕 Food</option>
-                                    <option value="transport">🚗 Transport</option>
-                                    <option value="entertainment">🎬 Entertainment</option>
-                                    <option value="health">🏥 Health</option>
-                                    <option value="shopping">🛍️ Shopping</option>
-                                    <option value="education">📚 Education</option>
-                                    <option value="other">📦 Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group subscription-fields" style="display:none">
-                                <label>Billing Cycle</label>
-                                <select id="billingCycle">
-                                    <option value="monthly">Monthly</option>
-                                    <option value="yearly">Yearly</option>
-                                    <option value="weekly">Weekly</option>
-                                </select>
-                            </div>
-                            <div class="form-group bill-fields" style="display:none">
-                                <label>Due Day of Month</label>
-                                <input type="number" id="billDueDay" min="1" max="31" placeholder="15">
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="expensePaid"> Paid
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-danger" id="deleteExpenseBtn" style="display:none">Delete</button>
-                            <div class="footer-right">
-                                <button class="btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
-                                <button class="btn-primary" id="saveExpenseBtn">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Income Modal -->
-                <div class="modal-overlay" id="incomeModal">
-                    <div class="modal modal-small">
-                        <div class="modal-header">
-                            <h3>Set Monthly Income</h3>
-                            <button class="modal-close" onclick="closeModal('incomeModal')">✕</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label>Monthly Income ($)</label>
-                                <input type="number" id="incomeInput" placeholder="0.00" step="0.01">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn-secondary" onclick="closeModal('incomeModal')">Cancel</button>
-                            <button class="btn-primary" id="saveIncomeBtn">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Shopping Section -->
-            <section class="content-section" id="shopping">
-                <div class="section-header">
-                    <h2>Shopping & Groceries</h2>
-                </div>
-
-                <div class="shopping-tabs">
-                    <button class="shopping-tab active" data-tab="shoppingList">🛒 Shopping List</button>
-                    <button class="shopping-tab" data-tab="groceriesList">🥬 Groceries</button>
-                </div>
-
-                <!-- Shopping List -->
-                <div class="shopping-panel active" id="shoppingListPanel">
-                    <div class="list-add-bar">
-                        <input type="text" id="shoppingItemInput" placeholder="Add item...">
-                        <select id="shoppingPriority">
-                            <option value="normal">Normal</option>
-                            <option value="urgent">Urgent</option>
-                            <option value="low">Low</option>
-                        </select>
-                        <input type="number" id="shoppingItemPrice" placeholder="Est. price" step="0.01">
-                        <button class="btn-primary" id="addShoppingItem">Add</button>
-                    </div>
-                    <div class="list-stats">
-                        <span>Total items: <strong id="shoppingTotal">0</strong></span>
-                        <span>Completed: <strong id="shoppingCompleted">0</strong></span>
-                        <span>Est. Total: <strong id="shoppingEstTotal">$0</strong></span>
-                        <button class="btn-sm btn-secondary" id="clearCompletedShopping">Clear Done</button>
-                    </div>
-                    <div id="shoppingItems" class="checklist"></div>
-                </div>
-
-                <!-- Groceries List -->
-                <div class="shopping-panel" id="groceriesListPanel">
-                    <div class="list-add-bar">
-                        <input type="text" id="groceryItemInput" placeholder="Add grocery item...">
-                        <select id="groceryCategory">
-                            <option value="produce">🥬 Produce</option>
-                            <option value="dairy">🥛 Dairy</option>
-                            <option value="meat">🥩 Meat</option>
-                            <option value="bakery">🍞 Bakery</option>
-                            <option value="frozen">🧊 Frozen</option>
-                            <option value="beverages">🥤 Beverages</option>
-                            <option value="snacks">🍿 Snacks</option>
-                            <option value="household">🧹 Household</option>
-                            <option value="other">📦 Other</option>
-                        </select>
-                        <input type="number" id="groceryQuantity" placeholder="Qty" min="1" value="1">
-                        <button class="btn-primary" id="addGroceryItem">Add</button>
-                    </div>
-                    <div class="list-stats">
-                        <span>Total items: <strong id="groceryTotal">0</strong></span>
-                        <span>Completed: <strong id="groceryCompleted">0</strong></span>
-                        <button class="btn-sm btn-secondary" id="clearCompletedGrocery">Clear Done</button>
-                    </div>
-                    <div id="groceryItems" class="checklist categorized"></div>
-                </div>
-            </section>
-        </main>
+            </form>
+        </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toastContainer" class="toast-container"></div>
+    <script>
+        // CONFIGURATION: Set your WhatsApp phone number here (with country code, no + or spaces)
+        const HOST_PHONE_NUMBER = "254700000000"; 
 
-    <script src="app.js"></script>
+        // Sample Data: Houses and their current booked date ranges
+        const houses = [
+            {
+                id: "h1",
+                name: "Sunset Studio Apartment",
+                price: "$50 / night",
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+                description: "Cozy 1-bedroom studio with high-speed Wi-Fi and city view.",
+                // Format: YYYY-MM-DD
+                bookedDates: [
+                    { start: "2026-09-15", end: "2026-09-20" }
+                ]
+            },
+            {
+                id: "h2",
+                name: "Ocean View Villa",
+                price: "$120 / night",
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+                description: "Spacious 3-bedroom villa with private balcony and pool access.",
+                bookedDates: [
+                    { start: "2026-09-10", end: "2026-09-14" },
+                    { start: "2026-09-22", end: "2026-09-25" }
+                ]
+            },
+            {
+                id: "h3",
+                name: "Garden Suite",
+                price: "$75 / night",
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+                description: "Quiet 2-bedroom suite surrounded by nature.",
+                bookedDates: []
+            }
+        ];
+
+        let selectedHouse = null;
+
+        // Render House Cards
+        function renderHouses() {
+            const container = document.getElementById("housesContainer");
+            container.innerHTML = "";
+
+            houses.forEach(house => {
+                const isSelected = selectedHouse && selectedHouse.id === house.id;
+                
+                const card = document.createElement("div");
+                card.className = `house-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = () => selectHouse(house);
+
+                card.innerHTML = `
+                    <img src="${house.image}" alt="${house.name}" class="house-img">
+                    <div class="house-details">
+                        <div class="house-header">
+                            <span class="house-title">${house.name}</span>
+                        </div>
+                        <div class="house-price">${house.price}</div>
+                        <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 0.75rem;">${house.description}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Select House
+        function selectHouse(house) {
+            selectedHouse = house;
+            document.getElementById("selectedHouseInput").value = house.name;
+            renderHouses();
+            validateAvailability();
+        }
+
+        // Date Overlap Checking Function
+        function isDateRangeBooked(checkInStr, checkOutStr, bookedRanges) {
+            const inDate = new Date(checkInStr);
+            const outDate = new Date(checkOutStr);
+
+            for (let range of bookedRanges) {
+                const bookedStart = new Date(range.start);
+                const bookedEnd = new Date(range.end);
+
+                // Overlap occurs if requested check-in is before booked end AND requested check-out is after booked start
+                if (inDate < bookedEnd && outDate > bookedStart) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Validate availability and form completeness
+        function validateAvailability() {
+            const checkIn = document.getElementById("checkIn").value;
+            const checkOut = document.getElementById("checkOut").value;
+            const statusMsg = document.getElementById("statusMessage");
+            const btn = document.getElementById("whatsappBtn");
+
+            // Clear state if incomplete
+            if (!selectedHouse || !checkIn || !checkOut) {
+                statusMsg.className = "status-message";
+                statusMsg.style.display = "none";
+                btn.disabled = true;
+                return;
+            }
+
+            // Ensure check-out is after check-in
+            if (new Date(checkOut) <= new Date(checkIn)) {
+                statusMsg.className = "status-message error";
+                statusMsg.textContent = "Check-out date must be after check-in date.";
+                btn.disabled = true;
+                return;
+            }
+
+            // Check against house schedule
+            const isBooked = isDateRangeBooked(checkIn, checkOut, selectedHouse.bookedDates);
+
+            if (isBooked) {
+                statusMsg.className = "status-message error";
+                statusMsg.textContent = "Sorry! This house is unavailable for the selected dates. Please choose different dates or another house.";
+                btn.disabled = true;
+            } else {
+                statusMsg.className = "status-message success";
+                statusMsg.textContent = "Great news! This house is AVAILABLE for your selected dates.";
+                btn.disabled = false;
+            }
+        }
+
+        // Handle Form Submission -> Send to WhatsApp
+        document.getElementById("bookingForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            if (!selectedHouse) return;
+
+            const checkIn = document.getElementById("checkIn").value;
+            const checkOut = document.getElementById("checkOut").value;
+            const guestName = document.getElementById("guestName").value;
+            const guestsCount = document.getElementById("guestsCount").value;
+
+            // Build pre-filled WhatsApp message
+            const message = 
+`Hello! I would like to make an inquiry and request payment details for a booking.
+
+*Booking Details:*
+• *House:* ${selectedHouse.name}
+• *Check-in:* ${checkIn}
+• *Check-out:* ${checkOut}
+• *Guest Name:* ${guestName}
+• *Number of Guests:* ${guestsCount}
+
+Please confirm availability and share payment instructions. Thank you!`;
+
+            // Format message for URI link
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${HOST_PHONE_NUMBER}?text=${encodedMessage}`;
+
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Event Listeners for Date Inputs
+        document.getElementById("checkIn").addEventListener("change", validateAvailability);
+        document.getElementById("checkOut").addEventListener("change", validateAvailability);
+
+        // Prevent picking past dates
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("checkIn").min = today;
+        document.getElementById("checkOut").min = today;
+
+        // Initialize UI
+        renderHouses();
+    </script>
 </body>
 </html>
