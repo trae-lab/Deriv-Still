@@ -153,6 +153,87 @@
             background-color: var(--primary-hover);
         }
 
+        /* Search & Filters */
+        .search-bar-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input-wrap .search-icon {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            display: flex;
+        }
+
+        .search-input {
+            padding-left: 2.5rem !important;
+        }
+
+        .btn-search {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-search:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-chips {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            flex: 1;
+            padding-bottom: 0.25rem;
+        }
+
+        .chip {
+            flex-shrink: 0;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            background: var(--white);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--dark);
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .price-select {
+            width: auto;
+            flex-shrink: 0;
+            padding: 0.5rem 0.75rem;
+        }
+
         /* House Listings Grid */
         .houses-grid {
             display: grid;
@@ -558,6 +639,59 @@
 
         .modal-content { position: relative; }
 
+        /* Account Settings */
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid #f0f1f3;
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #d1d5db;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+
+        .toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(18px);
+        }
+
         /* Bottom Navigation */
         body {
             padding-bottom: 6.5rem;
@@ -655,14 +789,37 @@
         <!-- CUSTOMER VIEW -->
         <section id="customerView" class="view-section">
             <h2 style="margin-bottom: 1rem;">Available Properties</h2>
-            <div class="houses-grid" id="customerHousesGrid"></div>
 
-            <h2 style="margin-bottom: 1rem; margin-top: 2rem;">Check Dates & Send Payment Inquiry</h2>
+            <div class="search-bar-row">
+                <div class="search-input-wrap">
+                    <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by name or location...">
+                </div>
+                <button type="button" class="btn-search" id="searchBtn" onclick="applyFilters()">Search</button>
+            </div>
+
+            <div class="filter-row">
+                <div class="category-chips" id="categoryChips"></div>
+                <select id="priceFilter" class="form-control price-select">
+                    <option value="all">Any Price</option>
+                    <option value="under50">Under $50/night</option>
+                    <option value="50to100">$50 - $100/night</option>
+                    <option value="over100">$100+/night</option>
+                </select>
+            </div>
+
+            <div class="houses-grid" id="customerHousesGrid"></div>
+            <p id="noResultsMsg" style="display:none; text-align:center; color: var(--muted); padding: 2rem 0;">No properties match your search. Try different filters.</p>
+        </section>
+
+        <!-- BOOKING VIEW -->
+        <section id="bookingView" class="view-section">
+            <h2 style="margin-bottom: 1rem;">Check Dates & Send Payment Inquiry</h2>
             <div class="booking-container">
                 <form id="bookingForm">
                     <div class="form-group">
                         <label for="selectedHouseInput">Selected House</label>
-                        <input type="text" id="selectedHouseInput" class="form-control" readonly placeholder="Click a house above to select">
+                        <input type="text" id="selectedHouseInput" class="form-control" readonly placeholder="Go to Home and pick a house first">
                     </div>
 
                     <div class="form-row">
@@ -695,10 +852,9 @@
             </div>
         </section>
 
-        <!-- ADMIN PORTAL VIEW -->
         <!-- ACCOUNT VIEW -->
         <section id="accountView" class="view-section">
-            <div class="auth-container" id="accountCard"></div>
+            <div class="auth-container" id="accountCard" style="max-width: 480px;"></div>
         </section>
 
         <section id="adminView" class="view-section">
@@ -868,6 +1024,7 @@
 
         function defaultBottomTabFor(viewId) {
             if (viewId === 'customerView') return 'home';
+            if (viewId === 'bookingView') return 'booking';
             return 'account'; // loginView, accountView, adminView
         }
 
@@ -882,13 +1039,13 @@
             document.getElementById(viewId).classList.add("active");
             updateNavUI();
 
-            if (viewId === 'customerView') renderCustomerHouses();
+            if (viewId === 'customerView') { renderCategoryChips(); applyFilters(); }
             if (viewId === 'adminView') renderAdminTable();
             if (viewId === 'accountView') renderAccountView();
 
             activeBottomTab = bottomTab || defaultBottomTabFor(viewId);
             renderBottomNav();
-            window.scrollTo({ top: viewId === 'customerView' && bottomTab !== 'booking' ? 0 : window.scrollY, behavior: 'auto' });
+            window.scrollTo({ top: 0, behavior: 'auto' });
         }
 
         // BOTTOM NAVIGATION
@@ -911,9 +1068,7 @@
         }
 
         function goBooking() {
-            navigateTo('customerView', 'booking');
-            const target = document.querySelector('.booking-container');
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            navigateTo('bookingView', 'booking');
         }
 
         function goAccount() {
@@ -922,6 +1077,14 @@
             } else {
                 navigateTo('loginView', 'account');
             }
+        }
+
+        function getAccountSettings() {
+            return JSON.parse(localStorage.getItem('accountSettings')) || { emailNotifications: true, smsNotifications: false };
+        }
+
+        function saveAccountSettings(settings) {
+            localStorage.setItem('accountSettings', JSON.stringify(settings));
         }
 
         function renderAccountView() {
@@ -934,18 +1097,80 @@
                 `;
                 return;
             }
+
+            const settings = getAccountSettings();
+
             card.innerHTML = `
-                <div style="display:flex; justify-content:center; margin-bottom:1rem; color: var(--primary);">${ICON_ACCOUNT}</div>
-                <h2 style="text-align:center;">${currentUser.email}</h2>
+                <div style="display:flex; justify-content:center; margin-bottom:0.75rem; color: var(--primary);">${ICON_ACCOUNT}</div>
+                <h2 style="text-align:center;">My Account</h2>
                 <p class="auth-sub" style="text-align:center;">
                     <span style="display:inline-block; padding:0.25rem 0.75rem; border-radius:999px; background:var(--light); font-weight:600; font-size:0.78rem; color: var(--dark);">${currentUser.role.toUpperCase()}</span>
                 </p>
-                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem;">
+
+                <h3 style="margin: 1.25rem 0 0.75rem; font-size: 1rem;">Personal Information</h3>
+                <form id="personalInfoForm">
+                    <div class="form-group">
+                        <label for="acctFullName">Full Name</label>
+                        <input type="text" id="acctFullName" class="form-control" value="${currentUser.fullName || ''}" placeholder="e.g. Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="acctEmail">Email Address</label>
+                        <input type="text" id="acctEmail" class="form-control" value="${currentUser.email}" ${currentUser.email === 'admin' ? 'disabled' : ''}>
+                    </div>
+                    <div class="form-group">
+                        <label for="acctPhone">Phone Number</label>
+                        <input type="tel" id="acctPhone" class="form-control" value="${currentUser.phone || ''}" placeholder="e.g. +254 700 000000">
+                    </div>
+                    <button type="submit" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;">Save Personal Information</button>
+                    <div id="personalInfoSaved" style="display:none; margin-top:0.6rem;" class="status-message success">Saved!</div>
+                </form>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Settings</h3>
+                <div class="settings-row">
+                    <span>Email notifications</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleEmailNotif" ${settings.emailNotifications ? 'checked' : ''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <span>SMS notifications</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleSmsNotif" ${settings.smsNotifications ? 'checked' : ''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.5rem;">
                     ${currentUser.role === 'admin' ? `<button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="navigateTo('adminView','account')">Admin Portal</button>` : ''}
-                    <button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="goHome()">Browse Properties</button>
                     <button class="btn-sm btn-danger" style="width:100%; padding:0.7rem;" onclick="logout()">Log Out</button>
                 </div>
             `;
+
+            document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                currentUser.fullName = document.getElementById('acctFullName').value.trim();
+                currentUser.phone = document.getElementById('acctPhone').value.trim();
+                if (currentUser.email !== 'admin') {
+                    currentUser.email = document.getElementById('acctEmail').value.trim();
+                }
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                const saved = document.getElementById('personalInfoSaved');
+                saved.style.display = 'block';
+                setTimeout(() => saved.style.display = 'none', 2000);
+            });
+
+            document.getElementById('toggleEmailNotif').addEventListener('change', function() {
+                const s = getAccountSettings();
+                s.emailNotifications = this.checked;
+                saveAccountSettings(s);
+            });
+
+            document.getElementById('toggleSmsNotif').addEventListener('change', function() {
+                const s = getAccountSettings();
+                s.smsNotifications = this.checked;
+                saveAccountSettings(s);
+            });
         }
 
         function updateNavUI() {
@@ -955,7 +1180,6 @@
                     <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()}</span>
                     ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin Portal</button>' : ''}
                     <button class="btn-sm btn-outline" onclick="navigateTo('customerView')">View Houses</button>
-                    <button class="btn-sm btn-danger" onclick="logout()">Logout</button>
                 `;
             } else {
                 userNav.innerHTML = `
@@ -1109,12 +1333,79 @@
             `;
         }
 
+        // SEARCH & FILTERS
+        const CATEGORY_OPTIONS = [
+            { key: 'all', label: 'All' },
+            { key: 'studio', label: 'Studio' },
+            { key: '1bed', label: '1 Bedroom' },
+            { key: '2bed', label: '2 Bedrooms' },
+            { key: '3plus', label: '3+ Bedrooms' }
+        ];
+
+        let activeCategory = 'all';
+
+        function getHouseCategory(house) {
+            const beds = Number(house.bedrooms) || 0;
+            if (beds === 0) return 'studio';
+            if (beds === 1) return '1bed';
+            if (beds === 2) return '2bed';
+            return '3plus';
+        }
+
+        function parsePriceNumber(priceStr) {
+            const match = String(priceStr || '').replace(/,/g, '').match(/[\d.]+/);
+            return match ? parseFloat(match[0]) : 0;
+        }
+
+        function houseMatchesPriceRange(house, range) {
+            const value = parsePriceNumber(house.price);
+            if (range === 'under50') return value < 50;
+            if (range === '50to100') return value >= 50 && value <= 100;
+            if (range === 'over100') return value > 100;
+            return true; // 'all'
+        }
+
+        function renderCategoryChips() {
+            const wrap = document.getElementById('categoryChips');
+            if (!wrap) return;
+            wrap.innerHTML = CATEGORY_OPTIONS.map(opt =>
+                `<button type="button" class="chip ${activeCategory === opt.key ? 'active' : ''}" onclick="setCategory('${opt.key}')">${opt.label}</button>`
+            ).join('');
+        }
+
+        function setCategory(key) {
+            activeCategory = key;
+            renderCategoryChips();
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+            const priceRange = document.getElementById('priceFilter')?.value || 'all';
+
+            const filtered = houses.filter(house => {
+                const matchesQuery = !query ||
+                    house.name.toLowerCase().includes(query) ||
+                    house.location.toLowerCase().includes(query) ||
+                    house.description.toLowerCase().includes(query);
+                const matchesCategory = activeCategory === 'all' || getHouseCategory(house) === activeCategory;
+                const matchesPrice = houseMatchesPriceRange(house, priceRange);
+                return matchesQuery && matchesCategory && matchesPrice;
+            });
+
+            renderCustomerHouses(filtered);
+        }
+
         // CUSTOMER VIEW LOGIC
-        function renderCustomerHouses() {
+        function renderCustomerHouses(list) {
             const container = document.getElementById("customerHousesGrid");
+            const noResultsMsg = document.getElementById("noResultsMsg");
+            const houseList = list || houses;
             container.innerHTML = "";
 
-            houses.forEach(house => {
+            if (noResultsMsg) noResultsMsg.style.display = houseList.length ? "none" : "block";
+
+            houseList.forEach(house => {
                 const isSelected = selectedHouse && selectedHouse.id === house.id;
                 const card = document.createElement("div");
                 card.className = `house-card ${isSelected ? 'selected' : ''}`;
@@ -1194,13 +1485,13 @@
             if (!detailHouse) return;
             selectHouse(detailHouse);
             closeDetailModal();
-            document.getElementById("selectedHouseInput").scrollIntoView({ behavior: "smooth", block: "center" });
+            goBooking();
         }
 
         function selectHouse(house) {
             selectedHouse = house;
             document.getElementById("selectedHouseInput").value = house.name;
-            renderCustomerHouses();
+            applyFilters();
             validateAvailability();
         }
 
@@ -1276,6 +1567,11 @@ Please confirm availability and share payment details. Thank you!`;
         document.getElementById("checkIn").addEventListener("change", validateAvailability);
         document.getElementById("checkOut").addEventListener("change", validateAvailability);
 
+        // Search & filter listeners
+        document.getElementById("searchInput").addEventListener("input", applyFilters);
+        document.getElementById("searchInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyFilters(); } });
+        document.getElementById("priceFilter").addEventListener("change", applyFilters);
+
         // ADMIN TABLE LOGIC
         function renderAdminTable() {
             const tbody = document.getElementById("adminHouseTable");
@@ -1339,6 +1635,8 @@ Please confirm availability and share payment details. Thank you!`;
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("checkIn").min = today;
         document.getElementById("checkOut").min = today;
+
+        renderCategoryChips();
 
         if (currentUser) {
             if (currentUser.role === 'admin') navigateTo('adminView');
