@@ -2483,4 +2483,184 @@ Please confirm availability and share payment details. Thank you!`;
                     <button type="submit" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;">Update Password</button>
                 </form>
 
-                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">My Favorites</h3>
+                <div id="favoritesList">
+                    ${favHouses.length ? favHouses.map(h => `
+                        <div class="fav-list-item">
+                            <img src="${h.images[0]}" alt="${h.name}">
+                            <div class="fav-info"><strong>${h.name}</strong><br><span style="color:var(--muted);">${h.price}</span></div>
+                            <button type="button" class="btn-sm btn-outline" onclick="goAccount(); openDetailModal('${h.id}')">View</button>
+                        </div>
+                    `).join('') : `<p class="empty-note">No favorites yet — tap the heart on a listing to save it.</p>`}
+                </div>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Booking History</h3>
+                <div id="historyList">
+                    ${ud.bookingHistory.length ? ud.bookingHistory.map(b => `
+                        <div class="history-list-item">
+                            <div style="flex:1;">
+                                <strong>${b.houseName}</strong><br>
+                                <span style="color:var(--muted);">${b.checkIn} &rarr; ${b.checkOut} &middot; ${b.guests} guest(s) &middot; $${b.total}</span>
+                            </div>
+                        </div>
+                    `).join('') : `<p class="empty-note">No bookings yet.</p>`}
+                </div>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Notifications</h3>
+                <div id="notifList">
+                    ${ud.notifications.length ? ud.notifications.slice(0, 10).map(n => `
+                        <div class="notif-list-item">
+                            <div style="flex:1;">${n.message}<br><span style="color:var(--muted); font-size:0.75rem;">${new Date(n.date).toLocaleString()}</span></div>
+                        </div>
+                    `).join('') : `<p class="empty-note">No notifications yet.</p>`}
+                </div>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Settings</h3>
+                <div class="settings-row">
+                    <span>Email notifications</span>
+                    <label class="toggle-switch"><input type="checkbox" id="toggleEmailNotif" ${settings.emailNotifications ? 'checked' : ''}><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row">
+                    <span>SMS notifications</span>
+                    <label class="toggle-switch"><input type="checkbox" id="toggleSmsNotif" ${settings.smsNotifications ? 'checked' : ''}><span class="toggle-slider"></span></label>
+                </div>
+                <div class="settings-row" style="border-bottom:none;">
+                    <span>Dark mode</span>
+                    <label class="toggle-switch"><input type="checkbox" id="toggleDarkMode" ${settings.darkMode ? 'checked' : ''}><span class="toggle-slider"></span></label>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.5rem;">
+                    ${currentUser.role === 'admin' ? `<button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="navigateTo('adminView','account')">Admin Portal</button>` : ''}
+                    <button class="btn-sm btn-danger" style="width:100%; padding:0.7rem;" onclick="logout()">Log Out</button>
+                </div>
+            `;
+
+            document.getElementById('avatarUpload').addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    currentUser.avatar = ev.target.result;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    renderAccountView();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('personalInfoForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                currentUser.fullName = document.getElementById('acctFullName').value.trim();
+                currentUser.phone = document.getElementById('acctPhone').value.trim();
+                if (currentUser.email !== 'admin') currentUser.email = document.getElementById('acctEmail').value.trim();
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                const saved = document.getElementById('personalInfoSaved');
+                saved.style.display = 'block';
+                setTimeout(() => saved.style.display = 'none', 2000);
+            });
+
+            document.getElementById('changePasswordForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const cur = document.getElementById('currentPassword').value;
+                const next = document.getElementById('newPassword').value;
+                const confirm = document.getElementById('confirmPassword').value;
+                const msg = document.getElementById('passwordChangeMsg');
+
+                const storedPass = currentUser.email === 'admin' ? getAdminPassword() : (getCustomerCreds()[currentUser.email] || '');
+                if (cur !== storedPass) {
+                    msg.className = 'status-message error';
+                    msg.textContent = 'Current password is incorrect.';
+                    return;
+                }
+                if (next.length < 4) {
+                    msg.className = 'status-message error';
+                    msg.textContent = 'New password must be at least 4 characters.';
+                    return;
+                }
+                if (next !== confirm) {
+                    msg.className = 'status-message error';
+                    msg.textContent = 'New passwords do not match.';
+                    return;
+                }
+                if (currentUser.email === 'admin') {
+                    setAdminPassword(next);
+                } else {
+                    const creds = getCustomerCreds();
+                    creds[currentUser.email] = next;
+                    saveCustomerCreds(creds);
+                }
+                msg.className = 'status-message success';
+                msg.textContent = 'Password updated successfully.';
+                this.reset();
+            });
+
+            document.getElementById('toggleEmailNotif').addEventListener('change', function () {
+                const s = getAccountSettings(); s.emailNotifications = this.checked; saveAccountSettings(s);
+            });
+            document.getElementById('toggleSmsNotif').addEventListener('change', function () {
+                const s = getAccountSettings(); s.smsNotifications = this.checked; saveAccountSettings(s);
+            });
+            document.getElementById('toggleDarkMode').addEventListener('change', function () {
+                const s = getAccountSettings(); s.darkMode = this.checked; saveAccountSettings(s);
+                applyDarkMode(this.checked);
+            });
+        }
+
+        // ONBOARDING TOUR
+        function maybeShowOnboarding() {
+            if (localStorage.getItem('bnb_onboarded')) return;
+            onboardingStep = 0;
+            document.getElementById('onboardingModal').classList.add('active');
+            renderOnboardingStep();
+        }
+
+        function renderOnboardingStep() {
+            const step = ONBOARDING_STEPS[onboardingStep];
+            document.getElementById('onboardingTitle').textContent = step.title;
+            document.getElementById('onboardingText').textContent = step.text;
+            document.getElementById('onboardingDots').innerHTML = ONBOARDING_STEPS.map((_, i) =>
+                `<span class="onboarding-dot ${i === onboardingStep ? 'active' : ''}"></span>`
+            ).join('');
+            document.getElementById('onboardingNextBtn').textContent = onboardingStep === ONBOARDING_STEPS.length - 1 ? 'Get Started' : 'Next';
+        }
+
+        function onboardingNext() {
+            if (onboardingStep >= ONBOARDING_STEPS.length - 1) {
+                finishOnboarding();
+            } else {
+                onboardingStep++;
+                renderOnboardingStep();
+            }
+        }
+
+        function skipOnboarding() { finishOnboarding(); }
+
+        function finishOnboarding() {
+            localStorage.setItem('bnb_onboarded', '1');
+            document.getElementById('onboardingModal').classList.remove('active');
+        }
+
+        // INITIALIZATION
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("checkIn").min = today;
+        document.getElementById("checkOut").min = today;
+
+        document.getElementById("searchInput").addEventListener("input", applyFilters);
+        document.getElementById("searchInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyFilters(); } });
+        document.getElementById("priceFilter").addEventListener("change", applyFilters);
+        document.getElementById("sortFilter").addEventListener("change", applyFilters);
+
+        applyDarkMode(getAccountSettings().darkMode);
+        renderCategoryChips();
+        renderAmenityChips();
+
+        if (currentUser) {
+            if (currentUser.role === 'admin') navigateTo('adminView');
+            else navigateTo('customerView');
+        } else {
+            navigateTo('loginView');
+        }
+
+        maybeShowOnboarding();
+    </script>
+</body>
+</html>
