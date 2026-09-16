@@ -13,6 +13,19 @@
             --white: #ffffff;
             --danger: #dc2626;
             --muted: #6b7280;
+            --bg: #f9fafb;
+            --border: #d1d5db;
+            --border-soft: #e5e7eb;
+        }
+
+        body.dark-mode {
+            --dark: #f3f4f6;
+            --light: #374151;
+            --white: #1f2937;
+            --muted: #9ca3af;
+            --bg: #111827;
+            --border: #4b5563;
+            --border-soft: #374151;
         }
 
         * {
@@ -23,9 +36,11 @@
         }
 
         body {
-            background-color: #f9fafb;
+            background-color: var(--bg);
             color: var(--dark);
             line-height: 1.6;
+            padding-bottom: 6.5rem;
+            transition: background-color 0.2s, color 0.2s;
         }
 
         header {
@@ -106,7 +121,7 @@
         .auth-sub {
             text-align: center;
             font-size: 0.85rem;
-            color: #6b7280;
+            color: var(--muted);
             margin-bottom: 1.5rem;
         }
 
@@ -125,9 +140,11 @@
         .form-control {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--white);
+            color: var(--dark);
         }
 
         .form-control:focus {
@@ -197,11 +214,11 @@
             display: flex;
             gap: 0.75rem;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.75rem;
             flex-wrap: wrap;
         }
 
-        .category-chips {
+        .category-chips, .amenity-chips {
             display: flex;
             gap: 0.5rem;
             overflow-x: auto;
@@ -213,7 +230,7 @@
             flex-shrink: 0;
             padding: 0.45rem 0.9rem;
             border-radius: 999px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border);
             background: var(--white);
             font-size: 0.82rem;
             font-weight: 600;
@@ -228,10 +245,19 @@
             color: white;
         }
 
-        .price-select {
+        .price-select, .sort-select {
             width: auto;
             flex-shrink: 0;
             padding: 0.5rem 0.75rem;
+        }
+
+        .filters-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin: 0.5rem 0 0.35rem;
         }
 
         /* House Listings Grid */
@@ -250,6 +276,7 @@
             transition: transform 0.15s, box-shadow 0.15s;
             border: 2px solid transparent;
             cursor: pointer;
+            position: relative;
         }
 
         .house-card:hover {
@@ -288,6 +315,39 @@
             gap: 0.25rem;
         }
 
+        .featured-badge {
+            position: absolute;
+            top: 0.6rem;
+            left: 0.6rem;
+            background: #f59e0b;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            z-index: 2;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255,255,255,0.85);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            color: var(--danger);
+        }
+
         .house-details {
             padding: 1.25rem;
         }
@@ -309,7 +369,20 @@
             gap: 0.3rem;
             font-size: 0.82rem;
             color: var(--muted);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-row .stars {
+            display: flex;
         }
 
         .house-meta-row {
@@ -317,7 +390,7 @@
             gap: 1rem;
             margin-top: 0.6rem;
             padding-top: 0.6rem;
-            border-top: 1px solid #f0f1f3;
+            border-top: 1px solid var(--border-soft);
         }
 
         .meta-pill {
@@ -333,6 +406,24 @@
             color: var(--primary);
         }
 
+        .amenity-pill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.6rem;
+        }
+
+        .amenity-pill {
+            font-size: 0.72rem;
+            background: var(--light);
+            color: var(--dark);
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
         .view-details-link {
             display: inline-block;
             margin-top: 0.75rem;
@@ -340,6 +431,39 @@
             font-weight: 600;
             color: var(--primary);
         }
+
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Skeleton Loading */
+        .skeleton-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+        }
+
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, var(--light) 25%, var(--border-soft) 37%, var(--light) 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.4s ease infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+
+        .skeleton-img { height: 200px; }
+        .skeleton-line { height: 14px; margin: 0.6rem 1.25rem; border-radius: 4px; }
+        .skeleton-line.short { width: 40%; }
 
         /* Booking Form */
         .booking-container {
@@ -377,6 +501,16 @@
             display: block;
         }
 
+        .price-summary-box {
+            margin-top: 1rem;
+            padding: 0.85rem;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 0.9rem;
+            display: none;
+        }
+
         .btn-whatsapp {
             width: 100%;
             background-color: #25d366;
@@ -399,7 +533,64 @@
             cursor: not-allowed;
         }
 
+        .contact-alt-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn-contact-alt {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            text-decoration: none;
+        }
+
+        .btn-contact-alt:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
         /* Admin Controls */
+        .admin-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
         .admin-card {
             background: var(--white);
             padding: 1.5rem;
@@ -416,13 +607,13 @@
 
         .admin-table th, .admin-table td {
             padding: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-soft);
             text-align: left;
             vertical-align: middle;
         }
 
         .admin-table th {
-            background-color: #f8fafc;
+            background-color: var(--light);
         }
 
         .admin-thumb-group {
@@ -443,11 +634,29 @@
             display: flex;
             gap: 0.6rem;
             margin-top: 0.15rem;
+            flex-wrap: wrap;
         }
 
         .action-btns {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .amenity-checks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .amenity-check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.85rem;
+            background: var(--light);
+            padding: 0.35rem 0.7rem;
+            border-radius: 8px;
         }
 
         /* Modal Styles */
@@ -470,7 +679,7 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--white);
             padding: 2rem;
             border-radius: 12px;
             width: 100%;
@@ -478,30 +687,11 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
         }
 
         .modal-content.wide {
             max-width: 640px;
-        }
-
-        .image-preview {
-            width: 100%;
-            height: 150px;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 0.5rem;
-            overflow: hidden;
-            background: #f9fafb;
-        }
-
-        .image-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
         }
 
         .upload-thumbs {
@@ -517,7 +707,7 @@
             height: 56px;
             border-radius: 6px;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-soft);
         }
 
         .upload-thumb img {
@@ -548,7 +738,7 @@
             height: 280px;
             border-radius: 10px;
             overflow: hidden;
-            background: #f0f1f3;
+            background: var(--light);
         }
 
         .gallery-main-wrap img {
@@ -637,7 +827,151 @@
             line-height: 1;
         }
 
-        .modal-content { position: relative; }
+        /* Availability calendar */
+        .cal-months-wrap {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .cal-month {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .cal-month-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            text-align: center;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .cal-dow {
+            font-size: 0.65rem;
+            text-align: center;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .cal-cell {
+            font-size: 0.72rem;
+            text-align: center;
+            padding: 0.35rem 0;
+            border-radius: 4px;
+            background: var(--light);
+        }
+
+        .cal-cell.empty { background: transparent; }
+        .cal-cell.booked { background: #fecaca; color: #991b1b; font-weight: 700; }
+        .cal-cell.past { opacity: 0.4; }
+
+        .cal-legend {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        .cal-legend span { display: flex; align-items: center; gap: 0.3rem; }
+        .cal-legend-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+        /* Reviews */
+        .review-item {
+            border-top: 1px solid var(--border-soft);
+            padding: 0.85rem 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .review-date {
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .review-photo {
+            width: 100%;
+            max-width: 180px;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .star-input {
+            display: flex;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        /* Account: avatar, lists */
+        .avatar-circle {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+            border: 3px solid var(--light);
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 84px;
+            margin: 0 auto 0.75rem;
+        }
+
+        .avatar-edit-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--white);
+        }
+
+        .fav-list-item, .history-list-item, .notif-list-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-soft);
+            font-size: 0.85rem;
+        }
+
+        .fav-list-item img {
+            width: 52px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .fav-list-item .fav-info { flex: 1; }
+
+        .empty-note {
+            font-size: 0.82rem;
+            color: var(--muted);
+            padding: 0.5rem 0;
+        }
 
         /* Account Settings */
         .settings-row {
@@ -645,7 +979,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.65rem 0;
-            border-bottom: 1px solid #f0f1f3;
+            border-bottom: 1px solid var(--border-soft);
             font-size: 0.9rem;
         }
 
@@ -667,7 +1001,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #d1d5db;
+            background-color: var(--border);
             border-radius: 999px;
             transition: 0.2s;
         }
@@ -693,10 +1027,6 @@
         }
 
         /* Bottom Navigation */
-        body {
-            padding-bottom: 6.5rem;
-        }
-
         .bottom-nav {
             position: fixed;
             bottom: 1.1rem;
@@ -712,6 +1042,11 @@
             box-shadow: 0 8px 24px rgba(31, 41, 55, 0.18), inset 0 1px 0 rgba(255,255,255,0.6);
             border: 1px solid rgba(255,255,255,0.4);
             z-index: 200;
+        }
+
+        body.dark-mode .bottom-nav {
+            background: rgba(31, 41, 55, 0.75);
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .nav-item {
@@ -748,12 +1083,36 @@
         @media (max-width: 420px) {
             .nav-item { padding: 0.5rem 0.8rem; }
         }
+
+        /* Onboarding tour */
+        .onboarding-card {
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .onboarding-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin: 1rem 0;
+        }
+
+        .onboarding-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .onboarding-dot.active {
+            background: var(--primary);
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 onclick="navigateTo('customerView')">StayEase BnB</h1>
+        <h1 onclick="goHome()">StayEase BnB</h1>
         <div class="user-nav" id="userNav"></div>
     </header>
 
@@ -781,7 +1140,7 @@
                 <div style="margin-top: 1.5rem; padding: 0.75rem; background: #eff6ff; border-radius: 6px; font-size: 0.8rem; color: #1e40af;">
                     <strong>Demo Credentials:</strong><br>
                     • Admin: <code>admin</code> / Password: <code>admin123</code><br>
-                    • Customer: Any email / Any password
+                    • Customer: Any email — first login sets your password
                 </div>
             </div>
         </section>
@@ -806,9 +1165,19 @@
                     <option value="50to100">$50 - $100/night</option>
                     <option value="over100">$100+/night</option>
                 </select>
+                <select id="sortFilter" class="form-control sort-select">
+                    <option value="default">Sort: Featured</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="newest">Newest</option>
+                    <option value="photos_desc">Most Photos</option>
+                </select>
             </div>
 
-            <div class="houses-grid" id="customerHousesGrid"></div>
+            <div class="filters-label">Amenities</div>
+            <div class="amenity-chips" id="amenityChips"></div>
+
+            <div class="houses-grid" id="customerHousesGrid" style="margin-top: 1.25rem;"></div>
             <p id="noResultsMsg" style="display:none; text-align:center; color: var(--muted); padding: 2rem 0;">No properties match your search. Try different filters.</p>
         </section>
 
@@ -844,10 +1213,22 @@
                     </div>
 
                     <div id="statusMessage" class="status-message"></div>
+                    <div id="priceSummaryBox" class="price-summary-box"></div>
 
                     <button type="submit" id="whatsappBtn" class="btn-whatsapp" disabled>
                         Inquire & Request Payment Details on WhatsApp
                     </button>
+
+                    <div class="contact-alt-row">
+                        <a href="#" id="callHostBtn" class="btn-contact-alt">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            Call Host
+                        </a>
+                        <a href="#" id="emailHostBtn" class="btn-contact-alt">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+                            Email Host
+                        </a>
+                    </div>
                 </form>
             </div>
         </section>
@@ -857,11 +1238,17 @@
             <div class="auth-container" id="accountCard" style="max-width: 480px;"></div>
         </section>
 
+        <!-- ADMIN PORTAL VIEW -->
         <section id="adminView" class="view-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
                 <h2>Admin Management Dashboard</h2>
-                <button class="btn-sm btn-outline" onclick="openModal()">+ Add New House</button>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn-sm btn-outline" onclick="exportBookingsCSV()">Export Bookings CSV</button>
+                    <button class="btn-sm btn-outline" onclick="openModal()">+ Add New House</button>
+                </div>
             </div>
+
+            <div class="admin-stats-row" id="adminStats"></div>
 
             <div class="admin-card">
                 <h3>Manage Houses & Availability</h3>
@@ -910,13 +1297,22 @@
                         <input type="text" id="housePrice" class="form-control" required placeholder="e.g. $50 / night">
                     </div>
                     <div class="form-group">
-                        <label for="houseBedrooms">Bedrooms</label>
+                        <label for="houseBedrooms">Bedrooms (0 = Studio)</label>
                         <input type="number" id="houseBedrooms" class="form-control" min="0" value="1" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="houseBathrooms">Bathrooms</label>
                     <input type="number" id="houseBathrooms" class="form-control" min="0" step="0.5" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Amenities</label>
+                    <div class="amenity-checks" id="amenityCheckboxes"></div>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:0.5rem; font-weight:600;">
+                        <input type="checkbox" id="houseFeatured" style="width:auto;"> Mark as Featured
+                    </label>
                 </div>
                 <div class="form-group">
                     <label for="houseDesc">Description</label>
@@ -936,12 +1332,35 @@
         </div>
     </div>
 
+    <!-- ADMIN BLOCK DATES MODAL -->
+    <div class="modal-backdrop" id="blockDatesModal">
+        <div class="modal-content">
+            <button type="button" class="modal-close-x" onclick="closeBlockDatesModal()">&times;</button>
+            <h3 style="margin-bottom: 1rem;">Block Dates</h3>
+            <form id="blockDatesForm">
+                <input type="hidden" id="blockDatesHouseId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="blockStartDate">Start Date</label>
+                        <input type="date" id="blockStartDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="blockEndDate">End Date</label>
+                        <input type="date" id="blockEndDate" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Block These Dates</button>
+            </form>
+        </div>
+    </div>
+
     <!-- CUSTOMER HOUSE DETAIL / GALLERY MODAL -->
     <div class="modal-backdrop" id="detailModal">
         <div class="modal-content wide">
             <button type="button" class="modal-close-x" onclick="closeDetailModal()">&times;</button>
             <h3 id="detailTitle" style="margin-bottom: 0.25rem; padding-right: 1.5rem;"></h3>
             <div class="detail-location" id="detailLocation"></div>
+            <div class="rating-row" id="detailRatingRow"></div>
 
             <div class="gallery-main-wrap" style="margin-top: 1rem;">
                 <img id="galleryMainImg" alt="House photo">
@@ -952,17 +1371,69 @@
             <div class="gallery-thumbs" id="galleryThumbs"></div>
 
             <div class="detail-meta-row" id="detailMetaRow"></div>
-            <p id="detailDesc" style="color: var(--muted); font-size: 0.9rem;"></p>
+            <div class="amenity-pill-list" id="detailAmenities"></div>
+            <p id="detailDesc" style="color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem;"></p>
             <div class="house-price" id="detailPrice" style="margin-top: 0.75rem; font-size: 1.1rem;"></div>
+            <a href="#" id="detailMapLink" target="_blank" class="map-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                View on Map
+            </a>
 
             <button type="button" class="btn-primary" style="margin-top: 1rem;" onclick="selectHouseFromDetail()">Select This House</button>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Availability</h3>
+            <div class="cal-months-wrap" id="availabilityCalendar"></div>
+            <div class="cal-legend">
+                <span><span class="cal-legend-swatch" style="background:#fecaca;"></span> Booked</span>
+                <span><span class="cal-legend-swatch" style="background:var(--light);"></span> Available</span>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Reviews</h3>
+            <div id="reviewsList"></div>
+
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-soft);">
+                <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem;">Leave a Review</h3>
+                <div class="form-group">
+                    <label for="reviewName">Your Name</label>
+                    <input type="text" id="reviewName" class="form-control" placeholder="Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="star-input" id="reviewStarInput"></div>
+                    <input type="hidden" id="reviewRatingInput" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="reviewComment">Comment</label>
+                    <textarea id="reviewComment" class="form-control" rows="2" placeholder="Share your experience..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reviewPhoto">Add a Photo (optional)</label>
+                    <input type="file" id="reviewPhoto" class="form-control" accept="image/*">
+                </div>
+                <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="submitReview(detailHouse.id)">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING TOUR MODAL -->
+    <div class="modal-backdrop" id="onboardingModal">
+        <div class="modal-content onboarding-card">
+            <h3 id="onboardingTitle" style="margin-bottom:0.5rem;"></h3>
+            <p id="onboardingText" style="color: var(--muted); font-size:0.9rem;"></p>
+            <div class="onboarding-dots" id="onboardingDots"></div>
+            <div style="display:flex; gap:0.5rem;">
+                <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="skipOnboarding()">Skip</button>
+                <button type="button" class="btn-primary" style="padding:0.7rem;" onclick="onboardingNext()" id="onboardingNextBtn">Next</button>
+            </div>
         </div>
     </div>
 
     <script>
         const HOST_PHONE_NUMBER = "254700000000";
+        const HOST_EMAIL = "host@stayease.example";
         const ADMIN_USER = "admin";
-        const ADMIN_PASS = "admin123";
+        const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
+        const AMENITY_OPTIONS = ["WiFi", "Parking", "Pool", "Pet Friendly", "Kitchen", "AC"];
 
         // --- Icons (inline SVG, currentColor themed) ---
         const ICON_BED = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9v9"/><path d="M2 12h20v6"/><path d="M22 12v6"/><path d="M4 12V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/><path d="M12 12V9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><path d="M2 18v2"/><path d="M22 18v2"/></svg>`;
@@ -972,16 +1443,40 @@
         const ICON_HOME = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>`;
         const ICON_CART = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"/></svg>`;
         const ICON_ACCOUNT = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
+        const ICON_HEART_OUTLINE = `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.5-1.5 3-3.4 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.1 1.5 4 3 5.5l7 7Z"/></svg>`;
+        const ICON_HEART_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.5-1.5 3-3.4 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.1 1.5 4 3 5.5l7 7Z"/></svg>`;
+        const ICON_CAMERA = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
+        const ICON_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+        const ICON_STAR_BADGE = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5 12 2"/></svg>`;
 
-        const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
+        function starSVG(size, filled) {
+            return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${filled ? '#f59e0b' : 'none'}" stroke="${filled ? '#f59e0b' : '#d1d5db'}" stroke-width="1.5"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5 12 2"/></svg>`;
+        }
+
+        function starsHTML(rating, size) {
+            size = size || 14;
+            const rounded = Math.round(rating || 0);
+            let html = '';
+            for (let i = 1; i <= 5; i++) html += starSVG(size, i <= rounded);
+            return html;
+        }
 
         let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
         let selectedHouse = null;
-        let currentUploadedImages = []; // array of data URLs for the admin form
-
-        // Detail modal state
+        let currentUploadedImages = [];
         let detailHouse = null;
         let detailIndex = 0;
+        let activeCategory = 'all';
+        let activeAmenities = new Set();
+        let onboardingStep = 0;
+        let reviewStarRating = 5;
+
+        const ONBOARDING_STEPS = [
+            { title: "Welcome to StayEase!", text: "Search and filter properties right from the Home tab — by category, amenities, and price." },
+            { title: "Save Your Favorites", text: "Tap the heart icon on any listing to save it for later." },
+            { title: "Book with Ease", text: "Use the Bookings tab to check dates, see the total cost, and contact the host." },
+            { title: "Your Account", text: "Visit Account to manage your profile, favorites, booking history, and settings." }
+        ];
 
         let houses = JSON.parse(localStorage.getItem("bnb_houses")) || [
             {
@@ -997,18 +1492,63 @@
                 location: "Nairobi, Kenya",
                 bedrooms: 1,
                 bathrooms: 1,
+                amenities: ["WiFi", "Kitchen"],
+                featured: true,
+                reviews: [
+                    { id: "r1", author: "Amara", rating: 5, comment: "Spotless and the host responded fast!", photo: null, date: "2026-08-01T10:00:00.000Z" }
+                ],
+                createdAt: Date.now() - 1000 * 60 * 60 * 24 * 30,
                 bookedDates: [{ start: "2026-09-15", end: "2026-09-20" }]
+            },
+            {
+                id: "h2",
+                name: "Garden Cottage",
+                price: "$85 / night",
+                images: [
+                    "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80"
+                ],
+                description: "Peaceful 2-bedroom cottage with a private garden.",
+                location: "Naivasha, Kenya",
+                bedrooms: 2,
+                bathrooms: 1,
+                amenities: ["WiFi", "Parking", "Pet Friendly"],
+                featured: false,
+                reviews: [],
+                createdAt: Date.now() - 1000 * 60 * 60 * 24 * 10,
+                bookedDates: []
+            },
+            {
+                id: "h3",
+                name: "Downtown Loft",
+                price: "$120 / night",
+                images: [
+                    "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80"
+                ],
+                description: "Modern studio loft in the city center, walk to everything.",
+                location: "Nairobi, Kenya",
+                bedrooms: 0,
+                bathrooms: 1,
+                amenities: ["WiFi", "AC", "Pool"],
+                featured: true,
+                reviews: [
+                    { id: "r2", author: "Kevin", rating: 4, comment: "Great location, a bit noisy at night.", photo: null, date: "2026-08-20T10:00:00.000Z" }
+                ],
+                createdAt: Date.now() - 1000 * 60 * 60 * 24 * 2,
+                bookedDates: []
             }
         ];
 
-        // migrate any old single-"image" records to the "images" array shape
+        // migrate any old-shape records
         houses.forEach(h => {
-            if (!h.images) {
-                h.images = h.image ? [h.image] : [DEFAULT_IMAGE];
-            }
+            if (!h.images) h.images = h.image ? [h.image] : [DEFAULT_IMAGE];
             if (h.location === undefined) h.location = "Location not specified";
             if (h.bedrooms === undefined) h.bedrooms = 1;
             if (h.bathrooms === undefined) h.bathrooms = 1;
+            if (!h.amenities) h.amenities = [];
+            if (h.featured === undefined) h.featured = false;
+            if (!h.reviews) h.reviews = [];
+            if (!h.createdAt) h.createdAt = Date.now();
         });
 
         function saveData() {
@@ -1019,18 +1559,69 @@
             }
         }
 
+        // --- Per-user data (favorites, booking history, notifications) ---
+        let userData = JSON.parse(localStorage.getItem('bnb_userdata')) || {};
+
+        function getUserData(email) {
+            if (!userData[email]) userData[email] = { favorites: [], bookingHistory: [], notifications: [] };
+            return userData[email];
+        }
+
+        function saveUserData() {
+            localStorage.setItem('bnb_userdata', JSON.stringify(userData));
+        }
+
+        function addNotification(email, message) {
+            const ud = getUserData(email);
+            ud.notifications.unshift({ message, date: new Date().toISOString() });
+            saveUserData();
+        }
+
+        function isFavorite(houseId) {
+            if (!currentUser) return false;
+            return getUserData(currentUser.email).favorites.includes(houseId);
+        }
+
+        function toggleFavorite(houseId, event) {
+            if (event) event.stopPropagation();
+            if (!currentUser) {
+                alert('Please log in to save favorites.');
+                return;
+            }
+            const ud = getUserData(currentUser.email);
+            const idx = ud.favorites.indexOf(houseId);
+            if (idx >= 0) ud.favorites.splice(idx, 1); else ud.favorites.push(houseId);
+            saveUserData();
+            applyFilters();
+            if (document.getElementById('accountView').classList.contains('active')) renderAccountView();
+        }
+
+        // --- Credentials (simulated) ---
+        function getAdminPassword() {
+            return localStorage.getItem('bnb_admin_pass') || 'admin123';
+        }
+        function setAdminPassword(pass) {
+            localStorage.setItem('bnb_admin_pass', pass);
+        }
+        function getCustomerCreds() {
+            return JSON.parse(localStorage.getItem('bnb_customer_creds')) || {};
+        }
+        function saveCustomerCreds(creds) {
+            localStorage.setItem('bnb_customer_creds', JSON.stringify(creds));
+        }
+
         // NAVIGATION
         let activeBottomTab = 'home';
 
         function defaultBottomTabFor(viewId) {
             if (viewId === 'customerView') return 'home';
             if (viewId === 'bookingView') return 'booking';
-            return 'account'; // loginView, accountView, adminView
+            return 'account';
         }
 
         function navigateTo(viewId, bottomTab) {
             document.querySelectorAll(".view-section").forEach(el => el.classList.remove("active"));
-            
+
             if (viewId === 'adminView' && (!currentUser || currentUser.role !== 'admin')) {
                 navigateTo('loginView');
                 return;
@@ -1039,8 +1630,8 @@
             document.getElementById(viewId).classList.add("active");
             updateNavUI();
 
-            if (viewId === 'customerView') { renderCategoryChips(); applyFilters(); }
-            if (viewId === 'adminView') renderAdminTable();
+            if (viewId === 'customerView') { renderCategoryChips(); renderAmenityChips(); applyFilters(); }
+            if (viewId === 'adminView') { renderAdminStats(); renderAdminTable(); }
             if (viewId === 'accountView') renderAccountView();
 
             activeBottomTab = bottomTab || defaultBottomTabFor(viewId);
@@ -1050,11 +1641,6 @@
 
         // BOTTOM NAVIGATION
         function renderBottomNav() {
-            const items = [
-                { key: 'home', icon: ICON_HOME, label: 'Home' },
-                { key: 'booking', icon: ICON_CART, label: 'Bookings' },
-                { key: 'account', icon: ICON_ACCOUNT, label: 'Account' }
-            ];
             document.getElementById('navHomeBtn').innerHTML = `${ICON_HOME}<span>Home</span>`;
             document.getElementById('navBookingBtn').innerHTML = `${ICON_CART}<span>Bookings</span>`;
             document.getElementById('navAccountBtn').innerHTML = `${ICON_ACCOUNT}<span>Account</span>`;
@@ -1063,155 +1649,57 @@
             document.getElementById('navAccountBtn').classList.toggle('active', activeBottomTab === 'account');
         }
 
-        function goHome() {
-            navigateTo('customerView', 'home');
-        }
-
-        function goBooking() {
-            navigateTo('bookingView', 'booking');
-        }
-
+        function goHome() { navigateTo('customerView', 'home'); }
+        function goBooking() { navigateTo('bookingView', 'booking'); }
         function goAccount() {
-            if (currentUser) {
-                navigateTo('accountView', 'account');
-            } else {
-                navigateTo('loginView', 'account');
-            }
-        }
-
-        function getAccountSettings() {
-            return JSON.parse(localStorage.getItem('accountSettings')) || { emailNotifications: true, smsNotifications: false };
-        }
-
-        function saveAccountSettings(settings) {
-            localStorage.setItem('accountSettings', JSON.stringify(settings));
-        }
-
-        function renderAccountView() {
-            const card = document.getElementById('accountCard');
-            if (!currentUser) {
-                card.innerHTML = `
-                    <h2>My Account</h2>
-                    <p class="auth-sub">You're not logged in yet.</p>
-                    <button class="btn-primary" onclick="navigateTo('loginView','account')">Log In</button>
-                `;
-                return;
-            }
-
-            const settings = getAccountSettings();
-
-            card.innerHTML = `
-                <div style="display:flex; justify-content:center; margin-bottom:0.75rem; color: var(--primary);">${ICON_ACCOUNT}</div>
-                <h2 style="text-align:center;">My Account</h2>
-                <p class="auth-sub" style="text-align:center;">
-                    <span style="display:inline-block; padding:0.25rem 0.75rem; border-radius:999px; background:var(--light); font-weight:600; font-size:0.78rem; color: var(--dark);">${currentUser.role.toUpperCase()}</span>
-                </p>
-
-                <h3 style="margin: 1.25rem 0 0.75rem; font-size: 1rem;">Personal Information</h3>
-                <form id="personalInfoForm">
-                    <div class="form-group">
-                        <label for="acctFullName">Full Name</label>
-                        <input type="text" id="acctFullName" class="form-control" value="${currentUser.fullName || ''}" placeholder="e.g. Jane Doe">
-                    </div>
-                    <div class="form-group">
-                        <label for="acctEmail">Email Address</label>
-                        <input type="text" id="acctEmail" class="form-control" value="${currentUser.email}" ${currentUser.email === 'admin' ? 'disabled' : ''}>
-                    </div>
-                    <div class="form-group">
-                        <label for="acctPhone">Phone Number</label>
-                        <input type="tel" id="acctPhone" class="form-control" value="${currentUser.phone || ''}" placeholder="e.g. +254 700 000000">
-                    </div>
-                    <button type="submit" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;">Save Personal Information</button>
-                    <div id="personalInfoSaved" style="display:none; margin-top:0.6rem;" class="status-message success">Saved!</div>
-                </form>
-
-                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Settings</h3>
-                <div class="settings-row">
-                    <span>Email notifications</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="toggleEmailNotif" ${settings.emailNotifications ? 'checked' : ''}>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="settings-row">
-                    <span>SMS notifications</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="toggleSmsNotif" ${settings.smsNotifications ? 'checked' : ''}>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.5rem;">
-                    ${currentUser.role === 'admin' ? `<button class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="navigateTo('adminView','account')">Admin Portal</button>` : ''}
-                    <button class="btn-sm btn-danger" style="width:100%; padding:0.7rem;" onclick="logout()">Log Out</button>
-                </div>
-            `;
-
-            document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                currentUser.fullName = document.getElementById('acctFullName').value.trim();
-                currentUser.phone = document.getElementById('acctPhone').value.trim();
-                if (currentUser.email !== 'admin') {
-                    currentUser.email = document.getElementById('acctEmail').value.trim();
-                }
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                const saved = document.getElementById('personalInfoSaved');
-                saved.style.display = 'block';
-                setTimeout(() => saved.style.display = 'none', 2000);
-            });
-
-            document.getElementById('toggleEmailNotif').addEventListener('change', function() {
-                const s = getAccountSettings();
-                s.emailNotifications = this.checked;
-                saveAccountSettings(s);
-            });
-
-            document.getElementById('toggleSmsNotif').addEventListener('change', function() {
-                const s = getAccountSettings();
-                s.smsNotifications = this.checked;
-                saveAccountSettings(s);
-            });
-        }
-
-        function updateNavUI() {
-            const userNav = document.getElementById("userNav");
-            if (currentUser) {
-                userNav.innerHTML = `
-                    <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()}</span>
-                    ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin Portal</button>' : ''}
-                    <button class="btn-sm btn-outline" onclick="navigateTo('customerView')">View Houses</button>
-                `;
-            } else {
-                userNav.innerHTML = `
-                    <button class="btn-sm btn-outline" onclick="navigateTo('customerView')">View Houses</button>
-                    <button class="btn-sm btn-primary" style="width:auto;" onclick="navigateTo('loginView')">Login</button>
-                `;
-            }
+            if (currentUser) navigateTo('accountView', 'account');
+            else navigateTo('loginView', 'account');
         }
 
         // AUTH
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const email = document.getElementById("loginEmail").value.trim();
             const pass = document.getElementById("loginPassword").value.trim();
             const authError = document.getElementById("authError");
+            authError.style.display = "none";
 
-            if (email === ADMIN_USER && pass === ADMIN_PASS) {
-                currentUser = { email, role: 'admin' };
-                localStorage.setItem("currentUser", JSON.stringify(currentUser));
-                authError.style.display = "none";
-                this.reset();
-                navigateTo("adminView");
-            } else if (email && pass) {
-                currentUser = { email, role: 'customer' };
-                localStorage.setItem("currentUser", JSON.stringify(currentUser));
-                authError.style.display = "none";
-                this.reset();
-                navigateTo("customerView");
-            } else {
+            if (email === ADMIN_USER) {
+                if (pass === getAdminPassword()) {
+                    currentUser = { email, role: 'admin' };
+                    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+                    this.reset();
+                    navigateTo("adminView");
+                } else {
+                    authError.textContent = "Incorrect admin password.";
+                    authError.style.display = "block";
+                }
+                return;
+            }
+
+            if (!email || !pass) {
                 authError.textContent = "Invalid login details.";
                 authError.style.display = "block";
+                return;
             }
+
+            const creds = getCustomerCreds();
+            if (creds[email] !== undefined && creds[email] !== pass) {
+                authError.textContent = "Incorrect password for this account.";
+                authError.style.display = "block";
+                return;
+            }
+            if (creds[email] === undefined) {
+                creds[email] = pass;
+                saveCustomerCreds(creds);
+            }
+
+            const existing = JSON.parse(localStorage.getItem("currentUser"));
+            const savedProfile = (existing && existing.email === email) ? existing : {};
+            currentUser = { email, role: 'customer', fullName: savedProfile.fullName || '', phone: savedProfile.phone || '', avatar: savedProfile.avatar || '' };
+            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            this.reset();
+            navigateTo("customerView");
         });
 
         function logout() {
@@ -1220,22 +1708,33 @@
             navigateTo("loginView");
         }
 
-        // PHOTO UPLOAD READER (multiple files, appended to a working list)
-        document.getElementById("housePhoto").addEventListener("change", function(e) {
-            const files = Array.from(e.target.files || []);
-            let remaining = files.length;
-            if (!remaining) return;
+        function updateNavUI() {
+            const userNav = document.getElementById("userNav");
+            if (currentUser) {
+                userNav.innerHTML = `
+                    <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()}</span>
+                    ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin Portal</button>' : ''}
+                    <button class="btn-sm btn-outline" onclick="goHome()">View Houses</button>
+                `;
+            } else {
+                userNav.innerHTML = `
+                    <button class="btn-sm btn-outline" onclick="goHome()">View Houses</button>
+                    <button class="btn-sm btn-primary" style="width:auto;" onclick="navigateTo('loginView')">Login</button>
+                `;
+            }
+        }
 
+        // PHOTO UPLOAD READER (admin, multiple files)
+        document.getElementById("housePhoto").addEventListener("change", function (e) {
+            const files = Array.from(e.target.files || []);
             files.forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     currentUploadedImages.push(event.target.result);
                     renderUploadThumbs();
                 };
                 reader.readAsDataURL(file);
             });
-
-            // allow re-selecting the same file(s) again later
             e.target.value = "";
         });
 
@@ -1255,8 +1754,19 @@
             renderUploadThumbs();
         }
 
-        // MODAL LOGIC (admin add/edit)
-        function openModal(houseId = null) {
+        function renderAmenityCheckboxes(selected) {
+            selected = selected || [];
+            const wrap = document.getElementById("amenityCheckboxes");
+            wrap.innerHTML = AMENITY_OPTIONS.map(a => `
+                <label class="amenity-check-item">
+                    <input type="checkbox" value="${a}" ${selected.includes(a) ? 'checked' : ''} style="width:auto;"> ${a}
+                </label>
+            `).join('');
+        }
+
+        // ADMIN ADD/EDIT MODAL
+        function openModal(houseId) {
+            houseId = houseId || null;
             const modal = document.getElementById("houseModal");
             const form = document.getElementById("houseForm");
             form.reset();
@@ -1272,10 +1782,13 @@
                 document.getElementById("houseBedrooms").value = house.bedrooms;
                 document.getElementById("houseBathrooms").value = house.bathrooms;
                 document.getElementById("houseDesc").value = house.description;
+                document.getElementById("houseFeatured").checked = !!house.featured;
                 currentUploadedImages = [...house.images];
+                renderAmenityCheckboxes(house.amenities);
             } else {
                 document.getElementById("modalTitle").textContent = "Add New House";
                 document.getElementById("editHouseId").value = "";
+                renderAmenityCheckboxes([]);
             }
             renderUploadThumbs();
             modal.classList.add("active");
@@ -1285,7 +1798,7 @@
             document.getElementById("houseModal").classList.remove("active");
         }
 
-        document.getElementById("houseForm").addEventListener("submit", function(e) {
+        document.getElementById("houseForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const houseId = document.getElementById("editHouseId").value;
             const name = document.getElementById("houseName").value;
@@ -1294,6 +1807,8 @@
             const bedrooms = parseFloat(document.getElementById("houseBedrooms").value) || 0;
             const bathrooms = parseFloat(document.getElementById("houseBathrooms").value) || 0;
             const description = document.getElementById("houseDesc").value;
+            const featured = document.getElementById("houseFeatured").checked;
+            const amenities = Array.from(document.querySelectorAll("#amenityCheckboxes input:checked")).map(el => el.value);
 
             const images = currentUploadedImages.length ? [...currentUploadedImages] : [DEFAULT_IMAGE];
 
@@ -1306,31 +1821,40 @@
                 house.bathrooms = bathrooms;
                 house.description = description;
                 house.images = images;
+                house.amenities = amenities;
+                house.featured = featured;
             } else {
                 houses.push({
                     id: "h_" + Date.now(),
-                    name,
-                    location,
-                    price,
-                    bedrooms,
-                    bathrooms,
-                    description,
-                    images,
+                    name, location, price, bedrooms, bathrooms, description,
+                    images, amenities, featured,
+                    reviews: [],
+                    createdAt: Date.now(),
                     bookedDates: []
                 });
             }
 
             saveData();
             closeModal();
+            renderAdminStats();
             renderAdminTable();
         });
 
-        // META PILLS (shared markup for bed/bath/location)
+        // META PILLS
         function metaPillsHTML(house) {
             return `
-                <span class="meta-pill">${ICON_BED}${house.bedrooms} bed${house.bedrooms == 1 ? '' : 's'}</span>
+                <span class="meta-pill">${ICON_BED}${house.bedrooms === 0 ? 'Studio' : house.bedrooms + ' bed' + (house.bedrooms == 1 ? '' : 's')}</span>
                 <span class="meta-pill">${ICON_BATH}${house.bathrooms} bath${house.bathrooms == 1 ? '' : 's'}</span>
             `;
+        }
+
+        function amenityPillsHTML(house) {
+            if (!house.amenities.length) return '';
+            return house.amenities.map(a => `<span class="amenity-pill">${ICON_CHECK}${a}</span>`).join('');
+        }
+
+        function mapLink(location) {
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
         }
 
         // SEARCH & FILTERS
@@ -1341,8 +1865,6 @@
             { key: '2bed', label: '2 Bedrooms' },
             { key: '3plus', label: '3+ Bedrooms' }
         ];
-
-        let activeCategory = 'all';
 
         function getHouseCategory(house) {
             const beds = Number(house.bedrooms) || 0;
@@ -1362,7 +1884,7 @@
             if (range === 'under50') return value < 50;
             if (range === '50to100') return value >= 50 && value <= 100;
             if (range === 'over100') return value > 100;
-            return true; // 'all'
+            return true;
         }
 
         function renderCategoryChips() {
@@ -1379,21 +1901,67 @@
             applyFilters();
         }
 
+        function renderAmenityChips() {
+            const wrap = document.getElementById('amenityChips');
+            if (!wrap) return;
+            wrap.innerHTML = AMENITY_OPTIONS.map(a =>
+                `<button type="button" class="chip ${activeAmenities.has(a) ? 'active' : ''}" onclick="toggleAmenityFilter('${a}')">${a}</button>`
+            ).join('');
+        }
+
+        function toggleAmenityFilter(a) {
+            if (activeAmenities.has(a)) activeAmenities.delete(a); else activeAmenities.add(a);
+            renderAmenityChips();
+            applyFilters();
+        }
+
         function applyFilters() {
+            showSkeleton();
+            setTimeout(doApplyFilters, 220);
+        }
+
+        function showSkeleton() {
+            const container = document.getElementById("customerHousesGrid");
+            const noResultsMsg = document.getElementById("noResultsMsg");
+            if (!container) return;
+            if (noResultsMsg) noResultsMsg.style.display = "none";
+            container.innerHTML = Array(3).fill(0).map(() => `
+                <div class="skeleton-card">
+                    <div class="skeleton-shimmer skeleton-img"></div>
+                    <div class="skeleton-shimmer skeleton-line"></div>
+                    <div class="skeleton-shimmer skeleton-line short"></div>
+                </div>
+            `).join('');
+        }
+
+        function doApplyFilters() {
             const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
             const priceRange = document.getElementById('priceFilter')?.value || 'all';
+            const sortBy = document.getElementById('sortFilter')?.value || 'default';
 
-            const filtered = houses.filter(house => {
+            let filtered = houses.filter(house => {
                 const matchesQuery = !query ||
                     house.name.toLowerCase().includes(query) ||
                     house.location.toLowerCase().includes(query) ||
                     house.description.toLowerCase().includes(query);
                 const matchesCategory = activeCategory === 'all' || getHouseCategory(house) === activeCategory;
                 const matchesPrice = houseMatchesPriceRange(house, priceRange);
-                return matchesQuery && matchesCategory && matchesPrice;
+                const matchesAmenities = [...activeAmenities].every(a => house.amenities.includes(a));
+                return matchesQuery && matchesCategory && matchesPrice && matchesAmenities;
             });
 
+            if (sortBy === 'price_asc') filtered.sort((a, b) => parsePriceNumber(a.price) - parsePriceNumber(b.price));
+            else if (sortBy === 'price_desc') filtered.sort((a, b) => parsePriceNumber(b.price) - parsePriceNumber(a.price));
+            else if (sortBy === 'newest') filtered.sort((a, b) => b.createdAt - a.createdAt);
+            else if (sortBy === 'photos_desc') filtered.sort((a, b) => b.images.length - a.images.length);
+            else filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
             renderCustomerHouses(filtered);
+        }
+
+        function getAverageRating(house) {
+            if (!house.reviews.length) return null;
+            return house.reviews.reduce((a, r) => a + r.rating, 0) / house.reviews.length;
         }
 
         // CUSTOMER VIEW LOGIC
@@ -1412,9 +1980,13 @@
                 card.onclick = () => openDetailModal(house.id);
 
                 const photoCount = house.images.length;
+                const avgRating = getAverageRating(house);
+                const fav = isFavorite(house.id);
 
                 card.innerHTML = `
                     <div class="house-img-wrap">
+                        ${house.featured ? `<span class="featured-badge">${ICON_STAR_BADGE} Featured</span>` : ''}
+                        <button type="button" class="favorite-btn" onclick="toggleFavorite('${house.id}', event)">${fav ? ICON_HEART_FILLED : ICON_HEART_OUTLINE}</button>
                         <img src="${house.images[0]}" alt="${house.name}" class="house-img">
                         ${photoCount > 1 ? `<span class="photo-count-badge">${ICON_PHOTOS} ${photoCount}</span>` : ''}
                     </div>
@@ -1422,9 +1994,11 @@
                         <span class="house-title">${house.name}</span>
                         <div class="house-price">${house.price}</div>
                         <div class="house-location">${ICON_PIN}${house.location}</div>
-                        <p style="font-size: 0.85rem; color: #6b7280;">${house.description}</p>
+                        ${avgRating ? `<div class="rating-row"><span class="stars">${starsHTML(avgRating, 13)}</span> ${avgRating.toFixed(1)} (${house.reviews.length})</div>` : `<div class="rating-row">No reviews yet</div>`}
+                        <p style="font-size: 0.85rem; color: var(--muted);">${house.description}</p>
                         <div class="house-meta-row">${metaPillsHTML(house)}</div>
-                        <span class="view-details-link">View photos & details →</span>
+                        <div class="amenity-pill-list">${amenityPillsHTML(house)}</div>
+                        <span class="view-details-link">View photos & details &rarr;</span>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1436,15 +2010,30 @@
             detailHouse = houses.find(h => h.id === houseId);
             if (!detailHouse) return;
             detailIndex = 0;
+            reviewStarRating = 5;
 
             document.getElementById("detailTitle").textContent = detailHouse.name;
             document.getElementById("detailLocation").innerHTML = `${ICON_PIN}${detailHouse.location}`;
             document.getElementById("detailDesc").textContent = detailHouse.description;
             document.getElementById("detailPrice").textContent = detailHouse.price;
             document.getElementById("detailMetaRow").innerHTML = metaPillsHTML(detailHouse);
+            document.getElementById("detailAmenities").innerHTML = amenityPillsHTML(detailHouse);
+            document.getElementById("detailMapLink").href = mapLink(detailHouse.location);
+
+            const avgRating = getAverageRating(detailHouse);
+            document.getElementById("detailRatingRow").innerHTML = avgRating
+                ? `<span class="stars">${starsHTML(avgRating, 15)}</span> ${avgRating.toFixed(1)} (${detailHouse.reviews.length} review${detailHouse.reviews.length === 1 ? '' : 's'})`
+                : `No reviews yet`;
 
             renderGalleryThumbs();
             updateGalleryMain();
+            renderAvailabilityCalendar(detailHouse);
+            renderReviewsList(detailHouse);
+            renderReviewStarInput();
+
+            document.getElementById("reviewName").value = "";
+            document.getElementById("reviewComment").value = "";
+            document.getElementById("reviewPhoto").value = "";
 
             document.getElementById("detailModal").classList.add("active");
         }
@@ -1481,6 +2070,111 @@
             updateGalleryMain();
         }
 
+        // Availability calendar
+        function dateInAnyRange(dateObj, ranges) {
+            return ranges.some(r => {
+                const s = new Date(r.start), e = new Date(r.end);
+                return dateObj >= s && dateObj < e;
+            });
+        }
+
+        function renderMonthGrid(monthDate, bookedRanges) {
+            const year = monthDate.getFullYear(), month = monthDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startWeekday = firstDay.getDay();
+            const monthName = monthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+            const todayMidnight = new Date(new Date().toDateString());
+            let cells = '';
+            for (let i = 0; i < startWeekday; i++) cells += `<span class="cal-cell empty"></span>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(year, month, d);
+                const booked = dateInAnyRange(dateObj, bookedRanges);
+                const past = dateObj < todayMidnight;
+                cells += `<span class="cal-cell ${booked ? 'booked' : ''} ${past ? 'past' : ''}">${d}</span>`;
+            }
+            return `<div class="cal-month"><div class="cal-month-title">${monthName}</div><div class="cal-grid">
+                <span class="cal-dow">S</span><span class="cal-dow">M</span><span class="cal-dow">T</span><span class="cal-dow">W</span><span class="cal-dow">T</span><span class="cal-dow">F</span><span class="cal-dow">S</span>
+                ${cells}
+            </div></div>`;
+        }
+
+        function renderAvailabilityCalendar(house) {
+            const container = document.getElementById('availabilityCalendar');
+            const now = new Date();
+            let html = '';
+            for (let m = 0; m < 2; m++) {
+                const monthDate = new Date(now.getFullYear(), now.getMonth() + m, 1);
+                html += renderMonthGrid(monthDate, house.bookedDates);
+            }
+            container.innerHTML = html;
+        }
+
+        // Reviews
+        function renderReviewStarInput() {
+            const wrap = document.getElementById('reviewStarInput');
+            const render = () => {
+                wrap.innerHTML = Array(5).fill(0).map((_, i) =>
+                    `<span onclick="setReviewStar(${i + 1})">${starSVG(22, i + 1 <= reviewStarRating)}</span>`
+                ).join('');
+            };
+            render();
+            document.getElementById('reviewRatingInput').value = reviewStarRating;
+        }
+
+        function setReviewStar(n) {
+            reviewStarRating = n;
+            document.getElementById('reviewRatingInput').value = n;
+            renderReviewStarInput();
+        }
+
+        function renderReviewsList(house) {
+            const wrap = document.getElementById('reviewsList');
+            if (!house.reviews.length) {
+                wrap.innerHTML = `<p class="empty-note">No reviews yet — be the first to share your experience!</p>`;
+                return;
+            }
+            wrap.innerHTML = [...house.reviews].reverse().map(r => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span>${r.author} <span class="stars" style="display:inline-flex; vertical-align:middle;">${starsHTML(r.rating, 12)}</span></span>
+                        <span class="review-date">${new Date(r.date).toLocaleDateString()}</span>
+                    </div>
+                    <p style="font-size:0.85rem; color: var(--dark); margin-top:0.25rem;">${r.comment}</p>
+                    ${r.photo ? `<img src="${r.photo}" class="review-photo" alt="Review photo">` : ''}
+                </div>
+            `).join('');
+        }
+
+        function submitReview(houseId) {
+            const name = document.getElementById('reviewName').value.trim();
+            const rating = parseInt(document.getElementById('reviewRatingInput').value) || 5;
+            const comment = document.getElementById('reviewComment').value.trim();
+            const photoFile = document.getElementById('reviewPhoto').files[0];
+
+            if (!name || !comment) {
+                alert('Please enter your name and a comment.');
+                return;
+            }
+
+            const house = houses.find(h => h.id === houseId);
+            const finalize = (photoData) => {
+                house.reviews.push({ id: 'r_' + Date.now(), author: name, rating, comment, photo: photoData || null, date: new Date().toISOString() });
+                saveData();
+                if (currentUser) addNotification(currentUser.email, `Review submitted for ${house.name}`);
+                openDetailModal(houseId);
+                doApplyFilters();
+            };
+
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = e => finalize(e.target.result);
+                reader.readAsDataURL(photoFile);
+            } else {
+                finalize(null);
+            }
+        }
+
         function selectHouseFromDetail() {
             if (!detailHouse) return;
             selectHouse(detailHouse);
@@ -1491,14 +2185,13 @@
         function selectHouse(house) {
             selectedHouse = house;
             document.getElementById("selectedHouseInput").value = house.name;
-            applyFilters();
+            doApplyFilters();
             validateAvailability();
         }
 
         function isDateRangeBooked(checkInStr, checkOutStr, bookedRanges) {
             const inDate = new Date(checkInStr);
             const outDate = new Date(checkOutStr);
-
             for (let range of bookedRanges) {
                 const bookedStart = new Date(range.start);
                 const bookedEnd = new Date(range.end);
@@ -1512,9 +2205,11 @@
             const checkOut = document.getElementById("checkOut").value;
             const statusMsg = document.getElementById("statusMessage");
             const btn = document.getElementById("whatsappBtn");
+            const priceBox = document.getElementById("priceSummaryBox");
 
             if (!selectedHouse || !checkIn || !checkOut) {
                 statusMsg.style.display = "none";
+                priceBox.style.display = "none";
                 btn.disabled = true;
                 return;
             }
@@ -1522,6 +2217,7 @@
             if (new Date(checkOut) <= new Date(checkIn)) {
                 statusMsg.className = "status-message error";
                 statusMsg.textContent = "Check-out date must be after check-in date.";
+                priceBox.style.display = "none";
                 btn.disabled = true;
                 return;
             }
@@ -1531,15 +2227,22 @@
             if (isBooked) {
                 statusMsg.className = "status-message error";
                 statusMsg.textContent = "Sorry! This house is booked for these dates. Please select other dates.";
+                priceBox.style.display = "none";
                 btn.disabled = true;
             } else {
                 statusMsg.className = "status-message success";
                 statusMsg.textContent = "Great news! This house is AVAILABLE for your selected dates.";
                 btn.disabled = false;
+
+                const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
+                const nightlyRate = parsePriceNumber(selectedHouse.price);
+                const total = nights * nightlyRate;
+                priceBox.style.display = "block";
+                priceBox.innerHTML = `<strong>${nights} night${nights === 1 ? '' : 's'}</strong> &times; $${nightlyRate.toFixed(2)}/night = <strong>$${total.toFixed(2)} total</strong>`;
             }
         }
 
-        document.getElementById("bookingForm").addEventListener("submit", function(e) {
+        document.getElementById("bookingForm").addEventListener("submit", function (e) {
             e.preventDefault();
             if (!selectedHouse) return;
 
@@ -1547,30 +2250,79 @@
             const checkOut = document.getElementById("checkOut").value;
             const guestName = document.getElementById("guestName").value;
             const guestsCount = document.getElementById("guestsCount").value;
+            const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
+            const total = nights * parsePriceNumber(selectedHouse.price);
 
-            const message = 
+            const message =
 `Hello! I would like to make an inquiry and request payment details for a booking.
 
 *Booking Details:*
-• *House:* ${selectedHouse.name}
-• *Location:* ${selectedHouse.location}
-• *Check-in:* ${checkIn}
-• *Check-out:* ${checkOut}
-• *Guest Name:* ${guestName}
-• *Number of Guests:* ${guestsCount}
+- *House:* ${selectedHouse.name}
+- *Location:* ${selectedHouse.location}
+- *Check-in:* ${checkIn}
+- *Check-out:* ${checkOut}
+- *Guest Name:* ${guestName}
+- *Number of Guests:* ${guestsCount}
+- *Estimated Total:* $${total.toFixed(2)} (${nights} night${nights === 1 ? '' : 's'})
 
 Please confirm availability and share payment details. Thank you!`;
 
             window.open(`https://wa.me/${HOST_PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+
+            if (currentUser) {
+                const ud = getUserData(currentUser.email);
+                ud.bookingHistory.unshift({ houseName: selectedHouse.name, checkIn, checkOut, guests: guestsCount, total: total.toFixed(2), submittedAt: new Date().toISOString() });
+                saveUserData();
+                addNotification(currentUser.email, `Inquiry sent for ${selectedHouse.name} (${checkIn} to ${checkOut})`);
+            }
         });
 
         document.getElementById("checkIn").addEventListener("change", validateAvailability);
         document.getElementById("checkOut").addEventListener("change", validateAvailability);
 
-        // Search & filter listeners
-        document.getElementById("searchInput").addEventListener("input", applyFilters);
-        document.getElementById("searchInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyFilters(); } });
-        document.getElementById("priceFilter").addEventListener("change", applyFilters);
+        document.getElementById("callHostBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location.href = `tel:+${HOST_PHONE_NUMBER}`;
+        });
+
+        document.getElementById("emailHostBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            const subject = selectedHouse ? `Inquiry about ${selectedHouse.name}` : 'Booking Inquiry';
+            const body = selectedHouse ? `Hi, I'm interested in ${selectedHouse.name} in ${selectedHouse.location}.` : 'Hi, I have a question about a listing.';
+            window.location.href = `mailto:${HOST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        });
+
+        // ADMIN STATS
+        function renderAdminStats() {
+            const totalListings = houses.length;
+            const featuredCount = houses.filter(h => h.featured).length;
+            const today = new Date();
+            let upcoming = 0;
+            houses.forEach(h => h.bookedDates.forEach(r => { if (new Date(r.start) >= today) upcoming++; }));
+            let allRatings = [];
+            houses.forEach(h => h.reviews.forEach(r => allRatings.push(r.rating)));
+            const avgRating = allRatings.length ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length).toFixed(1) : '—';
+
+            document.getElementById('adminStats').innerHTML = `
+                <div class="stat-card"><div class="stat-value">${totalListings}</div><div class="stat-label">Total Listings</div></div>
+                <div class="stat-card"><div class="stat-value">${featuredCount}</div><div class="stat-label">Featured</div></div>
+                <div class="stat-card"><div class="stat-value">${upcoming}</div><div class="stat-label">Upcoming Bookings</div></div>
+                <div class="stat-card"><div class="stat-value">${avgRating}</div><div class="stat-label">Avg Rating</div></div>
+            `;
+        }
+
+        function exportBookingsCSV() {
+            let rows = [['House', 'Location', 'Start Date', 'End Date']];
+            houses.forEach(h => h.bookedDates.forEach(r => rows.push([h.name, h.location, r.start, r.end])));
+            const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bookings.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
 
         // ADMIN TABLE LOGIC
         function renderAdminTable() {
@@ -1580,8 +2332,8 @@ Please confirm availability and share payment details. Thank you!`;
             houses.forEach(house => {
                 const tr = document.createElement("tr");
 
-                const bookedText = house.bookedDates.length > 0 
-                    ? house.bookedDates.map(r => `${r.start} to ${r.end}`).join("<br>") 
+                const bookedText = house.bookedDates.length > 0
+                    ? house.bookedDates.map(r => `${r.start} to ${r.end}`).join("<br>")
                     : "<em>None</em>";
 
                 const thumbsHTML = house.images.slice(0, 3).map(src => `<img src="${src}" class="admin-thumb" alt="thumb">`).join("");
@@ -1590,7 +2342,7 @@ Please confirm availability and share payment details. Thank you!`;
                 tr.innerHTML = `
                     <td><div class="admin-thumb-group">${thumbsHTML}${moreCount}</div></td>
                     <td>
-                        <strong>${house.name}</strong>
+                        <strong>${house.name}</strong> ${house.featured ? `<span style="color:#f59e0b;">&#9733;</span>` : ''}
                         <div class="admin-meta-line">
                             <span>${ICON_PIN}&nbsp;${house.location}</span>
                             <span>${ICON_BED}&nbsp;${house.bedrooms}</span>
@@ -1601,7 +2353,8 @@ Please confirm availability and share payment details. Thank you!`;
                     <td><small>${bookedText}</small></td>
                     <td class="action-btns">
                         <button class="btn-sm btn-outline" onclick="openModal('${house.id}')">Edit</button>
-                        <button class="btn-sm btn-outline" onclick="addBookedRange('${house.id}')">+ Block Dates</button>
+                        <button class="btn-sm btn-outline" onclick="openBlockDatesModal('${house.id}')">+ Block Dates</button>
+                        <button class="btn-sm btn-outline" onclick="toggleFeatured('${house.id}')">${house.featured ? 'Unfeature' : 'Feature'}</button>
                         <button class="btn-sm btn-danger" onclick="deleteHouse('${house.id}')">Delete</button>
                     </td>
                 `;
@@ -1609,41 +2362,125 @@ Please confirm availability and share payment details. Thank you!`;
             });
         }
 
-        function addBookedRange(houseId) {
+        function toggleFeatured(houseId) {
             const house = houses.find(h => h.id === houseId);
             if (!house) return;
-
-            const start = prompt("Enter Block Start Date (YYYY-MM-DD):");
-            if (!start) return;
-            const end = prompt("Enter Block End Date (YYYY-MM-DD):");
-            if (!end) return;
-
-            house.bookedDates.push({ start, end });
+            house.featured = !house.featured;
             saveData();
+            renderAdminStats();
             renderAdminTable();
         }
+
+        function openBlockDatesModal(houseId) {
+            document.getElementById('blockDatesHouseId').value = houseId;
+            document.getElementById('blockDatesForm').reset();
+            document.getElementById('blockDatesModal').classList.add('active');
+        }
+
+        function closeBlockDatesModal() {
+            document.getElementById('blockDatesModal').classList.remove('active');
+        }
+
+        document.getElementById('blockDatesForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const houseId = document.getElementById('blockDatesHouseId').value;
+            const start = document.getElementById('blockStartDate').value;
+            const end = document.getElementById('blockEndDate').value;
+            const house = houses.find(h => h.id === houseId);
+            if (!house || !start || !end || end <= start) {
+                alert('Please choose a valid date range.');
+                return;
+            }
+            house.bookedDates.push({ start, end });
+            saveData();
+            closeBlockDatesModal();
+            renderAdminStats();
+            renderAdminTable();
+        });
 
         function deleteHouse(houseId) {
             if (confirm("Are you sure you want to delete this listing?")) {
                 houses = houses.filter(h => h.id !== houseId);
                 saveData();
+                renderAdminStats();
                 renderAdminTable();
             }
         }
 
-        // INITIALIZATION
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("checkIn").min = today;
-        document.getElementById("checkOut").min = today;
-
-        renderCategoryChips();
-
-        if (currentUser) {
-            if (currentUser.role === 'admin') navigateTo('adminView');
-            else navigateTo('customerView');
-        } else {
-            navigateTo('loginView');
+        // ACCOUNT VIEW
+        function getAccountSettings() {
+            return JSON.parse(localStorage.getItem('accountSettings')) || { emailNotifications: true, smsNotifications: false, darkMode: false };
         }
-    </script>
-</body>
-</html>
+
+        function saveAccountSettings(settings) {
+            localStorage.setItem('accountSettings', JSON.stringify(settings));
+        }
+
+        function applyDarkMode(enabled) {
+            document.body.classList.toggle('dark-mode', enabled);
+        }
+
+        function renderAccountView() {
+            const card = document.getElementById('accountCard');
+            if (!currentUser) {
+                card.innerHTML = `
+                    <h2>My Account</h2>
+                    <p class="auth-sub">You're not logged in yet.</p>
+                    <button class="btn-primary" onclick="navigateTo('loginView','account')">Log In</button>
+                `;
+                return;
+            }
+
+            const settings = getAccountSettings();
+            const ud = getUserData(currentUser.email);
+            const favHouses = houses.filter(h => ud.favorites.includes(h.id));
+
+            card.innerHTML = `
+                <div class="avatar-wrap">
+                    ${currentUser.avatar
+                        ? `<img src="${currentUser.avatar}" class="avatar-circle" alt="Avatar">`
+                        : `<div class="avatar-circle" style="display:flex; align-items:center; justify-content:center; background: var(--light); color: var(--primary);">${ICON_ACCOUNT}</div>`}
+                    <label class="avatar-edit-btn">${ICON_CAMERA}<input type="file" id="avatarUpload" accept="image/*" style="display:none;"></label>
+                </div>
+                <h2 style="text-align:center;">${currentUser.fullName || currentUser.email}</h2>
+                <p class="auth-sub" style="text-align:center;">
+                    <span style="display:inline-block; padding:0.25rem 0.75rem; border-radius:999px; background:var(--light); font-weight:600; font-size:0.78rem; color: var(--dark);">${currentUser.role.toUpperCase()}</span>
+                </p>
+
+                <h3 style="margin: 1.25rem 0 0.75rem; font-size: 1rem;">Personal Information</h3>
+                <form id="personalInfoForm">
+                    <div class="form-group">
+                        <label for="acctFullName">Full Name</label>
+                        <input type="text" id="acctFullName" class="form-control" value="${currentUser.fullName || ''}" placeholder="e.g. Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="acctEmail">Email Address</label>
+                        <input type="text" id="acctEmail" class="form-control" value="${currentUser.email}" ${currentUser.email === 'admin' ? 'disabled' : ''}>
+                    </div>
+                    <div class="form-group">
+                        <label for="acctPhone">Phone Number</label>
+                        <input type="tel" id="acctPhone" class="form-control" value="${currentUser.phone || ''}" placeholder="e.g. +254 700 000000">
+                    </div>
+                    <button type="submit" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;">Save Personal Information</button>
+                    <div id="personalInfoSaved" style="display:none; margin-top:0.6rem;" class="status-message success">Saved!</div>
+                </form>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Change Password</h3>
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" required>
+                    </div>
+                    <div id="passwordChangeMsg" class="status-message" style="display:none;"></div>
+                    <button type="submit" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;">Update Password</button>
+                </form>
+
+                <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem
