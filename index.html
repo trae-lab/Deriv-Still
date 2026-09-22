@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StayEase BnB - Bookings & Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #059669;
@@ -16,6 +18,7 @@
             --bg: #f9fafb;
             --border: #d1d5db;
             --border-soft: #e5e7eb;
+            --ink: #14181c;
         }
 
         body.dark-mode {
@@ -26,14 +29,17 @@
             --bg: #111827;
             --border: #4b5563;
             --border-soft: #374151;
+            --ink: #f3f4f6;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        .serif { font-family: 'Playfair Display', Georgia, serif; }
 
         body {
             background-color: var(--bg);
@@ -46,31 +52,58 @@
         header {
             background-color: var(--white);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            padding: 1rem 2rem;
+            padding: 0.85rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
 
-        header h1 {
-            color: var(--primary);
-            font-size: 1.6rem;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
             cursor: pointer;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--ink);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            color: var(--primary);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
 
         .user-nav {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
         }
 
         .btn-sm {
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
             font-size: 0.85rem;
             cursor: pointer;
             border: none;
             font-weight: 600;
+            min-height: 40px;
         }
 
         .btn-outline {
@@ -91,7 +124,7 @@
 
         .container {
             max-width: 1100px;
-            margin: 2rem auto;
+            margin: 0 auto 2rem;
             padding: 0 1rem;
         }
 
@@ -101,6 +134,96 @@
 
         .view-section.active {
             display: block;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 2.5rem 1rem 2rem;
+            margin: 0 -1rem 1.5rem;
+            background: linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        body.dark-mode .hero {
+            background: linear-gradient(180deg, #1c2330 0%, var(--bg) 100%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--white);
+            border: 1px solid var(--border-soft);
+            padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .avatar-stack {
+            display: flex;
+        }
+
+        .avatar-stack span {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--white);
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        .avatar-stack span:first-child { margin-left: 0; }
+
+        .hero-title {
+            font-size: clamp(1.7rem, 6vw, 2.5rem);
+            line-height: 1.15;
+            margin-bottom: 0.85rem;
+        }
+
+        .hero-sub {
+            color: var(--muted);
+            font-size: 0.92rem;
+            max-width: 480px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--ink);
+            color: white;
+            border: none;
+            padding: 0.6rem 0.6rem 0.6rem 1.4rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            cursor: pointer;
+            min-height: 48px;
+        }
+
+        .hero-cta .cta-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: white;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         /* Auth Container */
@@ -145,6 +268,7 @@
             font-size: 1rem;
             background: var(--white);
             color: var(--dark);
+            min-height: 46px;
         }
 
         .form-control:focus {
@@ -164,6 +288,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.2s;
+            min-height: 48px;
         }
 
         .btn-primary:hover {
@@ -204,6 +329,7 @@
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
+            min-height: 46px;
         }
 
         .btn-search:hover {
@@ -228,7 +354,7 @@
 
         .chip {
             flex-shrink: 0;
-            padding: 0.45rem 0.9rem;
+            padding: 0.5rem 0.9rem;
             border-radius: 999px;
             border: 1px solid var(--border);
             background: var(--white);
@@ -237,6 +363,7 @@
             cursor: pointer;
             color: var(--dark);
             transition: background 0.15s, color 0.15s, border-color 0.15s;
+            min-height: 38px;
         }
 
         .chip.active {
@@ -249,6 +376,7 @@
             width: auto;
             flex-shrink: 0;
             padding: 0.5rem 0.75rem;
+            min-height: 42px;
         }
 
         .filters-label {
@@ -263,7 +391,7 @@
         /* House Listings Grid */
         .houses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -337,8 +465,8 @@
             right: 0.6rem;
             background: rgba(255,255,255,0.85);
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -353,8 +481,8 @@
         }
 
         .house-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.15rem;
+            font-weight: 700;
         }
 
         .house-price {
@@ -465,6 +593,27 @@
         .skeleton-line { height: 14px; margin: 0.6rem 1.25rem; border-radius: 4px; }
         .skeleton-line.short { width: 40%; }
 
+        /* Back header (property detail page) */
+        .page-back-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
         /* Booking Form */
         .booking-container {
             background: var(--white);
@@ -479,6 +628,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr; }
         }
 
         .status-message {
@@ -501,15 +654,66 @@
             display: block;
         }
 
-        .price-summary-box {
-            margin-top: 1rem;
-            padding: 0.85rem;
-            border-radius: 8px;
-            background: #eff6ff;
-            color: #1e40af;
-            font-size: 0.9rem;
+        .booking-summary-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
             display: none;
         }
+
+        .booking-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding: 0.25rem 0;
+        }
+
+        .booking-summary-row.total {
+            border-top: 1px solid var(--border-soft);
+            margin-top: 0.4rem;
+            padding-top: 0.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .confirmation-card {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .confirmation-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #d1fae5;
+            color: #065f46;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .status-chip {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .status-chip.pending { background: #fef3c7; color: #92400e; }
+        .status-chip.confirmed { background: #d1fae5; color: #065f46; }
+        .status-chip.declined { background: #fee2e2; color: #991b1b; }
+        .status-chip.completed { background: #dbeafe; color: #1e40af; }
 
         .btn-whatsapp {
             width: 100%;
@@ -526,6 +730,7 @@
             justify-content: center;
             gap: 0.5rem;
             margin-top: 1rem;
+            min-height: 50px;
         }
 
         .btn-whatsapp:disabled {
@@ -554,6 +759,7 @@
             justify-content: center;
             gap: 0.4rem;
             text-decoration: none;
+            min-height: 46px;
         }
 
         .btn-contact-alt:hover {
@@ -561,10 +767,10 @@
             color: var(--primary);
         }
 
-        /* Admin Controls */
+        /* Admin */
         .admin-stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -578,17 +784,41 @@
         }
 
         .stat-value {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--primary);
         }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--muted);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.03em;
+        }
+
+        .admin-subtabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .admin-subtab-btn {
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--dark);
+            min-height: 42px;
+        }
+
+        .admin-subtab-btn.active {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: white;
         }
 
         .admin-card {
@@ -599,8 +829,14 @@
             margin-bottom: 2rem;
         }
 
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+        }
+
         .admin-table {
             width: 100%;
+            min-width: 640px;
             border-collapse: collapse;
             margin-top: 1rem;
         }
@@ -659,7 +895,7 @@
             border-radius: 8px;
         }
 
-        /* Modal Styles */
+        /* Modal Styles (admin utility modals only) */
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -731,12 +967,24 @@
             cursor: pointer;
         }
 
-        /* Detail Modal Gallery */
+        .modal-close-x {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--muted);
+            line-height: 1;
+        }
+
+        /* Property detail page gallery */
         .gallery-main-wrap {
             position: relative;
             width: 100%;
             height: 280px;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             background: var(--light);
         }
@@ -754,8 +1002,8 @@
             background: rgba(0,0,0,0.55);
             color: white;
             border: none;
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             font-size: 1.1rem;
             cursor: pointer;
@@ -813,18 +1061,6 @@
             font-size: 0.9rem;
             color: var(--muted);
             margin-top: 0.4rem;
-        }
-
-        .modal-close-x {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: transparent;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: var(--muted);
-            line-height: 1;
         }
 
         /* Availability calendar */
@@ -1055,7 +1291,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.15rem;
-            padding: 0.5rem 1.1rem;
+            padding: 0.55rem 1.1rem;
             border-radius: 999px;
             cursor: pointer;
             border: none;
@@ -1064,6 +1300,7 @@
             font-size: 0.68rem;
             font-weight: 600;
             transition: background 0.2s, color 0.2s;
+            min-height: 48px;
         }
 
         .nav-item svg {
@@ -1112,7 +1349,10 @@
 <body>
 
     <header>
-        <h1 onclick="goHome()">StayEase BnB</h1>
+        <div class="brand" onclick="goHome()">
+            <div class="brand-mark">SE</div>
+            <span class="brand-name">StayEase</span>
+        </div>
         <div class="user-nav" id="userNav"></div>
     </header>
 
@@ -1127,7 +1367,7 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="loginEmail">Email Address</label>
-                        <input type="text" id="loginEmail" class="form-control" placeholder="user@example.com or admin" required>
+                        <input type="text" id="loginEmail" class="form-control" placeholder="you@example.com" required>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
@@ -1136,17 +1376,30 @@
                     <div id="authError" class="status-message error" style="margin-bottom: 1rem;"></div>
                     <button type="submit" class="btn-primary">Sign In</button>
                 </form>
-
-                <div style="margin-top: 1.5rem; padding: 0.75rem; background: #eff6ff; border-radius: 6px; font-size: 0.8rem; color: #1e40af;">
-                    <strong>Demo Credentials:</strong><br>
-                    • Admin: <code>admin</code> / Password: <code>admin123</code><br>
-                    • Customer: Any email — first login sets your password
-                </div>
             </div>
         </section>
 
         <!-- CUSTOMER VIEW -->
         <section id="customerView" class="view-section">
+            <div class="hero">
+                <div class="hero-badge">
+                    <div class="avatar-stack">
+                        <span style="background:#f59e0b;">A</span>
+                        <span style="background:#059669;">M</span>
+                        <span style="background:#3b82f6;">K</span>
+                    </div>
+                    Loved by 200+ happy guests
+                </div>
+                <h1 class="hero-title serif">Find Your Perfect Getaway</h1>
+                <p class="hero-sub">Discover beautifully designed stays with private amenities and breathtaking locations, curated for comfortable, memorable trips.</p>
+                <button type="button" class="hero-cta" onclick="scrollToSearch()">
+                    Find Your Stay
+                    <span class="cta-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    </span>
+                </button>
+            </div>
+
             <h2 style="margin-bottom: 1rem;">Available Properties</h2>
 
             <div class="search-bar-row">
@@ -1181,6 +1434,70 @@
             <p id="noResultsMsg" style="display:none; text-align:center; color: var(--muted); padding: 2rem 0;">No properties match your search. Try different filters.</p>
         </section>
 
+        <!-- PROPERTY DETAIL PAGE -->
+        <section id="propertyDetailView" class="view-section">
+            <div class="page-back-row">
+                <button type="button" class="back-btn" onclick="goHome()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <h2 id="detailTitle" style="font-size: 1.25rem;"></h2>
+            </div>
+
+            <div class="detail-location" id="detailLocation"></div>
+            <div class="rating-row" id="detailRatingRow"></div>
+
+            <div class="gallery-main-wrap" style="margin-top: 1rem;">
+                <img id="galleryMainImg" alt="House photo">
+                <button type="button" class="gallery-nav-btn prev" onclick="galleryStep(-1)">&#8249;</button>
+                <button type="button" class="gallery-nav-btn next" onclick="galleryStep(1)">&#8250;</button>
+                <span class="gallery-counter" id="galleryCounter"></span>
+            </div>
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
+
+            <div class="detail-meta-row" id="detailMetaRow"></div>
+            <div class="amenity-pill-list" id="detailAmenities"></div>
+            <p id="detailDesc" style="color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem;"></p>
+            <div class="house-price" id="detailPrice" style="margin-top: 0.75rem; font-size: 1.15rem;"></div>
+            <a href="#" id="detailMapLink" target="_blank" class="map-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                View on Map
+            </a>
+
+            <button type="button" class="btn-primary" style="margin-top: 1.25rem;" onclick="reserveThisStay()">Reserve This Stay</button>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Availability</h3>
+            <div class="cal-months-wrap" id="availabilityCalendar"></div>
+            <div class="cal-legend">
+                <span><span class="cal-legend-swatch" style="background:#fecaca;"></span> Booked</span>
+                <span><span class="cal-legend-swatch" style="background:var(--light);"></span> Available</span>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Reviews</h3>
+            <div id="reviewsList"></div>
+
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-soft);">
+                <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem;">Leave a Review</h3>
+                <div class="form-group">
+                    <label for="reviewName">Your Name</label>
+                    <input type="text" id="reviewName" class="form-control" placeholder="Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="star-input" id="reviewStarInput"></div>
+                    <input type="hidden" id="reviewRatingInput" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="reviewComment">Comment</label>
+                    <textarea id="reviewComment" class="form-control" rows="2" placeholder="Share your experience..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reviewPhoto">Add a Photo (optional)</label>
+                    <input type="file" id="reviewPhoto" class="form-control" accept="image/*">
+                </div>
+                <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="submitReview(detailHouse.id)">Submit Review</button>
+            </div>
+        </section>
+
         <!-- BOOKING VIEW -->
         <section id="bookingView" class="view-section">
             <h2 style="margin-bottom: 1rem;">Check Dates & Send Payment Inquiry</h2>
@@ -1207,13 +1524,24 @@
                         <input type="text" id="guestName" class="form-control" placeholder="Jane Doe" required>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guestEmail">Email</label>
+                            <input type="email" id="guestEmail" class="form-control" placeholder="jane@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guestPhone">Phone</label>
+                            <input type="tel" id="guestPhone" class="form-control" placeholder="+1 234 567 8900" required>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="guestsCount">Number of Guests</label>
                         <input type="number" id="guestsCount" class="form-control" min="1" value="1" required>
                     </div>
 
                     <div id="statusMessage" class="status-message"></div>
-                    <div id="priceSummaryBox" class="price-summary-box"></div>
+                    <div id="bookingSummaryCard" class="booking-summary-card"></div>
 
                     <button type="submit" id="whatsappBtn" class="btn-whatsapp" disabled>
                         Inquire & Request Payment Details on WhatsApp
@@ -1230,6 +1558,8 @@
                         </a>
                     </div>
                 </form>
+
+                <div class="confirmation-card" id="confirmationCard"></div>
             </div>
         </section>
 
@@ -1250,20 +1580,46 @@
 
             <div class="admin-stats-row" id="adminStats"></div>
 
-            <div class="admin-card">
+            <div class="admin-subtabs">
+                <button type="button" class="admin-subtab-btn" id="tabPropertiesBtn" onclick="setAdminTab('properties')">Properties</button>
+                <button type="button" class="admin-subtab-btn" id="tabBookingsBtn" onclick="setAdminTab('bookings')">Bookings</button>
+            </div>
+
+            <div id="adminPropertiesPanel" class="admin-card">
                 <h3>Manage Houses & Availability</h3>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Photos</th>
-                            <th>House Name</th>
-                            <th>Price</th>
-                            <th>Booked Ranges</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminHouseTable"></tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Photos</th>
+                                <th>House Name</th>
+                                <th>Price</th>
+                                <th>Booked Ranges</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminHouseTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="adminBookingsPanel" class="admin-card" style="display:none;">
+                <h3>Guest Booking Inquiries</h3>
+                <div class="table-scroll">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Guest</th>
+                                <th>Property</th>
+                                <th>Dates</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTable"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -1354,67 +1710,6 @@
         </div>
     </div>
 
-    <!-- CUSTOMER HOUSE DETAIL / GALLERY MODAL -->
-    <div class="modal-backdrop" id="detailModal">
-        <div class="modal-content wide">
-            <button type="button" class="modal-close-x" onclick="closeDetailModal()">&times;</button>
-            <h3 id="detailTitle" style="margin-bottom: 0.25rem; padding-right: 1.5rem;"></h3>
-            <div class="detail-location" id="detailLocation"></div>
-            <div class="rating-row" id="detailRatingRow"></div>
-
-            <div class="gallery-main-wrap" style="margin-top: 1rem;">
-                <img id="galleryMainImg" alt="House photo">
-                <button type="button" class="gallery-nav-btn prev" onclick="galleryStep(-1)">&#8249;</button>
-                <button type="button" class="gallery-nav-btn next" onclick="galleryStep(1)">&#8250;</button>
-                <span class="gallery-counter" id="galleryCounter"></span>
-            </div>
-            <div class="gallery-thumbs" id="galleryThumbs"></div>
-
-            <div class="detail-meta-row" id="detailMetaRow"></div>
-            <div class="amenity-pill-list" id="detailAmenities"></div>
-            <p id="detailDesc" style="color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem;"></p>
-            <div class="house-price" id="detailPrice" style="margin-top: 0.75rem; font-size: 1.1rem;"></div>
-            <a href="#" id="detailMapLink" target="_blank" class="map-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                View on Map
-            </a>
-
-            <button type="button" class="btn-primary" style="margin-top: 1rem;" onclick="selectHouseFromDetail()">Select This House</button>
-
-            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Availability</h3>
-            <div class="cal-months-wrap" id="availabilityCalendar"></div>
-            <div class="cal-legend">
-                <span><span class="cal-legend-swatch" style="background:#fecaca;"></span> Booked</span>
-                <span><span class="cal-legend-swatch" style="background:var(--light);"></span> Available</span>
-            </div>
-
-            <h3 style="margin-top: 1.5rem; font-size: 1rem;">Reviews</h3>
-            <div id="reviewsList"></div>
-
-            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-soft);">
-                <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem;">Leave a Review</h3>
-                <div class="form-group">
-                    <label for="reviewName">Your Name</label>
-                    <input type="text" id="reviewName" class="form-control" placeholder="Jane Doe">
-                </div>
-                <div class="form-group">
-                    <label>Rating</label>
-                    <div class="star-input" id="reviewStarInput"></div>
-                    <input type="hidden" id="reviewRatingInput" value="5">
-                </div>
-                <div class="form-group">
-                    <label for="reviewComment">Comment</label>
-                    <textarea id="reviewComment" class="form-control" rows="2" placeholder="Share your experience..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="reviewPhoto">Add a Photo (optional)</label>
-                    <input type="file" id="reviewPhoto" class="form-control" accept="image/*">
-                </div>
-                <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="submitReview(detailHouse.id)">Submit Review</button>
-            </div>
-        </div>
-    </div>
-
     <!-- ONBOARDING TOUR MODAL -->
     <div class="modal-backdrop" id="onboardingModal">
         <div class="modal-content onboarding-card">
@@ -1434,6 +1729,17 @@
         const ADMIN_USER = "admin";
         const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80";
         const AMENITY_OPTIONS = ["WiFi", "Parking", "Pool", "Pet Friendly", "Kitchen", "AC"];
+        const SERVICE_FEE_RATE = 0.08;
+
+        // --- Lightweight client-side obfuscation for stored passwords. ---
+        // NOTE: this is NOT real encryption/security — it only avoids storing
+        // passwords as plain readable text in localStorage. True credential
+        // security requires a server-side backend, which this static demo
+        // does not have.
+        function encodePass(p) {
+            try { return btoa(unescape(encodeURIComponent(String(p)))); }
+            catch (e) { return String(p); }
+        }
 
         // --- Icons (inline SVG, currentColor themed) ---
         const ICON_BED = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9v9"/><path d="M2 12h20v6"/><path d="M22 12v6"/><path d="M4 12V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/><path d="M12 12V9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><path d="M2 18v2"/><path d="M22 18v2"/></svg>`;
@@ -1448,6 +1754,7 @@
         const ICON_CAMERA = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
         const ICON_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
         const ICON_STAR_BADGE = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5 12 2"/></svg>`;
+        const ICON_BIG_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
         function starSVG(size, filled) {
             return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${filled ? '#f59e0b' : 'none'}" stroke="${filled ? '#f59e0b' : '#d1d5db'}" stroke-width="1.5"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5 12 2"/></svg>`;
@@ -1470,6 +1777,7 @@
         let activeAmenities = new Set();
         let onboardingStep = 0;
         let reviewStarRating = 5;
+        let adminActiveTab = 'properties';
 
         const ONBOARDING_STEPS = [
             { title: "Welcome to StayEase!", text: "Search and filter properties right from the Home tab — by category, amenities, and price." },
@@ -1539,7 +1847,6 @@
             }
         ];
 
-        // migrate any old-shape records
         houses.forEach(h => {
             if (!h.images) h.images = h.image ? [h.image] : [DEFAULT_IMAGE];
             if (h.location === undefined) h.location = "Location not specified";
@@ -1552,18 +1859,24 @@
         });
 
         function saveData() {
-            try {
-                localStorage.setItem("bnb_houses", JSON.stringify(houses));
-            } catch (e) {
-                alert("Storage limit reached. Try uploading smaller or fewer image files.");
-            }
+            try { localStorage.setItem("bnb_houses", JSON.stringify(houses)); }
+            catch (e) { alert("Storage limit reached. Try uploading smaller or fewer image files."); }
         }
 
-        // --- Per-user data (favorites, booking history, notifications) ---
+        // --- Global booking inquiries (shared across admin + accounts) ---
+        let bookings = JSON.parse(localStorage.getItem('bnb_bookings')) || [];
+
+        function saveBookings() {
+            localStorage.setItem('bnb_bookings', JSON.stringify(bookings));
+        }
+
+        // --- Per-user data: favorites & notifications ---
         let userData = JSON.parse(localStorage.getItem('bnb_userdata')) || {};
 
         function getUserData(email) {
-            if (!userData[email]) userData[email] = { favorites: [], bookingHistory: [], notifications: [] };
+            if (!userData[email]) userData[email] = { favorites: [], notifications: [] };
+            if (!userData[email].notifications) userData[email].notifications = [];
+            if (!userData[email].favorites) userData[email].favorites = [];
             return userData[email];
         }
 
@@ -1572,6 +1885,7 @@
         }
 
         function addNotification(email, message) {
+            if (!email) return;
             const ud = getUserData(email);
             ud.notifications.unshift({ message, date: new Date().toISOString() });
             saveUserData();
@@ -1584,24 +1898,21 @@
 
         function toggleFavorite(houseId, event) {
             if (event) event.stopPropagation();
-            if (!currentUser) {
-                alert('Please log in to save favorites.');
-                return;
-            }
+            if (!currentUser) { alert('Please log in to save favorites.'); return; }
             const ud = getUserData(currentUser.email);
             const idx = ud.favorites.indexOf(houseId);
             if (idx >= 0) ud.favorites.splice(idx, 1); else ud.favorites.push(houseId);
             saveUserData();
-            applyFilters();
+            doApplyFilters();
             if (document.getElementById('accountView').classList.contains('active')) renderAccountView();
         }
 
-        // --- Credentials (simulated) ---
-        function getAdminPassword() {
-            return localStorage.getItem('bnb_admin_pass') || 'admin123';
+        // --- Credentials (obfuscated demo storage) ---
+        function getAdminPasswordHash() {
+            return localStorage.getItem('bnb_admin_pass_hash') || encodePass('admin123');
         }
         function setAdminPassword(pass) {
-            localStorage.setItem('bnb_admin_pass', pass);
+            localStorage.setItem('bnb_admin_pass_hash', encodePass(pass));
         }
         function getCustomerCreds() {
             return JSON.parse(localStorage.getItem('bnb_customer_creds')) || {};
@@ -1614,7 +1925,7 @@
         let activeBottomTab = 'home';
 
         function defaultBottomTabFor(viewId) {
-            if (viewId === 'customerView') return 'home';
+            if (viewId === 'customerView' || viewId === 'propertyDetailView') return 'home';
             if (viewId === 'bookingView') return 'booking';
             return 'account';
         }
@@ -1631,12 +1942,17 @@
             updateNavUI();
 
             if (viewId === 'customerView') { renderCategoryChips(); renderAmenityChips(); applyFilters(); }
-            if (viewId === 'adminView') { renderAdminStats(); renderAdminTable(); }
+            if (viewId === 'adminView') { renderAdminStats(); setAdminTab(adminActiveTab); }
             if (viewId === 'accountView') renderAccountView();
 
             activeBottomTab = bottomTab || defaultBottomTabFor(viewId);
             renderBottomNav();
             window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+
+        function scrollToSearch() {
+            const el = document.getElementById('searchInput');
+            if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.focus(); }
         }
 
         // BOTTOM NAVIGATION
@@ -1665,7 +1981,7 @@
             authError.style.display = "none";
 
             if (email === ADMIN_USER) {
-                if (pass === getAdminPassword()) {
+                if (encodePass(pass) === getAdminPasswordHash()) {
                     currentUser = { email, role: 'admin' };
                     localStorage.setItem("currentUser", JSON.stringify(currentUser));
                     this.reset();
@@ -1684,13 +2000,14 @@
             }
 
             const creds = getCustomerCreds();
-            if (creds[email] !== undefined && creds[email] !== pass) {
+            const hashed = encodePass(pass);
+            if (creds[email] !== undefined && creds[email] !== hashed) {
                 authError.textContent = "Incorrect password for this account.";
                 authError.style.display = "block";
                 return;
             }
             if (creds[email] === undefined) {
-                creds[email] = pass;
+                creds[email] = hashed;
                 saveCustomerCreds(creds);
             }
 
@@ -1712,13 +2029,11 @@
             const userNav = document.getElementById("userNav");
             if (currentUser) {
                 userNav.innerHTML = `
-                    <span style="font-size:0.9rem; font-weight:600;">Role: ${currentUser.role.toUpperCase()}</span>
-                    ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin Portal</button>' : ''}
-                    <button class="btn-sm btn-outline" onclick="goHome()">View Houses</button>
+                    <span style="font-size:0.85rem; font-weight:600;">${currentUser.role.toUpperCase()}</span>
+                    ${currentUser.role === 'admin' ? '<button class="btn-sm btn-outline" onclick="navigateTo(\'adminView\')">Admin</button>' : ''}
                 `;
             } else {
                 userNav.innerHTML = `
-                    <button class="btn-sm btn-outline" onclick="goHome()">View Houses</button>
                     <button class="btn-sm btn-primary" style="width:auto;" onclick="navigateTo('loginView')">Login</button>
                 `;
             }
@@ -1977,7 +2292,7 @@
                 const isSelected = selectedHouse && selectedHouse.id === house.id;
                 const card = document.createElement("div");
                 card.className = `house-card ${isSelected ? 'selected' : ''}`;
-                card.onclick = () => openDetailModal(house.id);
+                card.onclick = () => openPropertyDetail(house.id);
 
                 const photoCount = house.images.length;
                 const avgRating = getAverageRating(house);
@@ -2005,8 +2320,8 @@
             });
         }
 
-        // DETAIL / GALLERY MODAL
-        function openDetailModal(houseId) {
+        // PROPERTY DETAIL PAGE
+        function openPropertyDetail(houseId) {
             detailHouse = houses.find(h => h.id === houseId);
             if (!detailHouse) return;
             detailIndex = 0;
@@ -2035,11 +2350,7 @@
             document.getElementById("reviewComment").value = "";
             document.getElementById("reviewPhoto").value = "";
 
-            document.getElementById("detailModal").classList.add("active");
-        }
-
-        function closeDetailModal() {
-            document.getElementById("detailModal").classList.remove("active");
+            navigateTo('propertyDetailView');
         }
 
         function renderGalleryThumbs() {
@@ -2152,18 +2463,14 @@
             const comment = document.getElementById('reviewComment').value.trim();
             const photoFile = document.getElementById('reviewPhoto').files[0];
 
-            if (!name || !comment) {
-                alert('Please enter your name and a comment.');
-                return;
-            }
+            if (!name || !comment) { alert('Please enter your name and a comment.'); return; }
 
             const house = houses.find(h => h.id === houseId);
             const finalize = (photoData) => {
                 house.reviews.push({ id: 'r_' + Date.now(), author: name, rating, comment, photo: photoData || null, date: new Date().toISOString() });
                 saveData();
                 if (currentUser) addNotification(currentUser.email, `Review submitted for ${house.name}`);
-                openDetailModal(houseId);
-                doApplyFilters();
+                openPropertyDetail(houseId);
             };
 
             if (photoFile) {
@@ -2175,17 +2482,17 @@
             }
         }
 
-        function selectHouseFromDetail() {
+        function reserveThisStay() {
             if (!detailHouse) return;
             selectHouse(detailHouse);
-            closeDetailModal();
             goBooking();
         }
 
         function selectHouse(house) {
             selectedHouse = house;
             document.getElementById("selectedHouseInput").value = house.name;
-            doApplyFilters();
+            document.getElementById("confirmationCard").style.display = "none";
+            document.getElementById("bookingForm").style.display = "block";
             validateAvailability();
         }
 
@@ -2205,11 +2512,11 @@
             const checkOut = document.getElementById("checkOut").value;
             const statusMsg = document.getElementById("statusMessage");
             const btn = document.getElementById("whatsappBtn");
-            const priceBox = document.getElementById("priceSummaryBox");
+            const summaryCard = document.getElementById("bookingSummaryCard");
 
             if (!selectedHouse || !checkIn || !checkOut) {
                 statusMsg.style.display = "none";
-                priceBox.style.display = "none";
+                summaryCard.style.display = "none";
                 btn.disabled = true;
                 return;
             }
@@ -2217,7 +2524,7 @@
             if (new Date(checkOut) <= new Date(checkIn)) {
                 statusMsg.className = "status-message error";
                 statusMsg.textContent = "Check-out date must be after check-in date.";
-                priceBox.style.display = "none";
+                summaryCard.style.display = "none";
                 btn.disabled = true;
                 return;
             }
@@ -2227,7 +2534,7 @@
             if (isBooked) {
                 statusMsg.className = "status-message error";
                 statusMsg.textContent = "Sorry! This house is booked for these dates. Please select other dates.";
-                priceBox.style.display = "none";
+                summaryCard.style.display = "none";
                 btn.disabled = true;
             } else {
                 statusMsg.className = "status-message success";
@@ -2236,9 +2543,17 @@
 
                 const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
                 const nightlyRate = parsePriceNumber(selectedHouse.price);
-                const total = nights * nightlyRate;
-                priceBox.style.display = "block";
-                priceBox.innerHTML = `<strong>${nights} night${nights === 1 ? '' : 's'}</strong> &times; $${nightlyRate.toFixed(2)}/night = <strong>$${total.toFixed(2)} total</strong>`;
+                const subtotal = nights * nightlyRate;
+                const serviceFee = subtotal * SERVICE_FEE_RATE;
+                const total = subtotal + serviceFee;
+
+                summaryCard.style.display = "block";
+                summaryCard.innerHTML = `
+                    <div class="booking-summary-row"><span>${selectedHouse.name}</span><span>${selectedHouse.location}</span></div>
+                    <div class="booking-summary-row"><span>${nights} night${nights === 1 ? '' : 's'} &times; $${nightlyRate.toFixed(2)}</span><span>$${subtotal.toFixed(2)}</span></div>
+                    <div class="booking-summary-row"><span>Service fee (8%)</span><span>$${serviceFee.toFixed(2)}</span></div>
+                    <div class="booking-summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+                `;
             }
         }
 
@@ -2249,33 +2564,83 @@
             const checkIn = document.getElementById("checkIn").value;
             const checkOut = document.getElementById("checkOut").value;
             const guestName = document.getElementById("guestName").value;
+            const guestEmail = document.getElementById("guestEmail").value;
+            const guestPhone = document.getElementById("guestPhone").value;
             const guestsCount = document.getElementById("guestsCount").value;
             const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
-            const total = nights * parsePriceNumber(selectedHouse.price);
+            const nightlyRate = parsePriceNumber(selectedHouse.price);
+            const subtotal = nights * nightlyRate;
+            const serviceFee = subtotal * SERVICE_FEE_RATE;
+            const total = subtotal + serviceFee;
+
+            const bookingId = 'bk_' + Date.now();
 
             const message =
 `Hello! I would like to make an inquiry and request payment details for a booking.
 
+*Booking Reference:* ${bookingId}
 *Booking Details:*
 - *House:* ${selectedHouse.name}
 - *Location:* ${selectedHouse.location}
 - *Check-in:* ${checkIn}
 - *Check-out:* ${checkOut}
 - *Guest Name:* ${guestName}
+- *Email:* ${guestEmail}
+- *Phone:* ${guestPhone}
 - *Number of Guests:* ${guestsCount}
-- *Estimated Total:* $${total.toFixed(2)} (${nights} night${nights === 1 ? '' : 's'})
+- *Estimated Total:* $${total.toFixed(2)} (${nights} night${nights === 1 ? '' : 's'}, incl. service fee)
 
 Please confirm availability and share payment details. Thank you!`;
 
             window.open(`https://wa.me/${HOST_PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
 
-            if (currentUser) {
-                const ud = getUserData(currentUser.email);
-                ud.bookingHistory.unshift({ houseName: selectedHouse.name, checkIn, checkOut, guests: guestsCount, total: total.toFixed(2), submittedAt: new Date().toISOString() });
-                saveUserData();
-                addNotification(currentUser.email, `Inquiry sent for ${selectedHouse.name} (${checkIn} to ${checkOut})`);
-            }
+            bookings.unshift({
+                id: bookingId,
+                houseId: selectedHouse.id,
+                houseName: selectedHouse.name,
+                location: selectedHouse.location,
+                checkIn, checkOut,
+                guests: guestsCount,
+                guestName, guestEmail, guestPhone,
+                nights, nightlyRate,
+                subtotal: subtotal.toFixed(2),
+                serviceFee: serviceFee.toFixed(2),
+                total: total.toFixed(2),
+                status: 'pending',
+                userEmail: currentUser ? currentUser.email : null,
+                submittedAt: new Date().toISOString()
+            });
+            saveBookings();
+
+            if (currentUser) addNotification(currentUser.email, `Inquiry sent for ${selectedHouse.name} (${checkIn} to ${checkOut})`);
+
+            showConfirmationCard(bookingId, selectedHouse, checkIn, checkOut, nights, total);
         });
+
+        function showConfirmationCard(bookingId, house, checkIn, checkOut, nights, total) {
+            document.getElementById("bookingForm").style.display = "none";
+            const card = document.getElementById("confirmationCard");
+            card.style.display = "block";
+            card.innerHTML = `
+                <div class="confirmation-icon">${ICON_BIG_CHECK}</div>
+                <h3>Inquiry Sent!</h3>
+                <p style="color:var(--muted); font-size:0.88rem; margin: 0.5rem 0;">Reference: <strong>${bookingId}</strong></p>
+                <p style="font-size:0.9rem; margin-bottom:0.75rem;">${house.name} &middot; ${checkIn} &rarr; ${checkOut} &middot; ${nights} night${nights === 1 ? '' : 's'} &middot; $${total.toFixed(2)}</p>
+                <span class="status-chip pending">Pending Confirmation</span>
+                <p style="color:var(--muted); font-size:0.82rem; margin-top:1rem;">We've reached out to the host on your behalf. You'll be notified here once your stay is confirmed.</p>
+                <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem; margin-top:1rem;" onclick="resetBookingForm()">Make Another Booking</button>
+            `;
+        }
+
+        function resetBookingForm() {
+            document.getElementById("bookingForm").reset();
+            document.getElementById("bookingForm").style.display = "block";
+            document.getElementById("confirmationCard").style.display = "none";
+            selectedHouse = null;
+            document.getElementById("selectedHouseInput").value = "";
+            document.getElementById("statusMessage").style.display = "none";
+            document.getElementById("bookingSummaryCard").style.display = "none";
+        }
 
         document.getElementById("checkIn").addEventListener("change", validateAvailability);
         document.getElementById("checkOut").addEventListener("change", validateAvailability);
@@ -2295,26 +2660,37 @@ Please confirm availability and share payment details. Thank you!`;
         // ADMIN STATS
         function renderAdminStats() {
             const totalListings = houses.length;
-            const featuredCount = houses.filter(h => h.featured).length;
-            const today = new Date();
-            let upcoming = 0;
-            houses.forEach(h => h.bookedDates.forEach(r => { if (new Date(r.start) >= today) upcoming++; }));
+            const totalBookings = bookings.length;
+            const pendingBookings = bookings.filter(b => b.status === 'pending').length;
+            const revenue = bookings.filter(b => b.status === 'confirmed' || b.status === 'completed')
+                .reduce((sum, b) => sum + parseFloat(b.total || 0), 0);
             let allRatings = [];
             houses.forEach(h => h.reviews.forEach(r => allRatings.push(r.rating)));
             const avgRating = allRatings.length ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length).toFixed(1) : '—';
 
             document.getElementById('adminStats').innerHTML = `
-                <div class="stat-card"><div class="stat-value">${totalListings}</div><div class="stat-label">Total Listings</div></div>
-                <div class="stat-card"><div class="stat-value">${featuredCount}</div><div class="stat-label">Featured</div></div>
-                <div class="stat-card"><div class="stat-value">${upcoming}</div><div class="stat-label">Upcoming Bookings</div></div>
+                <div class="stat-card"><div class="stat-value">${totalListings}</div><div class="stat-label">Listings</div></div>
+                <div class="stat-card"><div class="stat-value">${totalBookings}</div><div class="stat-label">Bookings</div></div>
+                <div class="stat-card"><div class="stat-value">${pendingBookings}</div><div class="stat-label">Pending</div></div>
+                <div class="stat-card"><div class="stat-value">$${revenue.toFixed(0)}</div><div class="stat-label">Revenue</div></div>
                 <div class="stat-card"><div class="stat-value">${avgRating}</div><div class="stat-label">Avg Rating</div></div>
             `;
         }
 
+        function setAdminTab(tab) {
+            adminActiveTab = tab;
+            document.getElementById('tabPropertiesBtn').classList.toggle('active', tab === 'properties');
+            document.getElementById('tabBookingsBtn').classList.toggle('active', tab === 'bookings');
+            document.getElementById('adminPropertiesPanel').style.display = tab === 'properties' ? 'block' : 'none';
+            document.getElementById('adminBookingsPanel').style.display = tab === 'bookings' ? 'block' : 'none';
+            if (tab === 'properties') renderAdminTable();
+            if (tab === 'bookings') renderAdminBookingsTable();
+        }
+
         function exportBookingsCSV() {
-            let rows = [['House', 'Location', 'Start Date', 'End Date']];
-            houses.forEach(h => h.bookedDates.forEach(r => rows.push([h.name, h.location, r.start, r.end])));
-            const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+            let rows = [['Reference', 'Guest', 'Email', 'Phone', 'House', 'Location', 'Check-in', 'Check-out', 'Guests', 'Total', 'Status']];
+            bookings.forEach(b => rows.push([b.id, b.guestName, b.guestEmail, b.guestPhone, b.houseName, b.location, b.checkIn, b.checkOut, b.guests, b.total, b.status]));
+            const csv = rows.map(r => r.map(v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`).join(',')).join('\n');
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2324,7 +2700,7 @@ Please confirm availability and share payment details. Thank you!`;
             URL.revokeObjectURL(url);
         }
 
-        // ADMIN TABLE LOGIC
+        // ADMIN: PROPERTIES TABLE
         function renderAdminTable() {
             const tbody = document.getElementById("adminHouseTable");
             tbody.innerHTML = "";
@@ -2362,6 +2738,67 @@ Please confirm availability and share payment details. Thank you!`;
             });
         }
 
+        // ADMIN: BOOKINGS TABLE
+        function renderAdminBookingsTable() {
+            const tbody = document.getElementById("adminBookingsTable");
+            tbody.innerHTML = "";
+
+            if (!bookings.length) {
+                tbody.innerHTML = `<tr><td colspan="6"><em>No booking inquiries yet.</em></td></tr>`;
+                return;
+            }
+
+            bookings.forEach(b => {
+                const tr = document.createElement("tr");
+                let actions = '';
+                if (b.status === 'pending') {
+                    actions = `
+                        <button class="btn-sm btn-outline" onclick="setBookingStatus('${b.id}','confirmed')">Confirm</button>
+                        <button class="btn-sm btn-danger" onclick="setBookingStatus('${b.id}','declined')">Decline</button>
+                    `;
+                } else if (b.status === 'confirmed') {
+                    actions = `<button class="btn-sm btn-outline" onclick="setBookingStatus('${b.id}','completed')">Mark Completed</button>`;
+                } else {
+                    actions = `<em>&mdash;</em>`;
+                }
+
+                tr.innerHTML = `
+                    <td><strong>${b.guestName}</strong><div class="admin-meta-line"><span>${b.guestEmail}</span><span>${b.guestPhone}</span></div></td>
+                    <td>${b.houseName}<div class="admin-meta-line"><span>${ICON_PIN}&nbsp;${b.location}</span></div></td>
+                    <td>${b.checkIn}<br>&rarr; ${b.checkOut}</td>
+                    <td>$${b.total}</td>
+                    <td><span class="status-chip ${b.status}">${b.status}</span></td>
+                    <td class="action-btns">${actions}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function setBookingStatus(bookingId, status) {
+            const booking = bookings.find(b => b.id === bookingId);
+            if (!booking) return;
+            booking.status = status;
+            saveBookings();
+
+            if (status === 'confirmed') {
+                const house = houses.find(h => h.id === booking.houseId);
+                if (house) {
+                    const alreadyBlocked = house.bookedDates.some(r => r.start === booking.checkIn && r.end === booking.checkOut);
+                    if (!alreadyBlocked) house.bookedDates.push({ start: booking.checkIn, end: booking.checkOut });
+                    saveData();
+                }
+                addNotification(booking.userEmail, `Your booking for ${booking.houseName} (${booking.checkIn} to ${booking.checkOut}) has been confirmed!`);
+            } else if (status === 'declined') {
+                addNotification(booking.userEmail, `Your booking request for ${booking.houseName} was declined by the host.`);
+            } else if (status === 'completed') {
+                addNotification(booking.userEmail, `Your stay at ${booking.houseName} is marked complete. Thanks for booking with StayEase!`);
+            }
+
+            renderAdminStats();
+            renderAdminBookingsTable();
+            renderAdminTable();
+        }
+
         function toggleFeatured(houseId) {
             const house = houses.find(h => h.id === houseId);
             if (!house) return;
@@ -2387,10 +2824,7 @@ Please confirm availability and share payment details. Thank you!`;
             const start = document.getElementById('blockStartDate').value;
             const end = document.getElementById('blockEndDate').value;
             const house = houses.find(h => h.id === houseId);
-            if (!house || !start || !end || end <= start) {
-                alert('Please choose a valid date range.');
-                return;
-            }
+            if (!house || !start || !end || end <= start) { alert('Please choose a valid date range.'); return; }
             house.bookedDates.push({ start, end });
             saveData();
             closeBlockDatesModal();
@@ -2434,6 +2868,7 @@ Please confirm availability and share payment details. Thank you!`;
             const settings = getAccountSettings();
             const ud = getUserData(currentUser.email);
             const favHouses = houses.filter(h => ud.favorites.includes(h.id));
+            const myBookings = bookings.filter(b => b.userEmail === currentUser.email);
 
             card.innerHTML = `
                 <div class="avatar-wrap">
@@ -2489,17 +2924,17 @@ Please confirm availability and share payment details. Thank you!`;
                         <div class="fav-list-item">
                             <img src="${h.images[0]}" alt="${h.name}">
                             <div class="fav-info"><strong>${h.name}</strong><br><span style="color:var(--muted);">${h.price}</span></div>
-                            <button type="button" class="btn-sm btn-outline" onclick="goAccount(); openDetailModal('${h.id}')">View</button>
+                            <button type="button" class="btn-sm btn-outline" onclick="openPropertyDetail('${h.id}')">View</button>
                         </div>
                     `).join('') : `<p class="empty-note">No favorites yet — tap the heart on a listing to save it.</p>`}
                 </div>
 
                 <h3 style="margin: 1.5rem 0 0.75rem; font-size: 1rem;">Booking History</h3>
                 <div id="historyList">
-                    ${ud.bookingHistory.length ? ud.bookingHistory.map(b => `
+                    ${myBookings.length ? myBookings.map(b => `
                         <div class="history-list-item">
                             <div style="flex:1;">
-                                <strong>${b.houseName}</strong><br>
+                                <strong>${b.houseName}</strong> <span class="status-chip ${b.status}" style="margin-left:0.35rem;">${b.status}</span><br>
                                 <span style="color:var(--muted);">${b.checkIn} &rarr; ${b.checkOut} &middot; ${b.guests} guest(s) &middot; $${b.total}</span>
                             </div>
                         </div>
@@ -2562,11 +2997,11 @@ Please confirm availability and share payment details. Thank you!`;
                 e.preventDefault();
                 const cur = document.getElementById('currentPassword').value;
                 const next = document.getElementById('newPassword').value;
-                const confirm = document.getElementById('confirmPassword').value;
+                const confirmVal = document.getElementById('confirmPassword').value;
                 const msg = document.getElementById('passwordChangeMsg');
 
-                const storedPass = currentUser.email === 'admin' ? getAdminPassword() : (getCustomerCreds()[currentUser.email] || '');
-                if (cur !== storedPass) {
+                const storedHash = currentUser.email === 'admin' ? getAdminPasswordHash() : (getCustomerCreds()[currentUser.email] || '');
+                if (encodePass(cur) !== storedHash) {
                     msg.className = 'status-message error';
                     msg.textContent = 'Current password is incorrect.';
                     return;
@@ -2576,7 +3011,7 @@ Please confirm availability and share payment details. Thank you!`;
                     msg.textContent = 'New password must be at least 4 characters.';
                     return;
                 }
-                if (next !== confirm) {
+                if (next !== confirmVal) {
                     msg.className = 'status-message error';
                     msg.textContent = 'New passwords do not match.';
                     return;
@@ -2585,7 +3020,7 @@ Please confirm availability and share payment details. Thank you!`;
                     setAdminPassword(next);
                 } else {
                     const creds = getCustomerCreds();
-                    creds[currentUser.email] = next;
+                    creds[currentUser.email] = encodePass(next);
                     saveCustomerCreds(creds);
                 }
                 msg.className = 'status-message success';
@@ -2624,12 +3059,8 @@ Please confirm availability and share payment details. Thank you!`;
         }
 
         function onboardingNext() {
-            if (onboardingStep >= ONBOARDING_STEPS.length - 1) {
-                finishOnboarding();
-            } else {
-                onboardingStep++;
-                renderOnboardingStep();
-            }
+            if (onboardingStep >= ONBOARDING_STEPS.length - 1) finishOnboarding();
+            else { onboardingStep++; renderOnboardingStep(); }
         }
 
         function skipOnboarding() { finishOnboarding(); }
