@@ -226,6 +226,44 @@
             flex-shrink: 0;
         }
 
+        .hero-image {
+            width: 100%;
+            max-width: 640px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin: 1.75rem auto 1.25rem;
+            display: block;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+        }
+
+        .hero-contact {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .hero-contact a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .filters-panel {
+            display: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .filters-panel.open {
+            display: block;
+        }
+
         /* Auth Container */
         .auth-container {
             background: var(--white);
@@ -1398,6 +1436,17 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                     </span>
                 </button>
+                <img class="hero-image" src="https://images.unsplash.com/photo-1768488314310-3742b3c75579?auto=format&fit=crop&w=1200&q=80" alt="Serene living room interior">
+                <div class="hero-contact">
+                    <a href="tel:+254700000000">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        +254 700 000000
+                    </a>
+                    <a href="mailto:host@stayease.example">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+                        host@stayease.example
+                    </a>
+                </div>
             </div>
 
             <h2 style="margin-bottom: 1rem;">Available Properties</h2>
@@ -1407,28 +1456,25 @@
                     <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
                     <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by name or location...">
                 </div>
-                <button type="button" class="btn-search" id="searchBtn" onclick="applyFilters()">Search</button>
+                <button type="button" class="btn-search" id="searchBtn" onclick="toggleFiltersPanel()">Search</button>
             </div>
 
-            <div class="filter-row">
-                <div class="category-chips" id="categoryChips"></div>
-                <select id="priceFilter" class="form-control price-select">
-                    <option value="all">Any Price</option>
-                    <option value="under50">Under $50/night</option>
-                    <option value="50to100">$50 - $100/night</option>
-                    <option value="over100">$100+/night</option>
-                </select>
-                <select id="sortFilter" class="form-control sort-select">
-                    <option value="default">Sort: Featured</option>
-                    <option value="price_asc">Price: Low to High</option>
-                    <option value="price_desc">Price: High to Low</option>
-                    <option value="newest">Newest</option>
-                    <option value="photos_desc">Most Photos</option>
-                </select>
-            </div>
+            <div class="filters-panel" id="filtersPanel">
+                <div class="filter-row">
+                    <div class="category-chips" id="categoryChips"></div>
+                    <input type="number" id="budgetInput" class="form-control price-select" placeholder="Max budget ($/night)" min="0" style="width:170px;">
+                    <select id="sortFilter" class="form-control sort-select">
+                        <option value="default">Sort: Featured</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                        <option value="photos_desc">Most Photos</option>
+                    </select>
+                </div>
 
-            <div class="filters-label">Amenities</div>
-            <div class="amenity-chips" id="amenityChips"></div>
+                <div class="filters-label">Amenities</div>
+                <div class="amenity-chips" id="amenityChips"></div>
+            </div>
 
             <div class="houses-grid" id="customerHousesGrid" style="margin-top: 1.25rem;"></div>
             <p id="noResultsMsg" style="display:none; text-align:center; color: var(--muted); padding: 2rem 0;">No properties match your search. Try different filters.</p>
@@ -1489,10 +1535,6 @@
                 <div class="form-group">
                     <label for="reviewComment">Comment</label>
                     <textarea id="reviewComment" class="form-control" rows="2" placeholder="Share your experience..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="reviewPhoto">Add a Photo (optional)</label>
-                    <input type="file" id="reviewPhoto" class="form-control" accept="image/*">
                 </div>
                 <button type="button" class="btn-sm btn-outline" style="width:100%; padding:0.7rem;" onclick="submitReview(detailHouse.id)">Submit Review</button>
             </div>
@@ -1955,6 +1997,12 @@
             if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.focus(); }
         }
 
+        function toggleFiltersPanel() {
+            const panel = document.getElementById('filtersPanel');
+            panel.classList.toggle('open');
+            applyFilters();
+        }
+
         // BOTTOM NAVIGATION
         function renderBottomNav() {
             document.getElementById('navHomeBtn').innerHTML = `${ICON_HOME}<span>Home</span>`;
@@ -2194,12 +2242,9 @@
             return match ? parseFloat(match[0]) : 0;
         }
 
-        function houseMatchesPriceRange(house, range) {
-            const value = parsePriceNumber(house.price);
-            if (range === 'under50') return value < 50;
-            if (range === '50to100') return value >= 50 && value <= 100;
-            if (range === 'over100') return value > 100;
-            return true;
+        function houseWithinBudget(house, budget) {
+            if (!budget || isNaN(budget) || budget <= 0) return true;
+            return parsePriceNumber(house.price) <= budget;
         }
 
         function renderCategoryChips() {
@@ -2251,7 +2296,7 @@
 
         function doApplyFilters() {
             const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
-            const priceRange = document.getElementById('priceFilter')?.value || 'all';
+            const budget = parseFloat(document.getElementById('budgetInput')?.value);
             const sortBy = document.getElementById('sortFilter')?.value || 'default';
 
             let filtered = houses.filter(house => {
@@ -2260,9 +2305,9 @@
                     house.location.toLowerCase().includes(query) ||
                     house.description.toLowerCase().includes(query);
                 const matchesCategory = activeCategory === 'all' || getHouseCategory(house) === activeCategory;
-                const matchesPrice = houseMatchesPriceRange(house, priceRange);
+                const matchesBudget = houseWithinBudget(house, budget);
                 const matchesAmenities = [...activeAmenities].every(a => house.amenities.includes(a));
-                return matchesQuery && matchesCategory && matchesPrice && matchesAmenities;
+                return matchesQuery && matchesCategory && matchesBudget && matchesAmenities;
             });
 
             if (sortBy === 'price_asc') filtered.sort((a, b) => parsePriceNumber(a.price) - parsePriceNumber(b.price));
@@ -2348,7 +2393,6 @@
 
             document.getElementById("reviewName").value = "";
             document.getElementById("reviewComment").value = "";
-            document.getElementById("reviewPhoto").value = "";
 
             navigateTo('propertyDetailView');
         }
@@ -2461,25 +2505,14 @@
             const name = document.getElementById('reviewName').value.trim();
             const rating = parseInt(document.getElementById('reviewRatingInput').value) || 5;
             const comment = document.getElementById('reviewComment').value.trim();
-            const photoFile = document.getElementById('reviewPhoto').files[0];
 
             if (!name || !comment) { alert('Please enter your name and a comment.'); return; }
 
             const house = houses.find(h => h.id === houseId);
-            const finalize = (photoData) => {
-                house.reviews.push({ id: 'r_' + Date.now(), author: name, rating, comment, photo: photoData || null, date: new Date().toISOString() });
-                saveData();
-                if (currentUser) addNotification(currentUser.email, `Review submitted for ${house.name}`);
-                openPropertyDetail(houseId);
-            };
-
-            if (photoFile) {
-                const reader = new FileReader();
-                reader.onload = e => finalize(e.target.result);
-                reader.readAsDataURL(photoFile);
-            } else {
-                finalize(null);
-            }
+            house.reviews.push({ id: 'r_' + Date.now(), author: name, rating, comment, photo: null, date: new Date().toISOString() });
+            saveData();
+            if (currentUser) addNotification(currentUser.email, `Review submitted for ${house.name}`);
+            openPropertyDetail(houseId);
         }
 
         function reserveThisStay() {
@@ -3077,7 +3110,7 @@ Please confirm availability and share payment details. Thank you!`;
 
         document.getElementById("searchInput").addEventListener("input", applyFilters);
         document.getElementById("searchInput").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyFilters(); } });
-        document.getElementById("priceFilter").addEventListener("change", applyFilters);
+        document.getElementById("budgetInput").addEventListener("input", applyFilters);
         document.getElementById("sortFilter").addEventListener("change", applyFilters);
 
         applyDarkMode(getAccountSettings().darkMode);
